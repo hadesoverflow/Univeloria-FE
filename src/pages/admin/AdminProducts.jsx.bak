@@ -1,0 +1,3441 @@
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
+import {
+
+  Package,
+
+  Search,
+
+  Plus,
+
+  Trash2,
+
+  Star,
+
+  Tag,
+
+  Palette,
+
+  Check,
+
+  Image as ImageIcon,
+
+  Home,
+
+  SlidersHorizontal,
+
+  X,
+
+  RefreshCw,
+
+  AlertCircle,
+
+  Edit2,
+
+  UploadCloud,
+
+  Sparkles,
+
+  Settings,
+
+  ExternalLink,
+
+  ShieldCheck,
+
+  CheckCircle2,
+
+  Layers,
+
+  FileCheck
+
+} from 'lucide-react';
+
+import { adminApi } from '../../api/adminApi';
+
+import { appwriteService } from '../../services/appwriteService';
+
+
+
+const SLOT_DEFINITIONS = [
+
+  { id: 0, title: 'Ảnh 1: Ảnh chính (Catalog)', isPrimary: true, hint: 'Ảnh đại diện chính của mẫu rèm (Bắt buộc)' },
+
+  { id: 1, title: 'Ảnh 2: Phối cảnh không gian', isPrimary: false, hint: 'Góc phối cảnh rèm trong không gian phòng' },
+
+  { id: 2, title: 'Ảnh 3: Cận chất liệu vải', isPrimary: false, hint: 'Cận cảnh thớ dệt, sợi vải và độ rủ mềm' },
+
+  { id: 3, title: 'Ảnh 4: Chi tiết may đo', isPrimary: false, hint: 'Đường may xếp ly, ray trượt ' + amp + ' phụ kiện' }
+
+];
+
+
+
+// Preset color options matching the public catalog
+
+const AVAILABLE_COLOR_PALETTES = [
+
+  { name: 'Kem lụa sáng', hex: '#f0dfc8' },
+
+  { name: 'Vàng cát caramel', hex: '#d49a5b' },
+
+  { name: 'Nâu đất hổ phách', hex: '#aa7c56' },
+
+  { name: 'Be xám ấm', hex: '#cbb59e' },
+
+  { name: 'Xám xi măng', hex: '#aaa69d' },
+
+  { name: 'Xám than chì', hex: '#8e8c82' },
+
+  { name: 'Đen tuyền tối', hex: '#282b2d' },
+
+  { name: 'Xanh navy Bỉ', hex: '#5c7893' },
+
+  { name: 'Trắng voan ngọc', hex: '#f1ece5' },
+
+  { name: 'Nâu chocolate', hex: '#755039' },
+
+  { name: 'Vải nhung sữa', hex: '#d7b89a' },
+
+  { name: 'Nâu espresso', hex: '#3a302a' }
+
+];
+
+
+
+// Preset curated images for curtain fabrics
+
+const PRESET_CURTAIN_IMAGES = [
+
+  { label: 'Rèm vải linen', src: '/assets/product-linen.jpg' },
+
+  { label: 'Rèm vải nhung', src: '/assets/product-velvet.jpg' },
+
+  { label: 'Rèm voan mềm', src: '/assets/product-sheer.jpg' },
+
+  { label: 'Rèm 2 lớp cản sáng', src: '/assets/product-blackout.jpg' },
+
+  { label: 'Rèm roman hiện đại', src: '/assets/product-roman.jpg' },
+
+  { label: 'Rèm cuốn văn phòng', src: '/assets/product-roller.jpg' },
+
+  { label: 'Rèm văn phòng tối giản', src: '/assets/product-office.jpg' },
+
+  { label: 'Rèm ngoài trời cao cấp', src: '/assets/product-outdoor.jpg' },
+
+  { label: 'Phòng khách Master', src: '/assets/category-living.jpg' },
+
+  { label: 'Phòng ngủ Suite', src: '/assets/category-bedroom.jpg' },
+
+  { label: 'Phòng ăn hiện đại', src: '/assets/category-dining.jpg' }
+
+];
+
+
+
+export function AdminProducts() {
+
+  const [products, setProducts] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState(null);
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const [categoryFilter, setCategoryFilter] = useState('ALL');
+
+  const [roomFilter, setRoomFilter] = useState('ALL');
+
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  const [submitting, setSubmitting] = useState(false);
+
+  const [submittingText, setSubmittingText] = useState('');
+
+  const [customColorHex, setCustomColorHex] = useState('#c8a87d');
+
+
+
+  // 4-Image Upload States: 4 slots per product
+  const [newProductImages, setNewProductImages] = useState(['', '', '', '']);
+  const [pendingImageFilesAdd, setPendingImageFilesAdd] = useState([null, null, null, null]);
+  const [pendingImageInfosAdd, setPendingImageInfosAdd] = useState([null, null, null, null]);
+
+  const [editProductImages, setEditProductImages] = useState(['', '', '', '']);
+  const [pendingImageFilesEdit, setPendingImageFilesEdit] = useState([null, null, null, null]);
+  const [pendingImageInfosEdit, setPendingImageInfosEdit] = useState([null, null, null, null]);
+
+  const [activeSlotIdx, setActiveSlotIdx] = useState(0);
+  const [isEditSlot, setIsEditSlot] = useState(false);
+  const singleFileInputRef = useRef(null);
+  const batchFileInputRef = useRef(null);
+
+  // Appwrite Config Panel
+  const [showAppwriteConfig, setShowAppwriteConfig] = useState(false);
+  const [appwriteConfigState, setAppwriteConfigState] = useState(() =;
+
+
+
+  // Form State for Adding Product
+
+  const [newProduct, setNewProduct] = useState({
+
+    name: '',
+
+    code: '',
+
+    category: 'Rèm vải',
+
+    room: 'Phòng khách',
+
+    style: 'Hiện đại',
+
+    price: 2450000,
+
+    oldPrice: '',
+
+    badge: 'Mới',
+
+    colors: ['#f0dfc8', '#d49a5b', '#282b2d'],
+
+    image: '/assets/product-linen.jpg',
+
+    description: '',
+
+    fullDescription: 'Rèm linen họa tiết tân cổ điển đại diện cho sự giao thoa tinh tế giữa phong cách kiến trúc Tân cổ điển quyến quý và chất sống hiện đại thanh lịch. Thiết kế hai lớp độc đáo mang đến giải pháp điều tiết ánh sáng toàn diện.',
+
+    material: 'Gấm linen jacquard & voan thêu chỉ lụa cao cấp',
+
+    lightBlocking: 'Cản sáng 85% - 95%, chống tia cực tím UV 99%',
+
+    fabricWidth: '280cm (Hỗ trợ may liền không nối vải cho trần cao đến 3.2m)',
+
+    origin: 'Nhập khẩu nguyên cây Thổ Nhĩ Kỳ / Bỉ',
+
+    warranty: 'Bảo hành 5 năm chính hãng cho ray trượt và phụ kiện',
+
+    rating: '5.0',
+
+    reviews: 12
+
+  });
+
+
+
+  // Form State for Editing Product
+
+  const [editingProduct, setEditingProduct] = useState(null);
+
+  const [editFormData, setEditFormData] = useState({
+
+    name: '',
+
+    code: '',
+
+    category: 'Rèm vải',
+
+    room: 'Phòng khách',
+
+    style: 'Hiện đại',
+
+    price: 2450000,
+
+    oldPrice: '',
+
+    badge: '',
+
+    colors: ['#f0dfc8', '#d49a5b'],
+
+    image: '/assets/product-linen.jpg',
+
+    description: '',
+
+    fullDescription: '',
+
+    material: '',
+
+    lightBlocking: '',
+
+    fabricWidth: '',
+
+    origin: '',
+
+    warranty: '',
+
+    rating: '5.0',
+
+    reviews: 12
+
+  });
+
+
+
+  const categories = ['ALL', 'Rèm vải', 'Rèm voan', 'Rèm cuốn', 'Rèm roman', 'Rèm gỗ', 'Rèm hai lớp'];
+
+  const rooms = ['ALL', 'Phòng khách', 'Phòng ngủ', 'Phòng ăn', 'Văn phòng', 'Ngoài trời'];
+
+
+
+  // Fetch real products from Database
+
+  const fetchProducts = useCallback(async () => {
+
+    try {
+
+      setLoading(true);
+
+      setError(null);
+
+      const res = await adminApi.getProducts({
+
+        category: categoryFilter,
+
+        room: roomFilter,
+
+        search: searchTerm.trim() || undefined
+
+      });
+
+
+
+      const rawList = Array.isArray(res)
+
+        ? res
+
+        : Array.isArray(res?.data)
+
+        ? res.data
+
+        : [];
+
+
+
+      const normalized = rawList.map((p) => {
+
+        let parsedColors = ['#f0dfc8', '#d49a5b'];
+
+        if (Array.isArray(p.colorHexList) && p.colorHexList.length > 0) {
+
+          parsedColors = p.colorHexList;
+
+        } else if (Array.isArray(p.colors) && p.colors.length > 0) {
+
+          parsedColors = p.colors.map((c) => (typeof c === 'string' ? c : c.hexCode || '#c8a87d'));
+
+        }
+
+
+
+        return {
+
+          id: p.id,
+
+          name: p.name,
+
+          code: p.code || ('UVL-' + (1000 + p.id)),
+
+          category: p.category || 'Rèm vải',
+
+          room: p.roomType || 'Phòng khách',
+
+          style: p.style || 'Hiện đại',
+
+          price: p.basePrice || 2450000,
+
+          oldPrice: p.oldPrice,
+
+          badge: p.badge,
+
+          colors: parsedColors,
+
+          image: p.thumbnailUrl || '/assets/product-linen.jpg',
+
+          description: p.description,
+
+          fullDescription: p.fullDescription,
+
+          material: p.material,
+
+          lightBlocking: p.lightBlocking,
+
+          fabricWidth: p.fabricWidth,
+
+          origin: p.origin,
+
+          warranty: p.warranty,
+
+          rating: p.rating || 5.0,
+
+          reviews: p.reviewsCount || 0
+
+        };
+
+      });
+
+
+
+      setProducts(normalized);
+
+    } catch (err) {
+
+      console.error('Fetch products error:', err);
+
+      setError('Không thể kết nối đến máy chủ quản trị: ' + (err.message || 'Lỗi không xác định'));
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  }, [categoryFilter, roomFilter, searchTerm]);
+
+
+
+  useEffect(() => {
+
+    fetchProducts();
+
+  }, [fetchProducts]);
+
+
+
+  // When user selects a file: only preview locally, DO NOT upload yet
+
+  const handleSelectLocalImage = (file, isEdit = false) => {
+
+    if (!file) return;
+
+
+
+    if (file.size > 15 * 1024 * 1024) {
+
+      alert('Kích thước ảnh vượt quá 15MB. Vui lòng chọn ảnh nhẹ hơn.');
+
+      return;
+
+    }
+
+
+
+    const previewUrl = URL.createObjectURL(file);
+
+    const fileInfo = {
+
+      name: file.name,
+
+      size: (file.size / (1024 * 1024)).toFixed(2) + ' MB'
+
+    };
+
+
+
+    if (isEdit) {
+
+      setPendingImageFileEdit(file);
+
+      setPendingImageInfoEdit(fileInfo);
+
+      setEditFormData((prev) => ({ ...prev, image: previewUrl }));
+
+    } else {
+
+      setPendingImageFileAdd(file);
+
+      setPendingImageInfoAdd(fileInfo);
+
+      setNewProduct((prev) => ({ ...prev, image: previewUrl }));
+
+    }
+
+  };
+
+
+
+  // Save Appwrite Configuration
+
+  const handleSaveAppwriteConfig = (e) => {
+
+    e.preventDefault();
+
+    const updated = appwriteService.saveConfig(appwriteConfigState);
+
+    setAppwriteConfigState(updated);
+
+    alert('Đã lưu cấu hình Appwrite thành công!');
+
+    setShowAppwriteConfig(false);
+
+  };
+
+
+
+  // Toggle color picker for Add
+
+  const handleToggleColor = (hex) => {
+
+    if (newProduct.colors.includes(hex)) {
+
+      if (newProduct.colors.length > 1) {
+
+        setNewProduct({
+
+          ...newProduct,
+
+          colors: newProduct.colors.filter((c) => c !== hex)
+
+        });
+
+      }
+
+    } else {
+
+      setNewProduct({
+
+        ...newProduct,
+
+        colors: [...newProduct.colors, hex]
+
+      });
+
+    }
+
+  };
+
+
+
+  // Add custom hex color
+
+  const handleAddCustomColor = () => {
+
+    if (!customColorHex || !customColorHex.startsWith('#')) return;
+
+    if (!newProduct.colors.includes(customColorHex)) {
+
+      setNewProduct({
+
+        ...newProduct,
+
+        colors: [...newProduct.colors, customColorHex]
+
+      });
+
+    }
+
+  };
+
+
+
+  // Add new product submit into Database: Upload image to Appwrite NOW if pending
+
+  const handleAddProduct = async (e) => {
+
+    e.preventDefault();
+
+    if (!newProduct.name.trim()) {
+
+      alert('Vui lòng nhập tên thiết kế rèm.');
+
+      return;
+
+    }
+
+
+
+    setSubmitting(true);
+
+    let finalImageUrl = newProduct.image || '/assets/product-linen.jpg';
+
+
+
+    try {
+
+      // Step 1: Upload to Appwrite if user selected a new local image
+
+      if (pendingImageFileAdd) {
+
+        setSubmittingText('Đang đẩy ảnh lên Appwrite Cloud Storage...');
+
+        try {
+
+          const appwriteRes = await appwriteService.uploadImage(pendingImageFileAdd);
+
+          finalImageUrl = appwriteRes.url;
+
+        } catch (uploadErr) {
+
+          alert('Lỗi tải ảnh lên Appwrite Storage: ' + uploadErr.message);
+
+          setSubmitting(false);
+
+          setSubmittingText('');
+
+          return;
+
+        }
+
+      }
+
+
+
+      // Step 2: Save product to Database
+
+      setSubmittingText('Đang lưu thông tin vào Database...');
+
+      const generatedCode = newProduct.code.trim() || ('UVL-' + Math.floor(1000 + Math.random() * 9000));
+
+      const payload = {
+
+        name: newProduct.name.trim(),
+
+        code: generatedCode,
+
+        category: newProduct.category,
+
+        roomType: newProduct.room,
+
+        style: newProduct.style,
+
+        description: newProduct.description?.trim() || ('Mẫu thiết kế ' + newProduct.name + ' phong cách ' + newProduct.style + ', phù hợp không gian ' + newProduct.room + '.'),
+
+        fullDescription: newProduct.fullDescription?.trim() || ('Mẫu thiết kế ' + newProduct.name + ' phong cách ' + newProduct.style + ', phù hợp không gian ' + newProduct.room + '.'),
+
+        material: newProduct.material?.trim() || 'Gấm linen jacquard & voan thêu chỉ lụa cao cấp',
+
+        lightBlocking: newProduct.lightBlocking?.trim() || 'Cản sáng 85% - 95%, chống tia cực tím UV 99%',
+
+        fabricWidth: newProduct.fabricWidth?.trim() || '280cm (Hỗ trợ may liền không nối vải cho trần cao đến 3.2m)',
+
+        origin: newProduct.origin?.trim() || 'Nhập khẩu nguyên cây Thổ Nhĩ Kỳ / Bỉ',
+
+        warranty: newProduct.warranty?.trim() || 'Bảo hành 5 năm chính hãng cho ray trượt và phụ kiện',
+
+        price: Number(newProduct.price) || 2000000,
+
+        oldPrice: newProduct.oldPrice ? Number(newProduct.oldPrice) : null,
+
+        priceUnit: '/m²',
+
+        badge: newProduct.badge || null,
+
+        image: finalImageUrl,
+
+        colors: newProduct.colors,
+
+        rating: 5.0,
+
+        reviews: 0
+
+      };
+
+
+
+      await adminApi.createProduct(payload);
+
+      setShowAddModal(false);
+
+      await fetchProducts();
+
+
+
+      // Reset Form & Pending upload state
+
+      setPendingImageFileAdd(null);
+
+      setPendingImageInfoAdd(null);
+
+      setNewProduct({
+
+        name: '',
+
+        code: '',
+
+        category: 'Rèm vải',
+
+        room: 'Phòng khách',
+
+        style: 'Hiện đại',
+
+        price: 2450000,
+
+        oldPrice: '',
+
+        badge: 'Mới',
+
+        colors: ['#f0dfc8', '#d49a5b', '#282b2d'],
+
+        image: '/assets/product-linen.jpg',
+
+        description: '',
+
+        fullDescription: 'Rèm linen họa tiết tân cổ điển đại diện cho sự giao thoa tinh tế giữa phong cách kiến trúc Tân cổ điển quyến quý và chất sống hiện đại thanh lịch. Thiết kế hai lớp độc đáo mang đến giải pháp điều tiết ánh sáng toàn diện.',
+
+        material: 'Gấm linen jacquard & voan thêu chỉ lụa cao cấp',
+
+        lightBlocking: 'Cản sáng 85% - 95%, chống tia cực tím UV 99%',
+
+        fabricWidth: '280cm (Hỗ trợ may liền không nối vải cho trần cao đến 3.2m)',
+
+        origin: 'Nhập khẩu nguyên cây Thổ Nhĩ Kỳ / Bỉ',
+
+        warranty: 'Bảo hành 5 năm chính hãng cho ray trượt và phụ kiện',
+
+        rating: '5.0',
+
+        reviews: 0
+
+      });
+
+    } catch (err) {
+
+      alert('Lỗi khi thêm sản phẩm vào cơ sở dữ liệu: ' + err.message);
+
+    } finally {
+
+      setSubmitting(false);
+
+      setSubmittingText('');
+
+    }
+
+  };
+
+
+
+  // Delete product from Database
+
+  const handleDeleteProduct = async (id, name) => {
+
+    if (window.confirm('Bạn có chắc chắn muốn xóa mẫu rèm "' + name + '" vĩnh viễn khỏi cơ sở dữ liệu?')) {
+
+      try {
+
+        await adminApi.deleteProduct(id);
+
+        setProducts((prev) => prev.filter((p) => p.id !== id));
+
+      } catch (err) {
+
+        alert('Lỗi khi xóa sản phẩm: ' + err.message);
+
+      }
+
+    }
+
+  };
+
+
+
+  // Open Edit Product Modal
+
+  const handleOpenEditModal = (product) => {
+
+    setEditingProduct(product);
+
+    setPendingImageFileEdit(null);
+
+    setPendingImageInfoEdit(null);
+
+    setEditFormData({
+
+      name: product.name || '',
+
+      code: product.code || '',
+
+      category: product.category || 'Rèm vải',
+
+      room: product.room || product.roomType || 'Phòng khách',
+
+      style: product.style || 'Hiện đại',
+
+      price: product.price || product.basePrice || 2450000,
+
+      oldPrice: product.oldPrice || '',
+
+      badge: product.badge || '',
+
+      colors: Array.isArray(product.colors) && product.colors.length > 0
+
+        ? product.colors.map((c) => (typeof c === 'string' ? c : c.hexCode || '#c8a87d'))
+
+        : ['#f0dfc8', '#d49a5b'],
+
+      image: product.image || product.thumbnailUrl || '/assets/product-linen.jpg',
+
+      description: product.description || '',
+
+      fullDescription: product.fullDescription || product.description || '',
+
+      material: product.material || 'Gấm linen jacquard & voan thêu chỉ lụa cao cấp',
+
+      lightBlocking: product.lightBlocking || 'Cản sáng 85% - 95%, chống tia cực tím UV 99%',
+
+      fabricWidth: product.fabricWidth || '280cm (Hỗ trợ may liền không nối vải cho trần cao đến 3.2m)',
+
+      origin: product.origin || 'Nhập khẩu nguyên cây Thổ Nhĩ Kỳ / Bỉ',
+
+      warranty: product.warranty || 'Bảo hành 5 năm chính hãng cho ray trượt và phụ kiện',
+
+      rating: product.rating || '5.0',
+
+      reviews: product.reviews || product.reviewsCount || 0
+
+    });
+
+  };
+
+
+
+  // Submit Update Product to Database: Upload image to Appwrite NOW if pending
+
+  const handleUpdateProductSubmit = async (e) => {
+
+    e.preventDefault();
+
+    if (!editingProduct) return;
+
+    if (!editFormData.name.trim()) {
+
+      alert('Vui lòng nhập tên thiết kế rèm.');
+
+      return;
+
+    }
+
+
+
+    setSubmitting(true);
+
+    let finalImageUrl = editFormData.image || '/assets/product-linen.jpg';
+
+
+
+    try {
+
+      // Step 1: Upload to Appwrite if user selected a new local image
+
+      if (pendingImageFileEdit) {
+
+        setSubmittingText('Đang đẩy ảnh mới lên Appwrite Cloud Storage...');
+
+        try {
+
+          const appwriteRes = await appwriteService.uploadImage(pendingImageFileEdit);
+
+          finalImageUrl = appwriteRes.url;
+
+        } catch (uploadErr) {
+
+          alert('Lỗi tải ảnh lên Appwrite Storage: ' + uploadErr.message);
+
+          setSubmitting(false);
+
+          setSubmittingText('');
+
+          return;
+
+        }
+
+      }
+
+
+
+      // Step 2: Save to Database
+
+      setSubmittingText('Đang cập nhật Database...');
+
+      const payload = {
+
+        name: editFormData.name.trim(),
+
+        code: editFormData.code.trim() || undefined,
+
+        category: editFormData.category,
+
+        roomType: editFormData.room,
+
+        style: editFormData.style,
+
+        price: Number(editFormData.price) || 2000000,
+
+        oldPrice: editFormData.oldPrice ? Number(editFormData.oldPrice) : null,
+
+        priceUnit: '/m²',
+
+        badge: editFormData.badge?.trim() || null,
+
+        image: finalImageUrl,
+
+        colors: editFormData.colors,
+
+        description: editFormData.description?.trim() || ('Mẫu rèm ' + editFormData.name + ' cao cấp cho ' + editFormData.room + '.'),
+
+        fullDescription: editFormData.fullDescription?.trim() || editFormData.description?.trim() || '',
+
+        material: editFormData.material?.trim() || 'Gấm linen jacquard & voan thêu chỉ lụa cao cấp',
+
+        lightBlocking: editFormData.lightBlocking?.trim() || 'Cản sáng 85% - 95%, chống tia cực tím UV 99%',
+
+        fabricWidth: editFormData.fabricWidth?.trim() || '280cm (Hỗ trợ may liền không nối vải cho trần cao đến 3.2m)',
+
+        origin: editFormData.origin?.trim() || 'Nhập khẩu nguyên cây Thổ Nhĩ Kỳ / Bỉ',
+
+        warranty: editFormData.warranty?.trim() || 'Bảo hành 5 năm chính hãng cho ray trượt và phụ kiện',
+
+        rating: Number(editFormData.rating) || 5.0,
+
+        reviews: Number(editFormData.reviews) || 0
+
+      };
+
+
+
+      await adminApi.updateProduct(editingProduct.id, payload);
+
+      setProducts((prev) =>
+
+        prev.map((p) =>
+
+          p.id === editingProduct.id
+
+            ? {
+
+                ...p,
+
+                ...payload,
+
+                basePrice: payload.price,
+
+                roomType: payload.roomType,
+
+                thumbnailUrl: payload.image,
+
+                colors: payload.colors
+
+              }
+
+            : p
+
+        )
+
+      );
+
+      setPendingImageFileEdit(null);
+
+      setPendingImageInfoEdit(null);
+
+      setEditingProduct(null);
+
+    } catch (err) {
+
+      alert('Lỗi khi cập nhật sản phẩm: ' + err.message);
+
+    } finally {
+
+      setSubmitting(false);
+
+      setSubmittingText('');
+
+    }
+
+  };
+
+
+
+  return (
+
+    <div className="admin-tab-content fade-in">
+
+      {/* Header bar */}
+
+      <div className="admin-welcome-bar">
+
+        <div>
+
+          <h2 className="admin-page-heading">Quản Lí Mẫu Rèm & Danh Mục Sản Phẩm</h2>
+
+          <p className="admin-page-sub">
+
+            Quản lý kho thiết kế rèm may đo cao cấp thực tế trong Database ({products.length} sản phẩm).
+
+          </p>
+
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px' }}>
+
+          <button
+
+            type="button"
+
+            className="admin-btn-secondary"
+
+            onClick={fetchProducts}
+
+            disabled={loading}
+
+            title="Làm mới dữ liệu từ Database"
+
+          >
+
+            <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
+
+            <span>Làm mới</span>
+
+          </button>
+
+          <button
+
+            type="button"
+
+            className="btn-admin-primary"
+
+            onClick={() => {
+
+              setPendingImageFileAdd(null);
+
+              setPendingImageInfoAdd(null);
+
+              setShowAddModal(true);
+
+            }}
+
+          >
+
+            <Plus size={16} />
+
+            <span>Thêm thiết kế rèm mới</span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+
+      {/* Error Notice */}
+
+      {error && (
+
+        <div
+
+          className="admin-error-banner"
+
+          style={{
+
+            background: '#fef2f2',
+
+            border: '1px solid #fecaca',
+
+            padding: '12px 16px',
+
+            borderRadius: '10px',
+
+            color: '#b91c1c',
+
+            marginBottom: '20px',
+
+            display: 'flex',
+
+            alignItems: 'center',
+
+            gap: '10px'
+
+          }}
+
+        >
+
+          <AlertCircle size={18} />
+
+          <span>{error}</span>
+
+        </div>
+
+      )}
+
+
+
+      {/* Filter and Search Bar */}
+
+      <div className="admin-filter-bar">
+
+        <div className="admin-search-box">
+
+          <Search size={16} className="search-icon" />
+
+          <input
+
+            type="text"
+
+            placeholder="Tìm theo tên mẫu rèm, mã UVL-..."
+
+            value={searchTerm}
+
+            onChange={(e) => setSearchTerm(e.target.value)}
+
+          />
+
+        </div>
+
+
+
+        {/* Category pills */}
+
+        <div className="admin-filter-pills">
+
+          {categories.map((cat) => (
+
+            <button
+
+              key={cat}
+
+              type="button"
+
+              className={`filter-pill-btn ${categoryFilter === cat ? 'active' : ''}`}
+
+              onClick={() => setCategoryFilter(cat)}
+
+            >
+
+              {cat === 'ALL' ? 'Tất cả loại rèm' : cat}
+
+            </button>
+
+          ))}
+
+        </div>
+
+      </div>
+
+
+
+      {/* Room Category Quick Strip */}
+
+      <div className="admin-room-filter-strip">
+
+        <span className="room-strip-label">
+
+          <Home size={14} />
+
+          <span>Không gian phòng:</span>
+
+        </span>
+
+        <div className="room-strip-btns">
+
+          {rooms.map((rm) => (
+
+            <button
+
+              key={rm}
+
+              type="button"
+
+              className={`room-chip-btn ${roomFilter === rm ? 'active' : ''}`}
+
+              onClick={() => setRoomFilter(rm)}
+
+            >
+
+              {rm === 'ALL' ? 'Tất cả không gian' : rm}
+
+            </button>
+
+          ))}
+
+        </div>
+
+      </div>
+
+
+
+      {/* Products Table with Color Swatches */}
+
+      <div className="admin-card-panel">
+
+        <div className="admin-table-responsive">
+
+          <table className="admin-data-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Sản phẩm rèm</th>
+
+                <th>Mã SKU</th>
+
+                <th>Phân loại & Không gian</th>
+
+                <th>Phong cách</th>
+
+                <th>Bảng màu sắc</th>
+
+                <th>Đơn giá / m²</th>
+
+                <th>Đánh giá</th>
+
+                <th>Huy hiệu</th>
+
+                <th>Thao tác</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {loading ? (
+
+                <tr>
+
+                  <td colSpan="9" style={{ textAlign: 'center', padding: '48px 20px', color: '#64748b' }}>
+
+                    <RefreshCw size={24} className="animate-spin" style={{ margin: '0 auto 8px', display: 'block', color: '#c8a87d' }} />
+
+                    <span>Đang tải danh mục rèm từ cơ sở dữ liệu...</span>
+
+                  </td>
+
+                </tr>
+
+              ) : products.length === 0 ? (
+
+                <tr>
+
+                  <td colSpan="9" style={{ textAlign: 'center', padding: '40px 20px', color: '#94a3b8' }}>
+
+                    Không tìm thấy mẫu rèm phù hợp trong cơ sở dữ liệu.
+
+                  </td>
+
+                </tr>
+
+              ) : (
+
+                products.map((p) => (
+
+                  <tr key={p.id}>
+
+                    <td>
+
+                      <div className="product-table-cell">
+
+                        <img src={p.image} alt={p.name} className="product-table-thumb" />
+
+                        <div className="product-info-cell">
+
+                          <strong>{p.name}</strong>
+
+                          {p.room && <span className="product-room-tag">{p.room}</span>}
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                    <td>
+
+                      <span className="table-code-badge">{p.code}</span>
+
+                    </td>
+
+                    <td>
+
+                      <div className="table-cat-cell">
+
+                        <span className="table-cat-pill">{p.category}</span>
+
+                      </div>
+
+                    </td>
+
+                    <td>
+
+                      <span className="table-style-pill">{p.style}</span>
+
+                    </td>
+
+                    <td>
+
+                      <div className="table-color-swatches" title={`Gồm ${p.colors ? p.colors.length : 0} màu dệt`}>
+
+                        {p.colors && p.colors.map((c, idx) => (
+
+                          <span
+
+                            key={idx}
+
+                            className="swatch-circle"
+
+                            style={{ backgroundColor: c }}
+
+                            title={c}
+
+                          />
+
+                        ))}
+
+                      </div>
+
+                    </td>
+
+                    <td>
+
+                      <div className="table-price-cell">
+
+                        <strong className="table-price">
+
+                          {Number(p.price).toLocaleString('vi-VN')}₫
+
+                        </strong>
+
+                        {p.oldPrice && (
+
+                          <small className="table-old-price">
+
+                            {Number(p.oldPrice).toLocaleString('vi-VN')}₫
+
+                          </small>
+
+                        )}
+
+                      </div>
+
+                    </td>
+
+                    <td>
+
+                      <div className="table-rating-cell">
+
+                        <Star size={13} fill="#f59e0b" color="#f59e0b" />
+
+                        <span>{p.rating}</span>
+
+                        <small>({p.reviews || 0})</small>
+
+                      </div>
+
+                    </td>
+
+                    <td>
+
+                      {p.badge ? (
+
+                        <span className={`table-badge-pill ${p.badge === 'Ưu đãi' ? 'sale' : p.badge === 'Bán chạy' ? 'hot' : 'new'}`}>
+
+                          {p.badge}
+
+                        </span>
+
+                      ) : (
+
+                        <span style={{ color: '#94a3b8', fontSize: '12px' }}>—</span>
+
+                      )}
+
+                    </td>
+
+                    <td>
+
+                      <div className="table-actions-row">
+
+                        <button
+
+                          type="button"
+
+                          className="btn-table-action view"
+
+                          title="Chỉnh sửa mẫu rèm"
+
+                          onClick={() => handleOpenEditModal(p)}
+
+                        >
+
+                          <Edit2 size={14} color="#3b82f6" />
+
+                        </button>
+
+                        <button
+
+                          type="button"
+
+                          className="btn-table-action delete"
+
+                          title="Xóa mẫu thiết kế khỏi Database"
+
+                          onClick={() => handleDeleteProduct(p.id, p.name)}
+
+                        >
+
+                          <Trash2 size={14} />
+
+                        </button>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                ))
+
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+
+      {/* ================= COMPREHENSIVE ADD PRODUCT MODAL ================= */}
+
+      {showAddModal && (
+
+        <div className="modal-backdrop" onClick={() => setShowAddModal(false)}>
+
+          <div
+
+            className="order-detail-modal product-modal-large"
+
+            onClick={(e) => e.stopPropagation()}
+
+          >
+
+            {/* Modal Header */}
+
+            <div className="modal-header">
+
+              <div>
+
+                <span className="modal-sub">THÊM MẪU RÈM VÀO CƠ SỞ DỮ LIỆU</span>
+
+                <h3 className="modal-title">Thêm Mẫu Rèm May Đo Mới</h3>
+
+              </div>
+
+              <button
+
+                type="button"
+
+                className="modal-close-btn"
+
+                onClick={() => setShowAddModal(false)}
+
+              >
+
+                ✕
+
+              </button>
+
+            </div>
+
+
+
+            <form onSubmit={handleAddProduct}>
+
+              <div className="modal-body-scroll" style={{ padding: '24px' }}>
+
+                <div className="add-product-modal-grid">
+
+                  {/* Left Column: Basic Details & Taxonomies */}
+
+                  <div className="modal-form-col">
+
+                    <h4 className="modal-section-title">
+
+                      <Tag size={15} />
+
+                      <span>Thông tin thiết kế</span>
+
+                    </h4>
+
+
+
+                    {/* Product Name */}
+
+                    <div className="modal-form-group">
+
+                      <label>Tên thiết kế rèm <span className="req">*</span></label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Rèm vải nhung hoàng gia Bỉ"
+
+                        value={newProduct.name}
+
+                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+
+                        required
+
+                      />
+
+                    </div>
+
+
+
+                    {/* Product SKU & Badge */}
+
+                    <div className="modal-form-row">
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Mã sản phẩm (SKU)</label>
+
+                        <input
+
+                          type="text"
+
+                          className="modal-input"
+
+                          placeholder="Tự sinh nếu để trống (UVL-...)"
+
+                          value={newProduct.code}
+
+                          onChange={(e) => setNewProduct({ ...newProduct, code: e.target.value })}
+
+                        />
+
+                      </div>
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Huy hiệu (Badge)</label>
+
+                        <select
+
+                          className="modal-select"
+
+                          value={newProduct.badge}
+
+                          onChange={(e) => setNewProduct({ ...newProduct, badge: e.target.value })}
+
+                        >
+
+                          <option value="">Không có</option>
+
+                          <option value="Mới">Mới (New)</option>
+
+                          <option value="Bán chạy">Bán chạy (Best Seller)</option>
+
+                          <option value="Ưu đãi">Ưu đãi (Special Offer)</option>
+
+                          <option value="Đặc sắc">Đặc sắc (Featured)</option>
+
+                          <option value="SmartHome">SmartHome</option>
+
+                        </select>
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* Category & Room */}
+
+                    <div className="modal-form-row">
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Loại rèm <span className="req">*</span></label>
+
+                        <select
+
+                          className="modal-select"
+
+                          value={newProduct.category}
+
+                          onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+
+                        >
+
+                          <option value="Rèm vải">Rèm vải</option>
+
+                          <option value="Rèm voan">Rèm voan</option>
+
+                          <option value="Rèm cuốn">Rèm cuốn</option>
+
+                          <option value="Rèm roman">Rèm roman</option>
+
+                          <option value="Rèm gỗ">Rèm gỗ</option>
+
+                          <option value="Rèm hai lớp">Rèm hai lớp</option>
+
+                        </select>
+
+                      </div>
+
+
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Không gian phòng <span className="req">*</span></label>
+
+                        <select
+
+                          className="modal-select"
+
+                          value={newProduct.room}
+
+                          onChange={(e) => setNewProduct({ ...newProduct, room: e.target.value })}
+
+                        >
+
+                          <option value="Phòng khách">Phòng khách</option>
+
+                          <option value="Phòng ngủ">Phòng ngủ</option>
+
+                          <option value="Phòng ăn">Phòng ăn</option>
+
+                          <option value="Văn phòng">Văn phòng</option>
+
+                          <option value="Ngoài trời">Ngoài trời</option>
+
+                        </select>
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* Style & Measure Unit */}
+
+                    <div className="modal-form-row">
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Phong cách</label>
+
+                        <select
+
+                          className="modal-select"
+
+                          value={newProduct.style}
+
+                          onChange={(e) => setNewProduct({ ...newProduct, style: e.target.value })}
+
+                        >
+
+                          <option value="Hiện đại">Hiện đại</option>
+
+                          <option value="Tối giản">Tối giản</option>
+
+                          <option value="Tân cổ điển">Tân cổ điển</option>
+
+                          <option value="Scandi">Scandi</option>
+
+                          <option value="Luxury">Luxury</option>
+
+                          <option value="Cổ điển">Cổ điển</option>
+
+                        </select>
+
+                      </div>
+
+
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Đơn vị may đo</label>
+
+                        <input
+
+                          type="text"
+
+                          className="modal-input"
+
+                          value="Mét vuông (m²)"
+
+                          disabled
+
+                          style={{ background: '#f5efe4' }}
+
+                        />
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* Pricing */}
+
+                    <div className="modal-form-row">
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Đơn giá may đo / m² (VNĐ) <span className="req">*</span></label>
+
+                        <input
+
+                          type="number"
+
+                          className="modal-input"
+
+                          placeholder="2450000"
+
+                          value={newProduct.price}
+
+                          onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) })}
+
+                          required
+
+                        />
+
+                      </div>
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Giá gốc trước giảm (nếu có)</label>
+
+                        <input
+
+                          type="number"
+
+                          className="modal-input"
+
+                          placeholder="Để trống nếu không giảm"
+
+                          value={newProduct.oldPrice}
+
+                          onChange={(e) => setNewProduct({ ...newProduct, oldPrice: e.target.value })}
+
+                        />
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+
+
+                  {/* Right Column: Colors & Image Picker with Appwrite */}
+
+                  <div className="modal-form-col">
+
+                    {/* Appwrite Image Upload Section */}
+
+                    <div className="modal-image-section">
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+
+                        <h4 className="modal-section-title" style={{ margin: 0 }}>
+
+                          <ImageIcon size={15} />
+
+                          <span>Hình ảnh mẫu rèm</span>
+
+                        </h4>
+
+                        <button
+
+                          type="button"
+
+                          className="appwrite-config-btn"
+
+                          onClick={() => setShowAppwriteConfig(!showAppwriteConfig)}
+
+                        >
+
+                          <Settings size={12} />
+
+                          <span>Cấu hình Appwrite</span>
+
+                        </button>
+
+                      </div>
+
+
+
+                      {/* Appwrite Settings Panel Popup */}
+
+                      {showAppwriteConfig && (
+
+                        <div className="appwrite-config-panel fade-in">
+
+                          <div className="appwrite-config-title">
+
+                            <ShieldCheck size={14} color="#0d9488" />
+
+                            <span>Cấu hình Appwrite Storage (https://appwrite.io)</span>
+
+                          </div>
+
+                          <div className="appwrite-config-row">
+
+                            <label>Appwrite Endpoint</label>
+
+                            <input
+
+                              type="text"
+
+                              value={appwriteConfigState.endpoint}
+
+                              onChange={(e) => setAppwriteConfigState({ ...appwriteConfigState, endpoint: e.target.value })}
+
+                              placeholder="https://fra.cloud.appwrite.io/v1"
+
+                            />
+
+                          </div>
+
+                          <div className="appwrite-config-row">
+
+                            <label>Project ID *</label>
+
+                            <input
+
+                              type="text"
+
+                              value={appwriteConfigState.projectId}
+
+                              onChange={(e) => setAppwriteConfigState({ ...appwriteConfigState, projectId: e.target.value })}
+
+                              placeholder="6ad40aaa003d14874b45"
+
+                            />
+
+                          </div>
+
+                          <div className="appwrite-config-row">
+
+                            <label>Storage Bucket ID *</label>
+
+                            <input
+
+                              type="text"
+
+                              value={appwriteConfigState.bucketId}
+
+                              onChange={(e) => setAppwriteConfigState({ ...appwriteConfigState, bucketId: e.target.value })}
+
+                              placeholder="6ad453e1001ed76927c1"
+
+                            />
+
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '10px' }}>
+
+                            <button
+
+                              type="button"
+
+                              className="btn-modal-close"
+
+                              style={{ padding: '4px 10px', fontSize: '11px' }}
+
+                              onClick={() => setShowAppwriteConfig(false)}
+
+                            >
+
+                              Đóng
+
+                            </button>
+
+                            <button
+
+                              type="button"
+
+                              className="btn-admin-primary"
+
+                              style={{ padding: '4px 12px', fontSize: '11px' }}
+
+                              onClick={handleSaveAppwriteConfig}
+
+                            >
+
+                              Lưu cấu hình
+
+                            </button>
+
+                          </div>
+
+                        </div>
+
+                      )}
+
+
+
+                      {/* Appwrite Drag-and-Drop / File Upload Card */}
+
+                      <input
+
+                        type="file"
+
+                        ref={addFileInputRef}
+
+                        accept="image/*"
+
+                        style={{ display: 'none' }}
+
+                        onChange={(e) => {
+
+                          if (e.target.files && e.target.files[0]) {
+
+                            handleSelectLocalImage(e.target.files[0], false);
+
+                          }
+
+                        }}
+
+                      />
+
+
+
+                      <div
+
+                        className="appwrite-upload-zone"
+
+                        onClick={() => addFileInputRef.current && addFileInputRef.current.click()}
+
+                        onDragOver={(e) => e.preventDefault()}
+
+                        onDrop={(e) => {
+
+                          e.preventDefault();
+
+                          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+
+                            handleSelectLocalImage(e.dataTransfer.files[0], false);
+
+                          }
+
+                        }}
+
+                      >
+
+                        <div className="appwrite-upload-icon-wrap">
+
+                          {pendingImageInfoAdd ? <FileCheck size={20} color="#0d9488" /> : <UploadCloud size={20} />}
+
+                        </div>
+
+                        <div className="appwrite-upload-text">
+
+                          {pendingImageInfoAdd ? `Đã chọn ảnh: ${pendingImageInfoAdd.name}` : 'Chọn ảnh tải lên https://appwrite.io/'}
+
+                        </div>
+
+                        <div className="appwrite-upload-hint">
+
+                          {pendingImageInfoAdd
+
+                            ? `Dung lượng: ${pendingImageInfoAdd.size} — Ảnh sẽ tự động đẩy lên Appwrite Storage khi bạn nhấn "Lưu"`
+
+                            : 'Nhấn vào đây hoặc kéo thả ảnh (Ảnh sẽ tự động đẩy lên Appwrite khi nhấn Lưu)'}
+
+                        </div>
+
+
+
+                        {pendingImageInfoAdd && (
+
+                          <span className="appwrite-status-tag" style={{ background: '#ecfdf5', color: '#047857' }}>
+
+                            <CheckCircle2 size={12} />
+
+                            Đã chuẩn bị tải lên Appwrite Cloud khi Lưu
+
+                          </span>
+
+                        )}
+
+                      </div>
+
+
+
+                      {/* Preview Card */}
+
+                      <div className="image-preview-card">
+
+                        <img
+
+                          src={newProduct.image}
+
+                          alt="Xem trước mẫu rèm"
+
+                          className="preview-img"
+
+                        />
+
+                        <div className="preview-meta">
+
+                          <strong>Ảnh hiển thị catalog</strong>
+
+                          <span title={newProduct.image}>{newProduct.image}</span>
+
+                        </div>
+
+                      </div>
+
+
+
+                      {/* Quick Presets Gallery */}
+
+                      <span className="quick-img-label">Hoặc chọn nhanh ảnh mẫu sẵn:</span>
+
+                      <div className="quick-img-grid">
+
+                        {PRESET_CURTAIN_IMAGES.slice(0, 6).map((imgItem) => (
+
+                          <div
+
+                            key={imgItem.src}
+
+                            className={`img-preset-thumb ${newProduct.image === imgItem.src ? 'selected' : ''}`}
+
+                            onClick={() => {
+
+                              setPendingImageFileAdd(null);
+
+                              setPendingImageInfoAdd(null);
+
+                              setNewProduct({ ...newProduct, image: imgItem.src });
+
+                            }}
+
+                            title={imgItem.label}
+
+                          >
+
+                            <img src={imgItem.src} alt={imgItem.label} />
+
+                            {newProduct.image === imgItem.src && (
+
+                              <span className="thumb-check-badge">
+
+                                <Check size={10} />
+
+                              </span>
+
+                            )}
+
+                          </div>
+
+                        ))}
+
+                      </div>
+
+
+
+                      {/* Custom URL Input */}
+
+                      <div className="custom-url-row" style={{ marginTop: '10px' }}>
+
+                        <input
+
+                          type="text"
+
+                          className="modal-input"
+
+                          placeholder="Hoặc dán link ảnh /assets/... hoặc https://..."
+
+                          value={newProduct.image}
+
+                          onChange={(e) => {
+
+                            setPendingImageFileAdd(null);
+
+                            setPendingImageInfoAdd(null);
+
+                            setNewProduct({ ...newProduct, image: e.target.value });
+
+                          }}
+
+                        />
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* Color Swatch Picker */}
+
+                    <div className="modal-color-section" style={{ marginTop: '16px' }}>
+
+                      <h4 className="modal-section-title">
+
+                        <Palette size={15} />
+
+                        <span>Phân loại màu sắc dệt sẵn</span>
+
+                      </h4>
+
+                      <p className="modal-section-sub">
+
+                        Chọn các màu sắc vải dệt khách hàng có thể chọn:
+
+                      </p>
+
+
+
+                      <div className="palette-picker-grid">
+
+                        {AVAILABLE_COLOR_PALETTES.map((colorItem) => {
+
+                          const isSelected = newProduct.colors.includes(colorItem.hex);
+
+                          return (
+
+                            <button
+
+                              key={colorItem.hex}
+
+                              type="button"
+
+                              className={`color-palette-btn ${isSelected ? 'selected' : ''}`}
+
+                              onClick={() => handleToggleColor(colorItem.hex)}
+
+                              title={`${colorItem.name} (${colorItem.hex})`}
+
+                            >
+
+                              <span
+
+                                className="color-btn-dot"
+
+                                style={{ backgroundColor: colorItem.hex }}
+
+                              >
+
+                                {isSelected && (
+
+                                  <Check
+
+                                    size={12}
+
+                                    color={['#f0dfc8', '#f1ece5', '#e9d8c2'].includes(colorItem.hex) ? '#0f172a' : '#ffffff'}
+
+                                  />
+
+                                )}
+
+                              </span>
+
+                              <span className="color-btn-name">{colorItem.name}</span>
+
+                            </button>
+
+                          );
+
+                        })}
+
+                      </div>
+
+
+
+                      {/* Custom Hex Add */}
+
+                      <div className="custom-hex-row">
+
+                        <input
+
+                          type="text"
+
+                          className="modal-input hex-input"
+
+                          placeholder="Nhập mã #hex khác..."
+
+                          value={customColorHex}
+
+                          onChange={(e) => setCustomColorHex(e.target.value)}
+
+                        />
+
+                        <button
+
+                          type="button"
+
+                          className="btn-add-hex"
+
+                          onClick={handleAddCustomColor}
+
+                        >
+
+                          + Thêm màu
+
+                        </button>
+
+                      </div>
+
+
+
+                      {/* Selected Swatches Preview */}
+
+                      <div className="selected-swatches-box">
+
+                        <span className="selected-label">Màu đã chọn ({newProduct.colors.length}):</span>
+
+                        <div className="selected-dots-row">
+
+                          {newProduct.colors.map((c) => (
+
+                            <span
+
+                              key={c}
+
+                              className="selected-dot-pill"
+
+                              style={{ backgroundColor: c }}
+
+                              title={`Click để bỏ: ${c}`}
+
+                              onClick={() => handleToggleColor(c)}
+
+                            >
+
+                              <X size={10} className="remove-dot-x" />
+
+                            </span>
+
+                          ))}
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+
+                {/* ================= FULL-WIDTH SECTION: MÔ TẢ CHI TIẾT & CẢM HỨNG ================= */}
+
+                <div className="modal-section-full">
+
+                  <h4 className="modal-section-full-title">
+
+                    <Sparkles size={16} color="#c8a87d" />
+
+                    <span>Mô tả chi tiết &amp; Cảm hứng thiết kế</span>
+
+                  </h4>
+
+                  <p className="modal-section-full-sub">
+
+                    Nội dung văn phong nghệ thuật và câu chuyện cảm hứng sẽ hiển thị trang trọng tại tab <strong>"Mô tả chi tiết &amp; Cảm hứng"</strong> của trang sản phẩm.
+
+                  </p>
+
+                  <div className="modal-form-group">
+
+                    <textarea
+
+                      className="modal-input"
+
+                      rows="4"
+
+                      placeholder="Ví dụ: Tuyệt tác rèm vải mang hơi thở Tân cổ điển đương đại... Rèm linen họa tiết tân cổ điển đại diện cho sự giao thoa tinh tế giữa phong cách kiến trúc Tân cổ điển quyến quý và chất sống hiện đại thanh lịch..."
+
+                      value={newProduct.fullDescription}
+
+                      onChange={(e) => setNewProduct({ ...newProduct, fullDescription: e.target.value })}
+
+                    />
+
+                  </div>
+
+                </div>
+
+
+
+                {/* ================= FULL-WIDTH SECTION: THÔNG SỐ KỸ THUẬT ================= */}
+
+                <div className="modal-section-full">
+
+                  <h4 className="modal-section-full-title">
+
+                    <SlidersHorizontal size={16} color="#c8a87d" />
+
+                    <span>Thông số kỹ thuật may đo</span>
+
+                  </h4>
+
+                  <p className="modal-section-full-sub">
+
+                    Các thông số tiêu chuẩn chất liệu được chuẩn hóa và hiển thị tại bảng tra cứu tab <strong>"Thông số kỹ thuật"</strong>.
+
+                  </p>
+
+
+
+                  <div className="specs-grid-inputs">
+
+                    <div className="modal-form-group">
+
+                      <label>Chất liệu vải <span className="req">*</span></label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Gấm linen jacquard & voan thêu chỉ lụa cao cấp"
+
+                        value={newProduct.material}
+
+                        onChange={(e) => setNewProduct({ ...newProduct, material: e.target.value })}
+
+                        required
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="modal-form-group">
+
+                      <label>Khả năng cản sáng <span className="req">*</span></label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Cản sáng 85% - 95%, chống tia cực tím UV 99%"
+
+                        value={newProduct.lightBlocking}
+
+                        onChange={(e) => setNewProduct({ ...newProduct, lightBlocking: e.target.value })}
+
+                        required
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="modal-form-group">
+
+                      <label>Khổ vải may tiêu chuẩn</label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: 280cm (Hỗ trợ may liền không nối vải cho trần cao đến 3.2m)"
+
+                        value={newProduct.fabricWidth}
+
+                        onChange={(e) => setNewProduct({ ...newProduct, fabricWidth: e.target.value })}
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="modal-form-group">
+
+                      <label>Xuất xứ vải &amp; phụ kiện</label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Nhập khẩu nguyên cây Thổ Nhĩ Kỳ / Bỉ"
+
+                        value={newProduct.origin}
+
+                        onChange={(e) => setNewProduct({ ...newProduct, origin: e.target.value })}
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="modal-form-group specs-input-full">
+
+                      <label>Chế độ bảo hành chính hãng</label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Bảo hành 5 năm chính hãng cho ray trượt và phụ kiện"
+
+                        value={newProduct.warranty}
+
+                        onChange={(e) => setNewProduct({ ...newProduct, warranty: e.target.value })}
+
+                      />
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+
+              {/* Modal Footer */}
+
+              <div className="modal-footer">
+
+                <button
+
+                  type="button"
+
+                  className="btn-modal-close"
+
+                  onClick={() => setShowAddModal(false)}
+
+                  disabled={submitting}
+
+                >
+
+                  Hủy bỏ
+
+                </button>
+
+                <button
+
+                  type="submit"
+
+                  className="btn-admin-primary"
+
+                  disabled={submitting}
+
+                >
+
+                  {submitting ? (submittingText || 'Đang lưu vào Database...') : 'Lưu mẫu rèm vào Database'}
+
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      )}
+
+
+
+      {/* ================= COMPREHENSIVE EDIT PRODUCT MODAL ================= */}
+
+      {editingProduct && (
+
+        <div className="modal-backdrop" onClick={() => setEditingProduct(null)}>
+
+          <div
+
+            className="order-detail-modal product-modal-large"
+
+            onClick={(e) => e.stopPropagation()}
+
+          >
+
+            <div className="modal-header">
+
+              <div>
+
+                <span className="modal-sub">CẬP NHẬT THIẾT KẾ RÈM #{editingProduct.id}</span>
+
+                <h3 className="modal-title">Chỉnh Sửa Mẫu Rèm: {editingProduct.name}</h3>
+
+              </div>
+
+              <button
+
+                type="button"
+
+                className="modal-close-btn"
+
+                onClick={() => setEditingProduct(null)}
+
+              >
+
+                ✕
+
+              </button>
+
+            </div>
+
+
+
+            <form onSubmit={handleUpdateProductSubmit}>
+
+              <div className="modal-body-scroll" style={{ padding: '24px' }}>
+
+                <div className="add-product-modal-grid">
+
+                  {/* Left Column: Basic Details & Taxonomies */}
+
+                  <div className="modal-form-col">
+
+                    <h4 className="modal-section-title">
+
+                      <Tag size={15} />
+
+                      <span>Thông tin thiết kế</span>
+
+                    </h4>
+
+
+
+                    {/* Product Name */}
+
+                    <div className="modal-form-group">
+
+                      <label>Tên thiết kế rèm <span className="req">*</span></label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        value={editFormData.name}
+
+                        onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+
+                        required
+
+                      />
+
+                    </div>
+
+
+
+                    {/* SKU & Badge */}
+
+                    <div className="modal-form-row">
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Mã sản phẩm (SKU)</label>
+
+                        <input
+
+                          type="text"
+
+                          className="modal-input"
+
+                          value={editFormData.code}
+
+                          onChange={(e) => setEditFormData({ ...editFormData, code: e.target.value })}
+
+                        />
+
+                      </div>
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Huy hiệu (Badge)</label>
+
+                        <select
+
+                          className="modal-select"
+
+                          value={editFormData.badge}
+
+                          onChange={(e) => setEditFormData({ ...editFormData, badge: e.target.value })}
+
+                        >
+
+                          <option value="">Không gán huy hiệu</option>
+
+                          <option value="Mới">Mới (New)</option>
+
+                          <option value="Bán chạy">Bán chạy (Best Seller)</option>
+
+                          <option value="Ưu đãi">Ưu đãi (Special Offer)</option>
+
+                          <option value="Cao cấp">Cao cấp (Luxury)</option>
+
+                          <option value="Thanh lịch">Thanh lịch (Elegant)</option>
+
+                          <option value="SmartHome">SmartHome (Tự động)</option>
+
+                        </select>
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* Category & Room */}
+
+                    <div className="modal-form-row">
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Chủng loại rèm</label>
+
+                        <select
+
+                          className="modal-select"
+
+                          value={editFormData.category}
+
+                          onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })}
+
+                        >
+
+                          <option value="Rèm vải">Rèm vải (Linen / Gấm / Nhung)</option>
+
+                          <option value="Rèm voan">Rèm voan (Sheer dệt mềm)</option>
+
+                          <option value="Rèm hai lớp">Rèm 2 lớp (Blackout + Voan)</option>
+
+                          <option value="Rèm cuốn">Rèm cuốn (Chống nắng văn phòng)</option>
+
+                          <option value="Rèm roman">Rèm Roman (Xếp lớp hiện đại)</option>
+
+                          <option value="Rèm gỗ">Rèm gỗ (Sồi tự nhiên / Ngoài trời)</option>
+
+                        </select>
+
+                      </div>
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Không gian phù hợp</label>
+
+                        <select
+
+                          className="modal-select"
+
+                          value={editFormData.room}
+
+                          onChange={(e) => setEditFormData({ ...editFormData, room: e.target.value })}
+
+                        >
+
+                          <option value="Phòng khách">Phòng khách</option>
+
+                          <option value="Phòng ngủ">Phòng ngủ</option>
+
+                          <option value="Phòng ăn">Phòng ăn</option>
+
+                          <option value="Văn phòng">Văn phòng</option>
+
+                          <option value="Ngoài trời">Ngoài trời / Ban công</option>
+
+                        </select>
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* Style & Price */}
+
+                    <div className="modal-form-row">
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Phong cách thiết kế</label>
+
+                        <select
+
+                          className="modal-select"
+
+                          value={editFormData.style}
+
+                          onChange={(e) => setEditFormData({ ...editFormData, style: e.target.value })}
+
+                        >
+
+                          <option value="Hiện đại">Hiện đại (Modern)</option>
+
+                          <option value="Tối giản">Tối giản (Minimalist)</option>
+
+                          <option value="Sang trọng">Sang trọng (Luxury)</option>
+
+                          <option value="Cổ điển">Cổ điển (Classic)</option>
+
+                          <option value="Tự nhiên">Tự nhiên (Natural)</option>
+
+                        </select>
+
+                      </div>
+
+                      <div className="modal-form-group" style={{ flex: 1 }}>
+
+                        <label>Giá may đo hoàn thiện (₫/m²) <span className="req">*</span></label>
+
+                        <input
+
+                          type="number"
+
+                          className="modal-input"
+
+                          value={editFormData.price}
+
+                          onChange={(e) => setEditFormData({ ...editFormData, price: e.target.value })}
+
+                          required
+
+                          min="100000"
+
+                          step="10000"
+
+                        />
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* Old Price */}
+
+                    <div className="modal-form-group">
+
+                      <label>Giá niêm yết cũ (nếu có ưu đãi, ₫/m²)</label>
+
+                      <input
+
+                        type="number"
+
+                        className="modal-input"
+
+                        placeholder="Để trống nếu không có ưu đãi"
+
+                        value={editFormData.oldPrice}
+
+                        onChange={(e) => setEditFormData({ ...editFormData, oldPrice: e.target.value })}
+
+                        min="0"
+
+                        step="10000"
+
+                      />
+
+                    </div>
+
+                  </div>
+
+
+
+                  {/* Right Column: Colors & Image with Appwrite */}
+
+                  <div className="modal-form-col">
+
+                    {/* Appwrite Image Upload Section */}
+
+                    <div className="modal-image-section">
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+
+                        <h4 className="modal-section-title" style={{ margin: 0 }}>
+
+                          <ImageIcon size={15} />
+
+                          <span>Hình ảnh đại diện mẫu rèm</span>
+
+                        </h4>
+
+                        <button
+
+                          type="button"
+
+                          className="appwrite-config-btn"
+
+                          onClick={() => setShowAppwriteConfig(!showAppwriteConfig)}
+
+                        >
+
+                          <Settings size={12} />
+
+                          <span>Cấu hình Appwrite</span>
+
+                        </button>
+
+                      </div>
+
+
+
+                      {/* Appwrite Settings Panel Popup */}
+
+                      {showAppwriteConfig && (
+
+                        <div className="appwrite-config-panel fade-in">
+
+                          <div className="appwrite-config-title">
+
+                            <ShieldCheck size={14} color="#0d9488" />
+
+                            <span>Cấu hình Appwrite Storage (https://appwrite.io)</span>
+
+                          </div>
+
+                          <div className="appwrite-config-row">
+
+                            <label>Appwrite Endpoint</label>
+
+                            <input
+
+                              type="text"
+
+                              value={appwriteConfigState.endpoint}
+
+                              onChange={(e) => setAppwriteConfigState({ ...appwriteConfigState, endpoint: e.target.value })}
+
+                              placeholder="https://fra.cloud.appwrite.io/v1"
+
+                            />
+
+                          </div>
+
+                          <div className="appwrite-config-row">
+
+                            <label>Project ID *</label>
+
+                            <input
+
+                              type="text"
+
+                              value={appwriteConfigState.projectId}
+
+                              onChange={(e) => setAppwriteConfigState({ ...appwriteConfigState, projectId: e.target.value })}
+
+                              placeholder="6ad40aaa003d14874b45"
+
+                            />
+
+                          </div>
+
+                          <div className="appwrite-config-row">
+
+                            <label>Storage Bucket ID *</label>
+
+                            <input
+
+                              type="text"
+
+                              value={appwriteConfigState.bucketId}
+
+                              onChange={(e) => setAppwriteConfigState({ ...appwriteConfigState, bucketId: e.target.value })}
+
+                              placeholder="6ad453e1001ed76927c1"
+
+                            />
+
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '10px' }}>
+
+                            <button
+
+                              type="button"
+
+                              className="btn-modal-close"
+
+                              style={{ padding: '4px 10px', fontSize: '11px' }}
+
+                              onClick={() => setShowAppwriteConfig(false)}
+
+                            >
+
+                              Đóng
+
+                            </button>
+
+                            <button
+
+                              type="button"
+
+                              className="btn-admin-primary"
+
+                              style={{ padding: '4px 12px', fontSize: '11px' }}
+
+                              onClick={handleSaveAppwriteConfig}
+
+                            >
+
+                              Lưu cấu hình
+
+                            </button>
+
+                          </div>
+
+                        </div>
+
+                      )}
+
+
+
+                      {/* Appwrite Drag-and-Drop / File Upload Card */}
+
+                      <input
+
+                        type="file"
+
+                        ref={editFileInputRef}
+
+                        accept="image/*"
+
+                        style={{ display: 'none' }}
+
+                        onChange={(e) => {
+
+                          if (e.target.files && e.target.files[0]) {
+
+                            handleSelectLocalImage(e.target.files[0], true);
+
+                          }
+
+                        }}
+
+                      />
+
+
+
+                      <div
+
+                        className="appwrite-upload-zone"
+
+                        onClick={() => editFileInputRef.current && editFileInputRef.current.click()}
+
+                        onDragOver={(e) => e.preventDefault()}
+
+                        onDrop={(e) => {
+
+                          e.preventDefault();
+
+                          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+
+                            handleSelectLocalImage(e.dataTransfer.files[0], true);
+
+                          }
+
+                        }}
+
+                      >
+
+                        <div className="appwrite-upload-icon-wrap">
+
+                          {pendingImageInfoEdit ? <FileCheck size={20} color="#0d9488" /> : <UploadCloud size={20} />}
+
+                        </div>
+
+                        <div className="appwrite-upload-text">
+
+                          {pendingImageInfoEdit ? `Đã chọn ảnh: ${pendingImageInfoEdit.name}` : 'Chọn ảnh tải lên https://appwrite.io/'}
+
+                        </div>
+
+                        <div className="appwrite-upload-hint">
+
+                          {pendingImageInfoEdit
+
+                            ? `Dung lượng: ${pendingImageInfoEdit.size} — Ảnh sẽ tự động đẩy lên Appwrite Storage khi bạn nhấn "Lưu"`
+
+                            : 'Nhấn vào đây hoặc kéo thả ảnh (Ảnh sẽ tự động đẩy lên Appwrite khi nhấn Lưu)'}
+
+                        </div>
+
+
+
+                        {pendingImageInfoEdit && (
+
+                          <span className="appwrite-status-tag" style={{ background: '#ecfdf5', color: '#047857' }}>
+
+                            <CheckCircle2 size={12} />
+
+                            Đã chuẩn bị tải lên Appwrite Cloud khi Lưu
+
+                          </span>
+
+                        )}
+
+                      </div>
+
+
+
+                      {/* Preview Thumb and URL */}
+
+                      <div className="image-preview-card">
+
+                        <img
+
+                          src={editFormData.image}
+
+                          alt="Xem trước ảnh rèm"
+
+                          className="preview-img"
+
+                        />
+
+                        <div className="preview-meta">
+
+                          <strong>Ảnh hiện tại</strong>
+
+                          <span title={editFormData.image}>{editFormData.image}</span>
+
+                        </div>
+
+                      </div>
+
+
+
+                      {/* Quick Presets */}
+
+                      <div className="image-preset-scroll" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '8px', maxHeight: '110px', overflowY: 'auto', marginTop: '10px' }}>
+
+                        {PRESET_CURTAIN_IMAGES.slice(0, 8).map((img) => (
+
+                          <div
+
+                            key={img.src}
+
+                            className={`image-preset-thumb ${editFormData.image === img.src ? 'active' : ''}`}
+
+                            onClick={() => {
+
+                              setPendingImageFileEdit(null);
+
+                              setPendingImageInfoEdit(null);
+
+                              setEditFormData({ ...editFormData, image: img.src });
+
+                            }}
+
+                            style={{ cursor: 'pointer', border: editFormData.image === img.src ? '2px solid #c8a87d' : '1px solid #e2e8f0', borderRadius: '6px', overflow: 'hidden' }}
+
+                          >
+
+                            <img src={img.src} alt={img.label} style={{ width: '100%', height: '44px', objectFit: 'cover' }} />
+
+                            <span style={{ fontSize: '10px', display: 'block', textAlign: 'center', padding: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{img.label}</span>
+
+                          </div>
+
+                        ))}
+
+                      </div>
+
+
+
+                      <div className="modal-form-group" style={{ marginTop: '10px' }}>
+
+                        <label>Đường dẫn ảnh tùy chỉnh:</label>
+
+                        <input
+
+                          type="text"
+
+                          className="modal-input"
+
+                          value={editFormData.image}
+
+                          onChange={(e) => {
+
+                            setPendingImageFileEdit(null);
+
+                            setPendingImageInfoEdit(null);
+
+                            setEditFormData({ ...editFormData, image: e.target.value });
+
+                          }}
+
+                        />
+
+                      </div>
+
+                    </div>
+
+
+
+                    {/* Color Swatches */}
+
+                    <div className="modal-color-section" style={{ marginTop: '16px' }}>
+
+                      <h4 className="modal-section-title">
+
+                        <Palette size={15} />
+
+                        <span>Bảng màu sắc mẫu vải ({editFormData.colors.length} màu đã chọn)</span>
+
+                      </h4>
+
+                      <p style={{ fontSize: '11.5px', color: '#64748b', margin: '-4px 0 8px 0' }}>
+
+                        Nhấp vào ô màu để chọn hoặc bỏ chọn phân loại màu sắc cho mẫu rèm:
+
+                      </p>
+
+
+
+                      <div className="palette-picker-grid">
+
+                        {AVAILABLE_COLOR_PALETTES.map((colorItem) => {
+
+                          const isSelected = editFormData.colors.includes(colorItem.hex);
+
+                          return (
+
+                            <button
+
+                              key={colorItem.hex}
+
+                              type="button"
+
+                              className={`color-palette-btn ${isSelected ? 'selected' : ''}`}
+
+                              onClick={() => {
+
+                                if (isSelected) {
+
+                                  if (editFormData.colors.length > 1) {
+
+                                    setEditFormData({
+
+                                      ...editFormData,
+
+                                      colors: editFormData.colors.filter((c) => c !== colorItem.hex)
+
+                                    });
+
+                                  }
+
+                                } else {
+
+                                  setEditFormData({
+
+                                    ...editFormData,
+
+                                    colors: [...editFormData.colors, colorItem.hex]
+
+                                  });
+
+                                }
+
+                              }}
+
+                            >
+
+                              <span className="color-btn-dot" style={{ backgroundColor: colorItem.hex }}>
+
+                                {isSelected && (
+
+                                  <Check
+
+                                    size={12}
+
+                                    color={['#f0dfc8', '#f1ece5', '#e9d8c2', '#ffffff'].includes(colorItem.hex) ? '#0f172a' : '#ffffff'}
+
+                                  />
+
+                                )}
+
+                              </span>
+
+                              <span className="color-btn-name">{colorItem.name}</span>
+
+                            </button>
+
+                          );
+
+                        })}
+
+                      </div>
+
+
+
+                      {/* Selected Swatches Preview */}
+
+                      <div className="selected-swatches-box" style={{ marginTop: '12px' }}>
+
+                        <span className="selected-label">Màu đang chọn ({editFormData.colors.length}):</span>
+
+                        <div className="selected-dots-row">
+
+                          {editFormData.colors.map((c) => (
+
+                            <span
+
+                              key={c}
+
+                              className="selected-dot-pill"
+
+                              style={{ backgroundColor: c }}
+
+                              title={c}
+
+                            />
+
+                          ))}
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+
+                {/* ================= FULL-WIDTH SECTION: MÔ TẢ CHI TIẾT & CẢM HỨNG ================= */}
+
+                <div className="modal-section-full">
+
+                  <h4 className="modal-section-full-title">
+
+                    <Sparkles size={16} color="#c8a87d" />
+
+                    <span>Mô tả chi tiết &amp; Cảm hứng thiết kế</span>
+
+                  </h4>
+
+                  <p className="modal-section-full-sub">
+
+                    Nội dung này hiển thị tại tab <strong>"Mô tả chi tiết &amp; Cảm hứng"</strong> của khách hàng.
+
+                  </p>
+
+                  <div className="modal-form-group">
+
+                    <textarea
+
+                      className="modal-input"
+
+                      rows="4"
+
+                      placeholder="Giới thiệu chi tiết về nguồn cảm hứng thiết kế, chất liệu vải, độ rủ sóng..."
+
+                      value={editFormData.fullDescription}
+
+                      onChange={(e) => setEditFormData({ ...editFormData, fullDescription: e.target.value })}
+
+                    />
+
+                  </div>
+
+                </div>
+
+
+
+                {/* ================= FULL-WIDTH SECTION: THÔNG SỐ KỸ THUẬT ================= */}
+
+                <div className="modal-section-full">
+
+                  <h4 className="modal-section-full-title">
+
+                    <SlidersHorizontal size={16} color="#c8a87d" />
+
+                    <span>Thông số kỹ thuật may đo</span>
+
+                  </h4>
+
+                  <p className="modal-section-full-sub">
+
+                    Hiển thị tại bảng kỹ thuật chuẩn hóa ở tab <strong>"Thông số kỹ thuật"</strong>.
+
+                  </p>
+
+
+
+                  <div className="specs-grid-inputs">
+
+                    <div className="modal-form-group">
+
+                      <label>Chất liệu vải <span className="req">*</span></label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Gấm linen jacquard & voan thêu chỉ lụa cao cấp"
+
+                        value={editFormData.material}
+
+                        onChange={(e) => setEditFormData({ ...editFormData, material: e.target.value })}
+
+                        required
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="modal-form-group">
+
+                      <label>Khả năng cản sáng <span className="req">*</span></label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Cản sáng 85% - 95%, chống tia cực tím UV 99%"
+
+                        value={editFormData.lightBlocking}
+
+                        onChange={(e) => setEditFormData({ ...editFormData, lightBlocking: e.target.value })}
+
+                        required
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="modal-form-group">
+
+                      <label>Khổ vải may tiêu chuẩn</label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: 280cm (Hỗ trợ may liền không nối vải cho trần cao đến 3.2m)"
+
+                        value={editFormData.fabricWidth}
+
+                        onChange={(e) => setEditFormData({ ...editFormData, fabricWidth: e.target.value })}
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="modal-form-group">
+
+                      <label>Xuất xứ vải &amp; phụ kiện</label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Nhập khẩu nguyên cây Thổ Nhĩ Kỳ / Bỉ"
+
+                        value={editFormData.origin}
+
+                        onChange={(e) => setEditFormData({ ...editFormData, origin: e.target.value })}
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="modal-form-group specs-input-full">
+
+                      <label>Chế độ bảo hành chính hãng</label>
+
+                      <input
+
+                        type="text"
+
+                        className="modal-input"
+
+                        placeholder="Ví dụ: Bảo hành 5 năm chính hãng cho ray trượt và phụ kiện"
+
+                        value={editFormData.warranty}
+
+                        onChange={(e) => setEditFormData({ ...editFormData, warranty: e.target.value })}
+
+                      />
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+
+              {/* Modal Footer */}
+
+              <div className="modal-footer">
+
+                <button
+
+                  type="button"
+
+                  className="btn-modal-close"
+
+                  onClick={() => setEditingProduct(null)}
+
+                  disabled={submitting}
+
+                >
+
+                  Hủy bỏ
+
+                </button>
+
+                <button
+
+                  type="submit"
+
+                  className="btn-admin-primary"
+
+                  disabled={submitting}
+
+                >
+
+                  {submitting ? (submittingText || 'Đang cập nhật Database...') : 'Lưu thay đổi vào Database'}
+
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      )}
+
+    </div>
+
+  );
+
+}
