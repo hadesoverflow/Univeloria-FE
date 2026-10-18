@@ -17,6 +17,7 @@ import { CustomerPage } from './pages/customer/CustomerPage';
 import { AdminPage } from './pages/admin/AdminPage';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { customerApi } from './api/customerApi';
+import { apiClient } from './api/apiClient';
 import { storageService } from './services/storageService';
 
 const VALID_ADMIN_TABS = ['dashboard', 'users', 'orders', 'products', 'reviews', 'consultations', 'feedbacks'];
@@ -203,8 +204,7 @@ export default function App() {
 
   // Fetch real product catalog from Database
   const fetchProductsCatalog = () => {
-    fetch('/api/Products')
-      .then((res) => res.json())
+    apiClient('/api/Products')
       .then((res) => {
         if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
           const categoryMap = {
@@ -356,19 +356,17 @@ export default function App() {
     setContactErrors(next);
     if (Object.keys(next).length === 0) {
       // POST real consultation to backend SQL Server DB
-      fetch('/api/Consultations', {
+      apiClient('/api/Consultations', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        data: {
           fullName: contactForm.name.trim(),
           phoneNumber: contactForm.phone.trim(),
           email: contactForm.email.trim() || null,
           serviceType: contactForm.need || 'Tư vấn chọn rèm',
           roomType: contactForm.space || null,
           note: `Ngân sách: ${contactForm.budget || 'Chưa chọn'} | Ghi chú: ${contactForm.message || 'Không có'}`
-        })
+        }
       })
-      .then((res) => res.json())
       .catch((err) => console.error('Lỗi khi gửi yêu cầu tư vấn:', err))
       .finally(() => {
         setContactSubmitted(true);

@@ -27,6 +27,7 @@ import {
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../hooks/useAuth';
 import { customerApi } from '../../api/customerApi';
+import { apiClient } from '../../api/apiClient';
 
 export function CartDrawer({ navigateTo }) {
   const {
@@ -280,10 +281,9 @@ export function CartDrawer({ navigateTo }) {
       // If guest and API failed, also record consultation inquiry
       if (!createdOrder) {
         try {
-          await fetch('/api/Consultations', {
+          await apiClient('/api/Consultations', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+            data: {
               fullName: customerName,
               phoneNumber: customerPhone,
               email: user?.email || null,
@@ -291,7 +291,7 @@ export function CartDrawer({ navigateTo }) {
               preferredShowroom: 'Khảo sát đo đạc tận nơi',
               roomType: cartItems[0]?.room || 'Phòng khách',
               note: `Địa chỉ: ${customerAddress}. Chi tiết giỏ hàng: ${productNames}. Mức PayOS: ${tierStr} (Ship: ${fee === 0 ? 'Free Ship 0₫' : '50.000₫'}). ${customerNotes}`
-            })
+            }
           });
         } catch (inquiryErr) {
           console.warn('Lỗi ghi nhận lịch hẹn:', inquiryErr);

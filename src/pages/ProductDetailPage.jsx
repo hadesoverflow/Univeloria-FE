@@ -24,6 +24,7 @@ import { formatProductPrice } from '../utils/formatters';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { reviewApi } from '../api/reviewApi';
+import { apiClient } from '../api/apiClient';
 
 export function ProductDetailPage({
   productId,
@@ -98,8 +99,7 @@ export function ProductDetailPage({
   useEffect(() => {
     if (!productId) return;
     let isMounted = true;
-    fetch(`/api/Products/${productId}`)
-      .then((res) => res.json())
+    apiClient(`/api/Products/${productId}`)
       .then((res) => {
         if (!isMounted) return;
         if (res && res.success && res.data) {
