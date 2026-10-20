@@ -45,27 +45,7 @@ export function LoginPage({ navigateTo }) {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  // Quick autofill demo accounts
-  const fillDemoAccount = (role) => {
-    setErrorMsg('');
-    setSuccessMsg('');
-    setTab('login');
-    if (role === 'admin') {
-      setLoginInput({
-        emailOrPhone: 'admin@univeloria.com',
-        password: 'Admin@123',
-        rememberMe: true,
-      });
-    } else {
-      setLoginInput({
-        emailOrPhone: 'customer@univeloria.com',
-        password: 'Customer@123',
-        rememberMe: true,
-      });
-    }
-  };
-
-  const handleLoginSubmit = async (e) => {
+const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -333,27 +313,6 @@ export function LoginPage({ navigateTo }) {
                     <span className="smart-divider-line" />
                     <span className="smart-divider-text">hoặc đăng nhập bằng email</span>
                     <span className="smart-divider-line" />
-                  </div>
-
-                  {/* Nút chọn nhanh tài khoản thử nghiệm */}
-                  <div className="smart-quick-demo">
-                    <span className="demo-label">Tài khoản thử nghiệm:</span>
-                    <button
-                      type="button"
-                      className="demo-pill admin-pill"
-                      onClick={() => fillDemoAccount('admin')}
-                      title="Email: admin@univeloria.com | Mật khẩu: Admin@123"
-                    >
-                      👑 Quản trị viên
-                    </button>
-                    <button
-                      type="button"
-                      className="demo-pill customer-pill"
-                      onClick={() => fillDemoAccount('customer')}
-                      title="Email: customer@univeloria.com | Mật khẩu: Customer@123"
-                    >
-                      💎 Khách hàng
-                    </button>
                   </div>
 
                   {/* Thông báo lỗi / thành công */}

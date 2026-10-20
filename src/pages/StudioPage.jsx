@@ -4,7 +4,7 @@ import { UnifiedFooter } from '../components/layout/UnifiedFooter';
 import { StudioIcon } from '../components/ui/Icons';
 import { curtainTypes, studioStyleFilters } from '../data/studioData';
 import { RoomCurtain3DViewer } from '../components/studio/RoomCurtain3DViewer';
-import { analyzeRoomPhoto } from '../utils/aiRoomAnalyzer';
+import { analyzeRoomPhoto, determineCurtainRecommendations } from '../utils/aiRoomAnalyzer';
 import { 
   Eye, 
   Sparkles, 
@@ -28,7 +28,16 @@ import {
   ChevronLeft,
   ChevronRight,
   ZoomIn,
-  ZoomOut
+  ZoomOut,
+  Camera,
+  Upload,
+  Home,
+  Check,
+  X,
+  Scan,
+  Compass,
+  Zap,
+  FastForward
 } from 'lucide-react';
 
 export function StudioPage({
@@ -77,8 +86,47 @@ export function StudioPage({
   const [curtainPage, setCurtainPage] = useState(1);
   const [mobileActiveTab, setMobileActiveTab] = useState('preview'); // 'preview' | 'curtains' | 'upload'
 
+  // Dedicated file input refs for Camera vs Gallery
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
+
+  // Questionnaire Survey & AI Scanner State
+  const [surveyModalOpen, setSurveyModalOpen] = useState(false);
+  const [pendingImage, setPendingImage] = useState(null);
+  const [surveyAnswers, setSurveyAnswers] = useState({
+    location: 'indoor', // 'indoor' | 'outdoor'
+    doorType: 'window',  // 'window' | 'main'
+    windowPanels: 'single' // 'single' | '3' | '4'
+  });
+  const [isScanning, setIsScanning] = useState(false);
+  const scanTimerRef = useRef(null);
+  const scanIntervalRef = useRef(null);
+  const [scanPhaseIndex, setScanPhaseIndex] = useState(0);
+
+  const SCAN_PHASES = [
+    'Đang tải dữ liệu ảnh phòng & cân chỉnh chất lượng quang học...',
+    'Đang quét cấu trúc khung cửa và nhận diện tọa độ không gian 3D...',
+    'Phân tích cường độ ánh sáng tự nhiên và bảng màu căn phòng...',
+    'Mô phỏng phối cảnh và đo đạc tỷ lệ chuẩn...',
+    'Hoàn tất nhận diện! Đang áp dụng các mẫu rèm tối ưu...'
+  ];
+
+  // Prioritize and filter curtain types based on AI Diagnosis
   const filteredCurtainTypes = useMemo(() => {
-    return curtainTypes.filter((t) => {
+    let list = [...curtainTypes];
+
+    // If an AI diagnosis exists with recommended IDs, sort them to the top
+    if (aiDiagnosis?.recommendedTypeIds?.length) {
+      list.sort((a, b) => {
+        const aRec = aiDiagnosis.recommendedTypeIds.includes(a.id);
+        const bRec = aiDiagnosis.recommendedTypeIds.includes(b.id);
+        if (aRec && !bRec) return -1;
+        if (!aRec && bRec) return 1;
+        return 0;
+      });
+    }
+
+    return list.filter((t) => {
       if (activeStudioFilter === 'Tất cả') return true;
       if (activeStudioFilter === 'Rèm Cuốn') return t.isRollerLinen || t.id === 'roller-linen';
       if (activeStudioFilter === 'Rèm Roman') return t.isRoman;
@@ -89,7 +137,7 @@ export function StudioPage({
       if (activeStudioFilter === 'Khách sạn 5 Sao') return t.id === 'sfold-luxury' || t.id === 'leaf-embroidery';
       return true;
     });
-  }, [activeStudioFilter]);
+  }, [activeStudioFilter, aiDiagnosis]);
 
   const totalCurtainPages = Math.max(1, Math.ceil(filteredCurtainTypes.length / ITEMS_PER_PAGE));
 
@@ -115,70 +163,104 @@ export function StudioPage({
     setIsCurtainOpen(false);
   }, [activeType]);
 
-  // Automatically reset curtain to 0% (closed) whenever switching to another curtain model
-  useEffect(() => {
-    setCurtainOpenRatio(0.0);
-    setIsCurtainOpen(false);
-  }, [activeType]);
-
   const handleToggleCurtainOpen = () => {
     const next = !isCurtainOpen;
     setIsCurtainOpen(next);
     setCurtainOpenRatio(next ? 1.0 : 0.0);
   };
 
-  // Trigger AI Room Analysis whenever roomImage changes or when user triggers it
-  const runAiAnalysis = async (imgUrl) => {
-    setInternalAnalyzing(true);
-    setAnalyzed(false);
-
-    try {
-      const result = await analyzeRoomPhoto(imgUrl || roomImage);
-      if (result) {
-        setAiDiagnosis(result);
-
-        // Auto-select the AI recommended curtain type & color
-        const foundType = curtainTypes.find((t) => t.id === result.recommendedTypeId);
-        if (foundType) {
-          chooseType(foundType);
-          setStudioColor(result.recommendedColor);
-        }
-      }
-    } catch (err) {
-      console.error('Error during AI room analysis:', err);
-    } finally {
-      setTimeout(() => {
-        setInternalAnalyzing(false);
-        setAnalyzed(true);
-      }, 900);
-    }
-  };
-
-  // Handler for file upload with auto AI analysis
-  const handleFileUpload = (file) => {
+  // Trigger file selection -> open questionnaire survey
+  const handlePhotoSelected = (file) => {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
-      const newImg = e.target?.result;
-      setRoomImage(newImg);
-      setHasUploaded(true);
-      setShowOriginal(false);
-      setShowAdjuster(true); // Mở thanh căn chỉnh rèm để người dùng dễ dàng dời rèm khớp cửa sổ
-      setMobileActiveTab('preview');
-      // Run AI analysis immediately on uploaded room photo
-      runAiAnalysis(newImg);
+      const dataUrl = e.target?.result;
+      setPendingImage(dataUrl);
+      setSurveyModalOpen(true);
+      setIsScanning(false);
     };
     reader.readAsDataURL(file);
   };
 
-  // Run initial analysis if not analyzed yet
+  // Open survey for preset images or re-analysis
+  const handleOpenSurveyForPreset = (imgSrc) => {
+    setPendingImage(imgSrc);
+    setSurveyModalOpen(true);
+    setIsScanning(false);
+  };
+
+  // Start AI Scanning (runs for 20s without displaying countdown numbers)
+  const handleStartScan = () => {
+    setIsScanning(true);
+    setScanPhaseIndex(0);
+    if (scanTimerRef.current) clearTimeout(scanTimerRef.current);
+    if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
+
+    // Update dynamic phase every 4 seconds (5 phases * 4s = 20s)
+    let phase = 0;
+    scanIntervalRef.current = setInterval(() => {
+      phase += 1;
+      if (phase < SCAN_PHASES.length) {
+        setScanPhaseIndex(phase);
+      }
+    }, 4000);
+
+    // Complete after exactly 20 seconds (20,000ms)
+    scanTimerRef.current = setTimeout(() => {
+      if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
+      finishScanAndApplyRecommendations();
+    }, 20000);
+  };
+
+  const finishScanAndApplyRecommendations = () => {
+    if (scanTimerRef.current) clearTimeout(scanTimerRef.current);
+    if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
+
+    // Calculate AI recommendations based on user's answers
+    const diagnosis = determineCurtainRecommendations(surveyAnswers);
+    setAiDiagnosis(diagnosis);
+
+    const imageToUse = pendingImage || roomImage;
+    setRoomImage(imageToUse);
+    setHasUploaded(true);
+    setShowOriginal(false);
+    setShowAdjuster(true);
+    setAnalyzed(true);
+    setIsScanning(false);
+    setSurveyModalOpen(false);
+    setMobileActiveTab('preview');
+
+    // Automatically choose primary recommended curtain type & color
+    const primaryType = curtainTypes.find((t) => t.id === diagnosis.primaryTypeId);
+    if (primaryType) {
+      chooseType(primaryType);
+      if (diagnosis.primaryColor) {
+        setStudioColor(diagnosis.primaryColor);
+      }
+    }
+  };
+
+  // Clean up timer on unmount
   useEffect(() => {
-    if (!aiDiagnosis && roomImage) {
-      runAiAnalysis(roomImage);
+    return () => {
+      if (scanTimerRef.current) clearTimeout(scanTimerRef.current);
+      if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
+    };
+  }, []);
+
+  // Run initial default analysis on mount if none exists
+  useEffect(() => {
+    if (!aiDiagnosis) {
+      const initialDiagnosis = determineCurtainRecommendations({
+        doorType: 'window',
+        location: 'indoor',
+        windowPanels: 'single'
+      });
+      setAiDiagnosis(initialDiagnosis);
     }
   }, []);
 
-  const analyzingState = isAnalyzing || internalAnalyzing;
+  const analyzingState = isAnalyzing || internalAnalyzing || isScanning;
 
   return (
     <div className="studio-page">
@@ -192,14 +274,14 @@ export function StudioPage({
         <div className="studio-intro-copy">
           <div className="kicker">AI 3D STUDIO <span /></div>
           <h1>Trải nghiệm phòng 3D<br/>tương tác thời gian thực<br/><em>AI Studio Siêu Thực</em></h1>
-          <p>Tải lên ảnh căn phòng của bạn, AI sẽ phân tích không gian và trực tiếp ướm rèm 3D vào khung cửa với mô phỏng ánh sáng, gió và chuyển động chân thực.</p>
+          <p>Tải lên ảnh căn phòng của bạn. AI sẽ khảo sát khung cửa, nhận diện thông minh và trực tiếp ướm rèm 3D vào khung cửa với mô phỏng ánh sáng, gió và chuyển động chân thực.</p>
         </div>
         <div className="stepper" aria-label="Quy trình 4 bước">
           {[
             ['image', '1', 'Tải ảnh phòng'],
-            ['sparkle', '2', 'AI Phân tích'],
+            ['sparkle', '2', 'AI Nhận diện'],
             ['cube', '3', 'Không gian 3D'],
-            ['grid', '4', 'Căn chỉnh rèm'],
+            ['grid', '4', 'Cân chỉnh rèm'],
           ].map(([icon, n, label], i) => (
             <React.Fragment key={n}>
               <div className={'step ' + (analyzed ? 'step-done' : i === 0 ? 'step-active' : '')}>
@@ -233,7 +315,7 @@ export function StudioPage({
           onClick={() => setMobileActiveTab('curtains')}
         >
           <Layers size={16} />
-          <span>Mẫu rèm ({curtainTypes?.length || 8})</span>
+          <span>Mẫu rèm ({curtainTypes?.length || 11})</span>
         </button>
         <button
           type="button"
@@ -263,7 +345,8 @@ export function StudioPage({
                   setRoomImage('/assets/studio-room.png');
                   setHasUploaded(false);
                   setAnalyzed(false);
-                  runAiAnalysis('/assets/studio-room.png');
+                  const resetDiag = determineCurtainRecommendations({ doorType: 'window', location: 'indoor', windowPanels: 'single' });
+                  setAiDiagnosis(resetDiag);
                 }}
                 aria-label="Đặt lại ảnh"
                 title="Khôi phục ảnh mẫu"
@@ -272,13 +355,13 @@ export function StudioPage({
               </button>
             )}
           </div>
-          <p className="panel-description">Chụp hoặc tải ảnh căn phòng của bạn. AI sẽ phân tích tone màu & ánh sáng để đề xuất rèm và tạo không gian 3D.</p>
+          <p className="panel-description">Chụp bằng điện thoại hoặc tải ảnh phòng lên. AI sẽ khảo sát loại cửa, vị trí để gợi ý các mẫu rèm chuẩn xác.</p>
 
           <div
             className={'dropzone ' + (dragging ? 'dragging' : '')}
             onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
             onDragLeave={() => setDragging(false)}
-            onDrop={(e) => { e.preventDefault(); setDragging(false); handleFileUpload(e.dataTransfer.files?.[0]); }}
+            onDrop={(e) => { e.preventDefault(); setDragging(false); handlePhotoSelected(e.dataTransfer.files?.[0]); }}
           >
             <span className="upload-illustration"><StudioIcon name="image" size={34} /><i>+</i></span>
             <strong>Kéo thả ảnh phòng vào đây</strong>
@@ -286,35 +369,47 @@ export function StudioPage({
             <div className="upload-actions">
               <button
                 className="button button-dark"
+                type="button"
                 onClick={() => {
-                  if (fileRef.current) {
-                    fileRef.current.setAttribute('capture', 'environment');
-                    fileRef.current.click();
+                  if (cameraInputRef.current) {
+                    cameraInputRef.current.click();
                   }
                 }}
               >
-                <StudioIcon name="camera" size={17} /> Chụp ảnh
+                <Camera size={17} /> Chụp ảnh
               </button>
               <button
                 className="button button-light"
+                type="button"
                 onClick={() => {
-                  if (fileRef.current) {
-                    fileRef.current.removeAttribute('capture');
-                    fileRef.current.click();
+                  if (galleryInputRef.current) {
+                    galleryInputRef.current.click();
                   }
                 }}
               >
-                <StudioIcon name="upload" size={17} /> Tải ảnh lên
+                <Upload size={17} /> Tải ảnh lên
               </button>
+
+              {/* Mobile Camera direct capture input */}
               <input
-                ref={fileRef}
+                ref={cameraInputRef}
                 className="hidden-input"
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileUpload(e.target.files?.[0])}
+                capture="environment"
+                onChange={(e) => handlePhotoSelected(e.target.files?.[0])}
+              />
+
+              {/* Gallery / File picker input */}
+              <input
+                ref={galleryInputRef}
+                className="hidden-input"
+                type="file"
+                accept="image/*"
+                onChange={(e) => handlePhotoSelected(e.target.files?.[0])}
               />
             </div>
-            <small>Hỗ trợ JPG, PNG, WEBP · AI xử lý tức thì</small>
+            <small>Hỗ trợ JPG, PNG, WEBP · Khảo sát & AI nhận diện</small>
           </div>
 
           <div className="tips-title" style={{ marginTop: '14px', marginBottom: '8px', fontSize: '11px', fontWeight: 600, color: 'var(--text-muted, #8c827a)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -323,59 +418,112 @@ export function StudioPage({
           <div className="tips-grid">
             <div 
               style={{ cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-              onClick={() => { setRoomImage('/assets/living-room.jpg'); setHasUploaded(true); setMobileActiveTab('preview'); runAiAnalysis('/assets/living-room.jpg'); }}
-              title="Click để ướm thử phòng khách vào tường 3D"
+              onClick={() => handleOpenSurveyForPreset('/assets/living-room.jpg')}
+              title="Khảo sát & nhận diện phòng khách"
             >
               <img src="/assets/tip-window.jpg" alt="Phòng khách" />
               <span><i><StudioIcon name="check" size={11} /></i>Phòng khách</span>
             </div>
             <div 
               style={{ cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-              onClick={() => { setRoomImage('/assets/bedroom.jpg'); setHasUploaded(true); setMobileActiveTab('preview'); runAiAnalysis('/assets/bedroom.jpg'); }}
-              title="Click để ướm thử phòng ngủ vào tường 3D"
+              onClick={() => handleOpenSurveyForPreset('/assets/bedroom.jpg')}
+              title="Khảo sát & nhận diện phòng ngủ"
             >
               <img src="/assets/tip-light.jpg" alt="Phòng ngủ" />
               <span><i><StudioIcon name="check" size={11} /></i>Phòng ngủ</span>
             </div>
             <div 
               style={{ cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-              onClick={() => { setRoomImage('/assets/studio-room.png'); setHasUploaded(true); setMobileActiveTab('preview'); runAiAnalysis('/assets/studio-room.png'); }}
-              title="Click để ướm thử studio mẫu vào tường 3D"
+              onClick={() => handleOpenSurveyForPreset('/assets/studio-room.png')}
+              title="Khảo sát & nhận diện studio mẫu"
             >
               <img src="/assets/tip-angle.jpg" alt="Studio tối giản" />
               <span><i><StudioIcon name="check" size={11} /></i>Studio mẫu</span>
             </div>
           </div>
 
-          <button
-            className="analyze-button"
-            onClick={() => runAiAnalysis(roomImage)}
-            disabled={analyzingState}
-          >
-            {analyzingState ? (
-              <><span className="spinner" /> AI đang phân tích không gian...</>
-            ) : (
-              <><StudioIcon name="sparkle" size={17} /> {analyzed ? 'Phân tích lại ảnh' : 'AI Phân tích & Gợi ý rèm'} <StudioIcon name="arrow" size={17} /></>
-            )}
-          </button>
+          
 
-          {analyzed && aiDiagnosis && (
+          {aiDiagnosis && (
             <div className="analysis-summary-box">
-              <div className="summary-badge">
-                <Sparkles size={14} color="#d4a373" />
-                <span>AI ĐÃ PHÂN TÍCH XONG</span>
+              <div className="summary-badge" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Sparkles size={14} color="#d4a373" />
+                  <span>AI ĐÃ PHÂN TÍCH XONG</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPendingImage(roomImage);
+                    setSurveyModalOpen(true);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '11px',
+                    color: '#8b6b3e',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                  title="Thay đổi lựa chọn khảo sát"
+                >
+                  <Sliders size={12} />
+                  <span>Khảo sát lại</span>
+                </button>
               </div>
+              
               <div className="summary-item">
-                <span className="lbl">Phong cách:</span>
-                <strong>{aiDiagnosis.style}</strong>
+                <span className="lbl">Không gian:</span>
+                <strong>{aiDiagnosis.spaceTypeLabel || 'Trong nhà'}</strong>
               </div>
+
               <div className="summary-item">
-                <span className="lbl">Tông màu phòng:</span>
-                <strong>{aiDiagnosis.wallTone}</strong>
+                <span className="lbl">Loại cửa:</span>
+                <strong>{aiDiagnosis.doorTypeLabel || 'Cửa sổ đơn'}</strong>
               </div>
+
               <div className="summary-item">
-                <span className="lbl">Ánh sáng:</span>
-                <strong>{aiDiagnosis.lightCondition}</strong>
+                <span className="lbl">Đề xuất:</span>
+                <span style={{ fontSize: '11px', color: '#8b6b3e', fontWeight: 600 }}>{aiDiagnosis.caseTitle}</span>
+              </div>
+
+              <div className="recommended-chips-wrapper" style={{ marginTop: '8px' }}>
+                <span className="lbl" style={{ display: 'block', fontSize: '10.5px', marginBottom: '4px' }}>Các mẫu rèm AI gợi ý:</span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {aiDiagnosis.recommendedTypeIds?.map((recId) => {
+                    const found = curtainTypes.find(c => c.id === recId);
+                    if (!found) return null;
+                    const isActive = activeType === found.id;
+                    return (
+                      <button
+                        key={recId}
+                        type="button"
+                        onClick={() => {
+                          chooseType(found);
+                          setMobileActiveTab('preview');
+                        }}
+                        style={{
+                          fontSize: '10.5px',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          border: isActive ? '1px solid #8b6b3e' : '1px solid #d4c7b8',
+                          background: isActive ? '#f4ece1' : '#ffffff',
+                          color: isActive ? '#653d12' : '#334155',
+                          fontWeight: isActive ? 700 : 500,
+                          cursor: 'pointer'
+                        }}
+                        title="Click để áp dụng mẫu rèm này vào phòng 3D"
+                      >
+                        {found.name.split(' ')[0]} {found.name.split(' ')[1] || ''}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
@@ -391,102 +539,108 @@ export function StudioPage({
             <span className="status-pill status-ready">
               <i />3D WebGL Active
             </span>
-            <button className="icon-button" onClick={() => runAiAnalysis(roomImage)} aria-label="Phân tích lại ảnh" title="Chạy lại phân tích AI">
+            <button
+              className="icon-button"
+              onClick={() => {
+                setPendingImage(roomImage);
+                setSurveyModalOpen(true);
+              }}
+              aria-label="Phân tích lại ảnh"
+              title="Khảo sát & nhận diện lại khung cửa"
+            >
               <StudioIcon name="rotate" size={17} />
             </button>
           </div>
 
           {/* EXTERNAL 3D ATMOSPHERE & ENVIRONMENT TOOLBAR */}
-          {true && (
-            <div className="studio-3d-external-toolbar">
-              <div className="external-toolbar-left">
-                <span className="atmo-toolbar-label">MÔ PHỎNG ÁNH SÁNG & THỜI TIẾT:</span>
-                <div className="external-atmo-group">
-                  <button
-                    className={'atmo-pill-btn ' + (activeAtmosphere === 'morning' ? 'active' : '')}
-                    onClick={() => setActiveAtmosphere('morning')}
-                    type="button"
-                    title="Ánh sáng ban mai nhẹ nhàng"
-                  >
-                    <Sunrise size={14} color="#ff9e3b" />
-                    <span>Sáng sớm</span>
-                  </button>
-                  <button
-                    className={'atmo-pill-btn ' + (activeAtmosphere === 'noon' ? 'active' : '')}
-                    onClick={() => setActiveAtmosphere('noon')}
-                    type="button"
-                    title="Ánh sáng trưa rực rỡ & cản sáng"
-                  >
-                    <Sun size={14} color="#f4b400" />
-                    <span>Trưa nắng</span>
-                  </button>
-                  <button
-                    className={'atmo-pill-btn ' + (activeAtmosphere === 'sunset' ? 'active' : '')}
-                    onClick={() => setActiveAtmosphere('sunset')}
-                    type="button"
-                    title="Hoàng hôn vàng hổ phách"
-                  >
-                    <Sunset size={14} color="#f25c3b" />
-                    <span>Hoàng hôn</span>
-                  </button>
-                  <button
-                    className={'atmo-pill-btn ' + (activeAtmosphere === 'night' ? 'active' : '')}
-                    onClick={() => setActiveAtmosphere('night')}
-                    type="button"
-                    title="Ban tối ấm áp với đèn LED hắt trần"
-                  >
-                    <Moon size={14} color="#7ba4d5" />
-                    <span>Ban tối</span>
-                  </button>
-                  <button
-                    className={'atmo-pill-btn ' + (activeAtmosphere === 'rain' ? 'active' : '')}
-                    onClick={() => setActiveAtmosphere('rain')}
-                    type="button"
-                    title="Trời mưa rả rích kèm gió lay rèm"
-                  >
-                    <CloudRain size={14} color="#89b2c9" />
-                    <span>Trời mưa + Gió</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="external-toolbar-right">
+          <div className="studio-3d-external-toolbar">
+            <div className="external-toolbar-left">
+              <span className="atmo-toolbar-label">MÔ PHỎNG ÁNH SÁNG & THỜI TIẾT:</span>
+              <div className="external-atmo-group">
                 <button
-                  className="atmo-action-btn"
-                  onClick={() => viewer3dRef.current?.resetCamera()}
+                  className={'atmo-pill-btn ' + (activeAtmosphere === 'morning' ? 'active' : '')}
+                  onClick={() => setActiveAtmosphere('morning')}
                   type="button"
-                  title="Đặt lại góc nhìn chính diện"
+                  title="Ánh sáng ban mai nhẹ nhàng"
                 >
-                  <RotateCcw size={13} />
-                  <span>Chính diện</span>
+                  <Sunrise size={14} color="#ff9e3b" />
+                  <span>Sáng sớm</span>
                 </button>
                 <button
-                  className={'atmo-action-btn ' + (showAdjuster ? 'active' : '')}
-                  onClick={() => setShowAdjuster(!showAdjuster)}
+                  className={'atmo-pill-btn ' + (activeAtmosphere === 'noon' ? 'active' : '')}
+                  onClick={() => setActiveAtmosphere('noon')}
                   type="button"
-                  title="Căn chỉnh vị trí & kích thước rèm khớp khung cửa"
+                  title="Ánh sáng trưa rực rỡ & cản sáng"
                 >
-                  <Sliders size={13} />
-                  <span>Căn chỉnh rèm</span>
+                  <Sun size={14} color="#f4b400" />
+                  <span>Trưa nắng</span>
+                </button>
+                <button
+                  className={'atmo-pill-btn ' + (activeAtmosphere === 'sunset' ? 'active' : '')}
+                  onClick={() => setActiveAtmosphere('sunset')}
+                  type="button"
+                  title="Hoàng hôn vàng hổ phách"
+                >
+                  <Sunset size={14} color="#f25c3b" />
+                  <span>Hoàng hôn</span>
+                </button>
+                <button
+                  className={'atmo-pill-btn ' + (activeAtmosphere === 'night' ? 'active' : '')}
+                  onClick={() => setActiveAtmosphere('night')}
+                  type="button"
+                  title="Ban tối ấm áp với đèn LED hắt trần"
+                >
+                  <Moon size={14} color="#7ba4d5" />
+                  <span>Ban tối</span>
+                </button>
+                <button
+                  className={'atmo-pill-btn ' + (activeAtmosphere === 'rain' ? 'active' : '')}
+                  onClick={() => setActiveAtmosphere('rain')}
+                  type="button"
+                  title="Trời mưa rả rích kèm gió lay rèm"
+                >
+                  <CloudRain size={14} color="#89b2c9" />
+                  <span>Trời mưa + Gió</span>
                 </button>
               </div>
             </div>
-          )}
 
-          {/* External Window Fit Calibration Drawer (Outside 3D Canvas) */}
+            <div className="external-toolbar-right">
+              <button
+                className="atmo-action-btn"
+                onClick={() => viewer3dRef.current?.resetCamera()}
+                type="button"
+                title="Đặt lại góc nhìn chính diện"
+              >
+                <RotateCcw size={13} />
+                <span>Chính diện</span>
+              </button>
+              <button
+                className={'atmo-action-btn ' + (showAdjuster ? 'active' : '')}
+                onClick={() => setShowAdjuster(!showAdjuster)}
+                type="button"
+                title="Căn chỉnh vị trí & kích thước rèm khớp khung cửa"
+              >
+                <Sliders size={13} />
+                <span>Căn chỉnh rèm</span>
+              </button>
+            </div>
+          </div>
+
+          {/* External Window Fit Calibration Drawer */}
           {showAdjuster && (
             <div className="external-adjuster-panel">
               <div className="adjuster-header">
-                <span>🎯 Căn chỉnh rèm theo khung cửa (3D Calibration)</span>
+                <span>⚡ Căn chỉnh rèm theo khung cửa (3D Calibration)</span>
                 <button className="adjuster-close" onClick={() => setShowAdjuster(false)} type="button">✕</button>
               </div>
               <div className="adjuster-grid">
                 <div className="adjuster-group" style={{ gridColumn: 'span 2' }}>
                   <small>Khớp nhanh vị trí cửa sổ trong ảnh (hoặc click & kéo trực tiếp rèm 3D):</small>
                   <div className="btn-row" style={{ marginTop: '4px' }}>
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(-0.88, 0)} title="Khớp vào cửa sổ bên trái ảnh" type="button" style={{ fontWeight: 600 }}>👈 Cửa bên trái</button>
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0, 0)} title="Khớp vào cửa sổ chính giữa ảnh" type="button" style={{ fontWeight: 600 }}>⏺️ Cửa chính giữa</button>
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0.88, 0)} title="Khớp vào cửa sổ bên phải ảnh" type="button" style={{ fontWeight: 600 }}>👉 Cửa bên phải</button>
+                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(-0.88, 0)} title="Khớp vào cửa sổ bên trái ảnh" type="button" style={{ fontWeight: 600 }}>⇦ Cửa bên trái</button>
+                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0, 0)} title="Khớp vào cửa sổ chính giữa ảnh" type="button" style={{ fontWeight: 600 }}>⦿ Cửa chính giữa</button>
+                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0.88, 0)} title="Khớp vào cửa sổ bên phải ảnh" type="button" style={{ fontWeight: 600 }}>⇨ Cửa bên phải</button>
                   </div>
                 </div>
                 <div className="adjuster-group">
@@ -612,7 +766,7 @@ export function StudioPage({
               onClick={() => setMobileActiveTab('curtains')}
             >
               <Layers size={15} />
-              <span>Đổi mẫu rèm ({curtainTypes?.length || 8} mẫu)</span>
+              <span>Đổi mẫu rèm ({curtainTypes?.length || 11} mẫu)</span>
             </button>
             <button
               type="button"
@@ -632,7 +786,7 @@ export function StudioPage({
               <span className="panel-step">03 / AI RECOMMENDATIONS</span>
               <h2>Mẫu rèm phù hợp nhất</h2>
             </div>
-            <span className="recommend-count">04</span>
+            <span className="recommend-count">{aiDiagnosis?.recommendedTypeIds?.length || 4}</span>
           </div>
 
           {/* AI Reasoning Widget in Panel 3 */}
@@ -640,7 +794,7 @@ export function StudioPage({
             <div className="ai-diagnostic-pill">
               <div className="diag-header">
                 <Sparkles size={15} color="#c9a473" />
-                <strong>Tư vấn từ Chuyên gia AI:</strong>
+                <strong>{aiDiagnosis.caseTitle || 'Gợi ý từ Chuyên gia AI:'}</strong>
               </div>
               <p>{aiDiagnosis.aiReason}</p>
               <div className="diag-tags">
@@ -665,7 +819,7 @@ export function StudioPage({
 
           <div className="recommend-list">
             {paginatedCurtainTypes.map((type) => {
-              const isRecommended = !aiDiagnosis || aiDiagnosis.recommendedTypeId === type.id;
+              const isRecommended = aiDiagnosis?.recommendedTypeIds?.includes(type.id);
               return (
                 <button
                   className={'recommend-card ' + (activeType === type.id ? 'active ' : '') + (isRecommended ? 'is-ai-pick' : '')}
@@ -683,7 +837,7 @@ export function StudioPage({
                   <span className="recommend-info">
                     <div className="card-top-title">
                       <strong>{type.name}</strong>
-                      {isRecommended && <span className="ai-pick-badge">AI Khuyên dùng ★</span>}
+                      {isRecommended && <span className="ai-pick-badge">AI Khuyên dùng ⭐</span>}
                     </div>
                     <small>{type.desc}</small>
                     <span className="mini-swatches">
@@ -698,7 +852,7 @@ export function StudioPage({
             })}
           </div>
 
-          {/* Pagination Controls (5 items per page) */}
+          {/* Pagination Controls */}
           {totalCurtainPages > 1 && (
             <div className="studio-curtain-pagination">
               <div className="studio-pagination-info">
@@ -720,7 +874,7 @@ export function StudioPage({
                   <button
                     key={pageNum}
                     type="button"
-                    className={`studio-pagi-num ${curtainPage === pageNum ? 'active' : ''}`}
+                    className={'studio-pagi-btn ' + (curtainPage === pageNum ? 'active' : '')}
                     onClick={() => setCurtainPage(pageNum)}
                   >
                     {pageNum}
@@ -731,44 +885,230 @@ export function StudioPage({
                   className="studio-pagi-nav"
                   disabled={curtainPage === totalCurtainPages}
                   onClick={() => setCurtainPage((p) => Math.min(totalCurtainPages, p + 1))}
-                  aria-label="Trang tiếp theo"
+                  aria-label="Trang sau"
                 >
                   <ChevronRight size={16} />
                 </button>
               </div>
             </div>
           )}
-
-          <div className="color-picker">
-            <div className="subheading">
-              <strong>Màu sắc vải rèm</strong>
-              <span>{studioColor.toUpperCase()}</span>
-            </div>
-            <div className="color-swatches">
-              {currentType.colors.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  aria-label={'Chọn màu ' + color}
-                  className={studioColor?.toLowerCase() === color?.toLowerCase() ? 'chosen' : ''}
-                  style={{ background: color }}
-                  onClick={() => setStudioColor(color)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="selected-summary">
-            <div>
-              <span>ĐANG CHỌN</span>
-              <strong>{currentType.name}</strong>
-            </div>
-            <button onClick={() => navigateTo('contact')}>
-              Tư vấn mẫu này <StudioIcon name="arrow" size={16} />
-            </button>
-          </div>
         </aside>
       </section>
+
+      {/* =========================================================================
+          QUESTIONNAIRE & 20-SECOND AI SCANNER MODAL
+          ========================================================================= */}
+      {surveyModalOpen && (
+        <div className="studio-survey-overlay" onClick={() => !isScanning && setSurveyModalOpen(false)}>
+          <div className="studio-survey-modal" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="survey-modal-header">
+              <div className="survey-modal-title">
+                <Sparkles size={18} color="#c8a87d" />
+                <h3>{isScanning ? 'AI Đang Phân Tích & Nhận Diện Không Gian...' : 'Khảo Sát Khung Cửa Để AI Gợi Ý Chuẩn Xác'}</h3>
+              </div>
+              {!isScanning && (
+                <button
+                  type="button"
+                  className="survey-close-btn"
+                  onClick={() => setSurveyModalOpen(false)}
+                  aria-label="Đóng"
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+
+            {/* Modal Body */}
+            <div className="survey-modal-body">
+              {!isScanning ? (
+                /* STEP 1: QUESTIONNAIRE FORM */
+                <div className="survey-form-content">
+                  <div className="survey-preview-thumb">
+                    <img src={pendingImage || roomImage} alt="Ảnh phòng khảo sát" />
+                    <span className="survey-photo-tag">Ảnh phòng của bạn</span>
+                  </div>
+
+                  {/* Question 1: Vị trí không gian */}
+                  <div className="survey-question-group">
+                    <label className="question-title">
+                      <span className="q-num">1</span>
+                      Vị trí không gian lắp đặt:
+                    </label>
+                    <div className="question-options-row">
+                      <button
+                        type="button"
+                        className={'q-opt-btn ' + (surveyAnswers.location === 'indoor' ? 'selected' : '')}
+                        onClick={() => setSurveyAnswers(prev => ({ ...prev, location: 'indoor' }))}
+                      >
+                        <span className="opt-emoji">🏠</span>
+                        <div className="opt-text">
+                          <strong>Trong nhà</strong>
+                          <small>Phòng khách, phòng ngủ, làm việc...</small>
+                        </div>
+                        {surveyAnswers.location === 'indoor' && <Check size={16} className="opt-check" />}
+                      </button>
+
+                      <button
+                        type="button"
+                        className={'q-opt-btn ' + (surveyAnswers.location === 'outdoor' ? 'selected' : '')}
+                        onClick={() => setSurveyAnswers(prev => ({ ...prev, location: 'outdoor' }))}
+                      >
+                        <span className="opt-emoji">☀️</span>
+                        <div className="opt-text">
+                          <strong>Ngoài trời</strong>
+                          <small>Ban công, hiên nhà, chòi villa...</small>
+                        </div>
+                        {surveyAnswers.location === 'outdoor' && <Check size={16} className="opt-check" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Question 2: Loại cửa */}
+                  <div className="survey-question-group">
+                    <label className="question-title">
+                      <span className="q-num">2</span>
+                      Loại khung cửa:
+                    </label>
+                    <div className="question-options-row">
+                      <button
+                        type="button"
+                        className={'q-opt-btn ' + (surveyAnswers.doorType === 'window' ? 'selected' : '')}
+                        onClick={() => setSurveyAnswers(prev => ({ ...prev, doorType: 'window' }))}
+                      >
+                        <span className="opt-emoji">🪟</span>
+                        <div className="opt-text">
+                          <strong>Cửa sổ</strong>
+                          <small>Cửa sổ đơn, 3 cửa hoặc 4 cửa</small>
+                        </div>
+                        {surveyAnswers.doorType === 'window' && <Check size={16} className="opt-check" />}
+                      </button>
+
+                      <button
+                        type="button"
+                        className={'q-opt-btn ' + (surveyAnswers.doorType === 'main' ? 'selected' : '')}
+                        onClick={() => setSurveyAnswers(prev => ({ ...prev, doorType: 'main' }))}
+                      >
+                        <span className="opt-emoji">🚪</span>
+                        <div className="opt-text">
+                          <strong>Cửa chính / Cửa đi</strong>
+                          <small>Cửa ra vào, cửa đại sảnh, vách lớn</small>
+                        </div>
+                        {surveyAnswers.doorType === 'main' && <Check size={16} className="opt-check" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Question 3: Cấu trúc số cửa (Chỉ khi chọn Cửa sổ) */}
+                  {surveyAnswers.doorType === 'window' && (
+                    <div className="survey-question-group">
+                      <label className="question-title">
+                        <span className="q-num">3</span>
+                        Cấu trúc khung cửa sổ:
+                      </label>
+                      <div className="question-options-grid-3">
+                        <button
+                          type="button"
+                          className={'q-opt-btn ' + (surveyAnswers.windowPanels === 'single' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: 'single' }))}
+                        >
+                          <span className="opt-emoji">🪟</span>
+                          <div className="opt-text">
+                            <strong>Cửa sổ đơn</strong>
+                            <small>1 khung cửa</small>
+                          </div>
+                          {surveyAnswers.windowPanels === 'single' && <Check size={15} className="opt-check" />}
+                        </button>
+
+                        <button
+                          type="button"
+                          className={'q-opt-btn ' + (surveyAnswers.windowPanels === '3' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: '3' }))}
+                        >
+                          <span className="opt-emoji">🪟🪟🪟</span>
+                          <div className="opt-text">
+                            <strong>3 cửa</strong>
+                            <small>Bộ 3 ô liền kề</small>
+                          </div>
+                          {surveyAnswers.windowPanels === '3' && <Check size={15} className="opt-check" />}
+                        </button>
+
+                        <button
+                          type="button"
+                          className={'q-opt-btn ' + (surveyAnswers.windowPanels === '4' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: '4' }))}
+                        >
+                          <span className="opt-emoji">🪟🪟🪟🪟</span>
+                          <div className="opt-text">
+                            <strong>4 cửa</strong>
+                            <small>Bộ 4 ô panorama</small>
+                          </div>
+                          {surveyAnswers.windowPanels === '4' && <Check size={15} className="opt-check" />}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Confirm & Start AI Recognition Button */}
+                  <div className="survey-actions-bar">
+                    <button
+                      type="button"
+                      className="start-scan-btn"
+                      onClick={handleStartScan}
+                    >
+                      <Zap size={18} />
+                      <span>Xem đề xuất rèm 3D phù hợp</span>
+                      <ArrowRight size={17} />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* STEP 2: HIGH-TECH AI SCANNER SCREEN */
+                <div className="survey-scanner-content">
+                  {/* Photo with Scanning Laser Animation */}
+                  <div className="scanner-visual-stage">
+                    <img src={pendingImage || roomImage} alt="Quét ảnh phòng" className="scanner-target-photo" />
+                    
+                    {/* Glowing Laser Beam */}
+                    <div className="scanner-laser-line" />
+                    
+                    {/* AR Bounding Box Overlays */}
+                    <div className="scanner-ar-box">
+                      <span className="corner top-left" />
+                      <span className="corner top-right" />
+                      <span className="corner bottom-left" />
+                      <span className="corner bottom-right" />
+                      <div className="ar-box-tag">
+                        <span>DETECTION: {surveyAnswers.doorType === 'window' ? (surveyAnswers.windowPanels === '3' ? 'TRIPLE_WINDOW' : surveyAnswers.windowPanels === '4' ? 'QUAD_WINDOW' : 'SINGLE_WINDOW') : 'MAIN_DOOR'}</span>
+                        <span>ENV: {surveyAnswers.location.toUpperCase()}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* High-Tech 20s AI Recognition Status Card */}
+                  <div className="scanner-status-card">
+                    <div className="scanner-timer-header">
+                      <div className="timer-badge">
+                        <Scan size={18} className="spin-slow" />
+                        <span>AI ĐANG PHÂN TÍCH & NHẬN DIỆN KHÔNG GIAN...</span>
+                      </div>
+                    </div>
+
+                    <div className="scanner-progress-track">
+                      <div className="scanner-progress-fill scanning-animated" />
+                    </div>
+
+                    <div className="scanner-phase-info">
+                      <Sparkles size={16} color="#c8a87d" />
+                      <p>{SCAN_PHASES[scanPhaseIndex]}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <UnifiedFooter navigateTo={navigateTo} />
     </div>

@@ -83,22 +83,27 @@
 .brand-name {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 27px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  letter-spacing: -0.015em;
   line-height: 1.05;
 }
 .brand-uni {
-  color: #203852;
+  color: #12283e;
+  font-weight: 800;
 }
 .brand-veloria {
-  color: #9d733b;
+  color: #653d12;
+  font-weight: 800;
+  -webkit-text-stroke: 0.4px currentColor;
+  text-shadow: 0 0.5px 1px rgba(255, 255, 255, 0.4);
 }
 .brand-name .reg {
-  font-size: 0.45em;
+  font-size: 0.48em;
   vertical-align: top;
   margin-left: 2px;
-  font-weight: 700;
-  color: #9d733b;
+  font-weight: 800;
+  color: #653d12;
+  -webkit-text-stroke: 0.3px currentColor;
 }
 .brand-text small {
   display: block;
@@ -8024,50 +8029,7 @@
   white-space: nowrap !important;
 }
 
-/* QUICK DEMO PILLS */
-.smart-quick-demo {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  background: #f8fafc !important;
-  border: 1px dashed #cbd5e1 !important;
-  border-radius: 8px !important;
-  padding: 6px 10px !important;
-  margin-bottom: 16px !important;
-  flex-wrap: wrap !important;
-}
 
-.demo-label {
-  font-size: 11.5px !important;
-  color: #64748b !important;
-  font-weight: 500 !important;
-}
-
-.demo-pill {
-  border: none !important;
-  border-radius: 6px !important;
-  padding: 4px 10px !important;
-  font-size: 11.5px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  transition: all 0.15s ease !important;
-}
-
-.admin-pill {
-  background: #fef3c7 !important;
-  color: #92400e !important;
-}
-.admin-pill:hover {
-  background: #fde68a !important;
-}
-
-.customer-pill {
-  background: #e0f2fe !important;
-  color: #0369a1 !important;
-}
-.customer-pill:hover {
-  background: #bae6fd !important;
-}
 
 /* FORM FIELDS */
 .smart-auth-form {
@@ -17301,5 +17263,449 @@ button:active:not(:disabled),
   .about-page-view .mission-vision-section,
   .about-page-view .core-values-section {
     padding: 48px 18px;
+  }
+}
+
+
+/* ==========================================================================
+   ENHANCED LOGO CONTRAST & BOLDNESS: UniVeloria®
+   Thickens strokes & deepens bronze-gold color so Veloria® is sharp & prominent
+   ========================================================================== */
+.brand-veloria,
+.topbar .brand-veloria,
+.mobile-nav-brand .brand-veloria {
+  color: #653d12 !important;
+  font-weight: 800 !important;
+  -webkit-text-stroke: 0.42px currentColor !important;
+  text-shadow: 0 0.5px 1px rgba(255, 255, 255, 0.45) !important;
+}
+
+.brand-name .reg,
+.topbar .brand-name .reg,
+.mobile-nav-brand .reg {
+  color: #653d12 !important;
+  font-weight: 800 !important;
+  -webkit-text-stroke: 0.32px currentColor !important;
+}
+
+
+/* ==========================================================================
+   AI STUDIO: Questionnaire Survey Modal & 20-Second Laser Scanner
+   ========================================================================== */
+.studio-survey-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(10, 15, 20, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.25s ease forwards;
+}
+
+.studio-survey-modal {
+  width: 100%;
+  max-width: 620px;
+  background: #ffffff;
+  border: 1px solid rgba(200, 168, 125, 0.4);
+  border-radius: 22px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 92vh;
+  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.survey-modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(220, 210, 195, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fdfbf7;
+}
+
+.survey-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.survey-modal-title h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #121c21;
+  margin: 0;
+}
+
+.survey-close-btn {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.survey-close-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #0f172a;
+}
+
+.survey-modal-body {
+  padding: 22px 24px 24px;
+  overflow-y: auto;
+  max-height: calc(92vh - 70px);
+}
+
+/* Step 1: Questionnaire */
+.survey-preview-thumb {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  border: 1px solid rgba(200, 168, 125, 0.3);
+}
+
+.survey-preview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.survey-photo-tag {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(18, 28, 33, 0.85);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+
+.survey-question-group {
+  margin-bottom: 18px;
+}
+
+.question-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.q-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #c8a87d;
+  color: #ffffff;
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.question-options-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.question-options-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.q-opt-btn {
+  background: #fbf9f5;
+  border: 1.5px solid rgba(200, 168, 125, 0.3);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  text-align: left;
+}
+
+.q-opt-btn:hover {
+  border-color: #b88d60;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(45, 35, 25, 0.06);
+}
+
+.q-opt-btn.selected {
+  border-color: #8b6b3e;
+  background: #f8f2e9;
+  box-shadow: 0 0 0 2px rgba(139, 107, 62, 0.2);
+}
+
+.opt-emoji {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.opt-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.opt-text strong {
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.opt-text small {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.opt-check {
+  margin-left: auto;
+  color: #8b6b3e;
+  flex-shrink: 0;
+}
+
+.survey-actions-bar {
+  margin-top: 24px;
+}
+
+.start-scan-btn {
+  width: 100%;
+  min-height: 52px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #182226, #091216);
+  color: #ffffff;
+  font-size: 14.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(10, 18, 22, 0.3);
+  transition: all 0.2s ease;
+}
+
+.start-scan-btn:hover {
+  background: linear-gradient(135deg, #8b6b3e, #6e4e24);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(139, 107, 62, 0.35);
+}
+
+/* Step 2: High-tech AI Room Laser Scanner */
+.scanner-visual-stage {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #091114;
+  margin-bottom: 20px;
+  border: 1px solid rgba(200, 168, 125, 0.4);
+}
+
+.scanner-target-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.85) contrast(1.1);
+}
+
+/* Laser Scanning Beam */
+.scanner-laser-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(200, 168, 125, 0.1), #f4d06f, #38bdf8, rgba(200, 168, 125, 0.1));
+  box-shadow: 0 0 16px 4px rgba(56, 189, 248, 0.65), 0 0 30px 8px rgba(244, 208, 111, 0.4);
+  animation: scanLaser 2.2s ease-in-out infinite alternate;
+  z-index: 5;
+}
+
+@keyframes scanLaser {
+  0% { top: 4%; }
+  100% { top: 94%; }
+}
+
+/* AR Bounding Box */
+.scanner-ar-box {
+  position: absolute;
+  top: 20%;
+  left: 22%;
+  right: 22%;
+  bottom: 18%;
+  border: 1px dashed rgba(56, 189, 248, 0.6);
+  pointer-events: none;
+  animation: pulseArBox 2s ease-in-out infinite;
+  z-index: 4;
+}
+
+@keyframes pulseArBox {
+  0%, 100% { border-color: rgba(56, 189, 248, 0.4); }
+  50% { border-color: rgba(244, 208, 111, 0.9); }
+}
+
+.scanner-ar-box .corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: #38bdf8;
+}
+
+.scanner-ar-box .top-left { top: -1px; left: -1px; border-top: 2px solid #38bdf8; border-left: 2px solid #38bdf8; }
+.scanner-ar-box .top-right { top: -1px; right: -1px; border-top: 2px solid #38bdf8; border-right: 2px solid #38bdf8; }
+.scanner-ar-box .bottom-left { bottom: -1px; left: -1px; border-bottom: 2px solid #38bdf8; border-left: 2px solid #38bdf8; }
+.scanner-ar-box .bottom-right { bottom: -1px; right: -1px; border-bottom: 2px solid #38bdf8; border-right: 2px solid #38bdf8; }
+
+.ar-box-tag {
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  display: flex;
+  gap: 8px;
+  font-family: monospace;
+  font-size: 9px;
+  color: #38bdf8;
+  background: rgba(10, 18, 22, 0.85);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.scanner-status-card {
+  background: #fdfaf5;
+  border: 1px solid rgba(200, 168, 125, 0.35);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.scanner-timer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.timer-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.timer-seconds {
+  font-size: 20px;
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #b88d60;
+  letter-spacing: -0.02em;
+}
+
+.spin-slow {
+  animation: spin 4s linear infinite;
+  color: #c8a87d;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.progress-percent {
+  font-size: 14px;
+  font-weight: 800;
+  color: #8b6b3e;
+}
+
+.scanner-progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(200, 168, 125, 0.2);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.scanner-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c8a87d, #38bdf8);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.scanner-progress-fill.scanning-animated {
+  width: 0%;
+  animation: scanProgress20s 20s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes scanProgress20s {
+  0% { width: 0%; }
+  15% { width: 18%; }
+  35% { width: 40%; }
+  55% { width: 62%; }
+  75% { width: 82%; }
+  90% { width: 94%; }
+  100% { width: 100%; }
+}
+
+.scanner-phase-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+  font-weight: 600;
+  min-height: 24px;
+}
+
+.scanner-phase-info p {
+  margin: 0;
+}
+
+
+
+/* Responsive adjustment for Questionnaire Modal */
+@media (max-width: 600px) {
+  .question-options-row {
+    grid-template-columns: 1fr;
+  }
+  .question-options-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .survey-modal-body {
+    padding: 16px;
+  }
+  .scanner-visual-stage {
+    height: 190px;
   }
 }

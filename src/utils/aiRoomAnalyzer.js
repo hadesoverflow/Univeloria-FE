@@ -1,11 +1,117 @@
 /**
- * AI Room Vision Analyzer
+ * AI Room Vision & Rule-Based Recommendation Engine
  * Analyzes room image colors, lighting & architecture to recommend the ideal curtain.
  */
-export async function analyzeRoomPhoto(imageUrl) {
+
+export function determineCurtainRecommendations({
+  doorType = 'window',
+  location = 'indoor',
+  windowPanels = 'single'
+} = {}) {
+  // Case 2: Cửa sổ đơn hoặc cửa chính NGOÀI TRỜI
+  if (location === 'outdoor') {
+    return {
+      ruleKey: 'outdoor',
+      caseTitle: 'Không gian Ngoài trời (Ban công / Hiên / Sân thượng)',
+      spaceTypeLabel: 'Ngoài trời',
+      doorTypeLabel: doorType === 'main' ? 'Cửa chính ngoài trời' : 'Cửa sổ ngoài trời',
+      recommendedTypeIds: ['pvc-tarpaulin'],
+      primaryTypeId: 'pvc-tarpaulin',
+      primaryColor: '#1a56b7',
+      style: 'Ngoài Trời & Chống Mưa Nắng',
+      wallTone: 'Không gian mở ban công / villa',
+      lightCondition: 'Thời tiết ngoài trời (Nắng gắt & Mưa bão)',
+      matchScore: 99,
+      aiReason: 'Với không gian ngoài trời hoặc ban công tiếp xúc trực tiếp với nắng, gió và mưa bão, AI đề xuất Rèm Bạt Nhựa PVC: sợi polyester 3 lớp siêu dai chống rách, phủ Nano chống bám bụi và chống thấm nước 100%.',
+      tags: ['Ngoài trời', 'Bạt nhựa PVC', 'Chống mưa nắng 100%']
+    };
+  }
+
+  // Case 3: Cửa sổ 3 CỬA (trong nhà)
+  if (doorType === 'window' && windowPanels === '3') {
+    return {
+      ruleKey: 'tripleWindow',
+      caseTitle: 'Cửa sổ 3 cánh (Bộ 3 ô cửa sổ liền kề)',
+      spaceTypeLabel: 'Trong nhà',
+      doorTypeLabel: 'Cửa sổ 3 cánh',
+      recommendedTypeIds: ['roller-triptych'],
+      primaryTypeId: 'roller-triptych',
+      primaryColor: '#ffffff',
+      style: 'Tranh Nghệ Thuật 3 Cánh',
+      wallTone: 'Không gian cửa sổ 3 ô liền kề',
+      lightCondition: 'Ánh sáng tự nhiên 3 hướng',
+      matchScore: 99,
+      aiReason: 'Với cấu trúc 3 ô cửa sổ liền kề, AI đề xuất Bộ 3 rèm cửa cuốn in tranh Botanical 3: họa tiết tranh nghệ thuật lá cây phối màu xanh ngọc bích & kem linen đối xứng hoàn mỹ, 3 trục cuốn nhôm riêng biệt linh hoạt.',
+      tags: ['Cửa sổ 3 cánh', 'Bộ 3 tranh Botanical 3', 'Trục cuốn độc lập']
+    };
+  }
+
+  // Case 4: Cửa sổ 4 CỬA (trong nhà)
+  if (doorType === 'window' && windowPanels === '4') {
+    return {
+      ruleKey: 'quadWindow',
+      caseTitle: 'Cửa sổ 4 cánh (Bộ 4 ô cửa panorama)',
+      spaceTypeLabel: 'Trong nhà',
+      doorTypeLabel: 'Cửa sổ 4 cánh',
+      recommendedTypeIds: ['roller-quad'],
+      primaryTypeId: 'roller-quad',
+      primaryColor: '#ffffff',
+      style: 'Tranh Panorama Mùa Thu Vàng',
+      wallTone: 'Không gian vách kính 4 ô rộng',
+      lightCondition: 'Góc nhìn Panorama toàn cảnh',
+      matchScore: 99,
+      aiReason: 'Với cấu trúc 4 ô cửa sổ rộng, AI đề xuất Bộ 4 rèm cửa cuốn in tranh Panorama Mùa Thu Vàng: đại cảnh lá vàng rực rỡ ghép 4 tấm liền mạch, cản sáng 100% và tạo điểm nhấn sang trọng cho toàn bộ gian phòng.',
+      tags: ['Cửa sổ 4 cánh', 'Tranh Panorama Mùa Thu Vàng', 'Ghép 4 tấm liền mạch']
+    };
+  }
+
+  // Case 5: CỬA CHÍNH (trong nhà)
+  if (doorType === 'main') {
+    return {
+      ruleKey: 'mainDoorIndoor',
+      caseTitle: 'Cửa chính / Cửa đi trong nhà',
+      spaceTypeLabel: 'Trong nhà',
+      doorTypeLabel: 'Cửa chính / Cửa đi',
+      recommendedTypeIds: ['leaf-embroidery', 'sfold-luxury', 'single-pleat'],
+      primaryTypeId: 'leaf-embroidery',
+      primaryColor: '#7e7065',
+      style: 'Rèm Vải Khách Sạn 5 Sao & Biệt Thự',
+      wallTone: 'Khu vực cửa chính phòng khách',
+      lightCondition: 'Đón tiếp ánh sáng không gian chính',
+      matchScore: 99,
+      aiReason: 'Với khu vực cửa chính trong nhà, AI đề xuất các dòng rèm vải cao cấp: Rèm 2 lớp thêu lá quý phái, Rèm 2 lớp S-Fold chuẩn khách sạn 5 sao và Rèm 1 lớp xếp ly định hình, tạo sự bề thế và đón tiếp sang trọng.',
+      tags: ['Cửa chính trong nhà', 'Rèm vải 2 lớp', 'Xếp ly & S-Fold 5 sao']
+    };
+  }
+
+  // Case 1: Cửa sổ ĐƠN trong nhà (mặc định)
+  return {
+    ruleKey: 'singleWindowIndoor',
+    caseTitle: 'Cửa sổ đơn trong nhà',
+    spaceTypeLabel: 'Trong nhà',
+    doorTypeLabel: 'Cửa sổ đơn',
+    recommendedTypeIds: ['roman-linen', 'honeycomb', 'roller-linen', 'roller-crystal', 'roller-art'],
+    primaryTypeId: 'roman-linen',
+    primaryColor: '#dfd7c8',
+    style: 'Hiện Đại, Tối Giản & Nghệ Thuật',
+    wallTone: 'Cửa sổ đơn phòng ngủ / làm việc',
+    lightCondition: 'Ánh sáng cửa sổ đơn',
+    matchScore: 99,
+    aiReason: 'Với ô cửa sổ đơn trong nhà, AI đề xuất 5 giải pháp rèm gọn gàng, cách nhiệt và thẩm mỹ cao: Rèm Roman xếp lớp, Rèm tổ ong cách nhiệt, Rèm cuốn vải dệt Linen, Rèm cuốn in tranh Hoa Pha Lê & Kim Cương, và Rèm cuốn Botanical.',
+    tags: ['Cửa sổ đơn', 'Rèm Roman & Tổ ong', 'Rèm cuốn & Tranh nghệ thuật']
+  };
+}
+
+export async function analyzeRoomPhoto(imageUrl, options = null) {
+  // If user provided survey questionnaire options, apply the deterministic rules
+  if (options && (options.doorType || options.location || options.windowPanels)) {
+    const recommendation = determineCurtainRecommendations(options);
+    return Promise.resolve(recommendation);
+  }
+
   return new Promise((resolve) => {
     if (!imageUrl) {
-      resolve(getDefaultRecommendation());
+      resolve(determineCurtainRecommendations({ doorType: 'window', location: 'indoor', windowPanels: 'single' }));
       return;
     }
 
@@ -48,101 +154,20 @@ export async function analyzeRoomPhoto(imageUrl) {
         const isWarm = (avgR * 1.05 + avgG * 0.95) > (avgB * 1.25);
         const isBright = avgLum > 130 || (brightPixels / totalSample > 0.4);
 
-        let style = 'Tranh Nghệ Thuật Hoa Pha Lê';
-        let lightCondition = isBright ? 'Ánh sáng dồi dào' : 'Ánh sáng dịu nhẹ';
-        let wallTone = 'Tone Be Sữa & Gỗ Sáng Hiện Đại';
-        let recommendedTypeId = 'roller-crystal';
-        let recommendedTypeName = 'Rèm Cuốn In Tranh Hoa Pha Lê & Kim Cương';
-        let recommendedColor = '#ffffff';
-        let matchScore = 99;
-        let aiReason = 'Không gian phòng khách sở hữu ánh sáng tự nhiên lý tưởng. AI đề xuất Rèm Cuốn In Tranh Hoa Pha Lê & Kim Cương: tranh nghệ thuật hoa thủy tinh pha lê xanh ngọc bích và đá quý hồng ngọc, cơ chế kéo rèm từ trên xuống cản sáng 100%, khi cuộn lên sẽ cuộn tròn vào thanh cố định tròn trên đỉnh sổ.';
-        let tags = ['Tranh Hoa Pha Lê', 'Thanh cuộn tròn', 'Cản sáng 100%'];
-
-        if (isWarm && isBright) {
-          style = 'Tranh Nghệ Thuật Hoa Pha Lê & Kim Cương';
-          wallTone = 'Tone Be Sữa & Gỗ Tự Nhiên';
-          lightCondition = 'Ánh sáng tự nhiên dồi dào';
-          recommendedTypeId = 'roller-crystal';
-          recommendedTypeName = 'Rèm Cuốn In Tranh Hoa Pha Lê & Kim Cương';
-          recommendedColor = '#ffffff';
-          matchScore = 99;
-          aiReason = 'Căn phòng sở hữu gam màu ấm áp cùng lượng ánh sáng lý tưởng. AI đề xuất Rèm Cuốn In Tranh Hoa Pha Lê & Kim Cương: họa tiết hoa thủy tinh xanh biếc cùng đá quý, thanh cố định tròn sang trọng, kéo mở từ trên xuống mượt mà.';
-          tags = ['Tranh Hoa Pha Lê', 'Thanh cuộn tròn', 'Cản sáng 100%'];
-        } else if (isWarm && !isBright) {
-          style = 'Ấm Cúng & Cổ Điển Sang Trọng';
-          wallTone = 'Tone Gỗ Trầm & Vàng Ấm';
-          lightCondition = 'Ánh sáng dịu nhẹ · Không gian thư giãn';
-          recommendedTypeId = 'leaf-embroidery';
-          recommendedTypeName = 'Rèm Hai Lớp Thêu Lá Cao Cấp';
-          recommendedColor = '#7e7065';
-          matchScore = 98;
-          aiReason = 'Căn phòng mang phong cách ấm cúng với các mảng màu trầm. Rèm Hai Lớp Thêu Lá Cao Cấp tone Nâu Taupe trầm sẽ tôn lên vẻ đẹp mộc mạc cao cấp và giúp không gian thêm phần thư thái, quý phái.';
-          tags = ['Họa tiết thêu lá', 'Tone màu sang trọng', 'Bền màu'];
-        } else if (!isWarm && isBright) {
-          style = 'Khách Sạn 5 Sao · Sang Trọng';
-          wallTone = 'Tone Khaki & Be Xám';
-          lightCondition = 'Ánh sáng dồi dào';
-          recommendedTypeId = 'sfold-luxury';
-          recommendedTypeName = 'Rèm Hai Lớp S-Fold Định Hình Cao Cấp';
-          recommendedColor = '#d5cbbe';
-          matchScore = 99;
-          aiReason = 'Không gian sang trọng chuẩn khách sạn cao cấp. AI đề xuất Rèm Hai Lớp S-Fold Định Hình: sóng chữ S đều đặn, lớp voan xước lọc sáng dịu và lớp vải dệt thô cản nhiệt tối ưu.';
-          tags = ['Sóng S-Fold 5 sao', 'Cản nhiệt tốt', 'Tạo chiều sâu'];
-        } else {
-          style = 'Modern Minimalist · Tối Giản Hiện Đại';
-          wallTone = 'Tone Ghi Xám & Tương Phản Cao';
-          lightCondition = 'Ánh sáng phân bổ đa hướng';
-          recommendedTypeId = 'single-pleat';
-          recommendedTypeName = 'Rèm Vải 1 Lớp Xếp Ly Định Hình Cao Cấp';
-          recommendedColor = '#9fa4a9';
-          matchScore = 99;
-          aiReason = 'Không gian có nét kiến trúc mạnh mẽ và tương phản cao. Mẫu Rèm Vải 1 Lớp Xếp Ly Đôi tone Ghi Xám Melange cản sáng 100% tạo cảm giác tinh gọn, hiện đại và bảo vệ sự riêng tư tuyệt đối.';
-          tags = ['Cản sáng 100%', 'Xếp ly định hình', 'Chống bám bụi'];
-        }
-
-        resolve({
-          avgR, avgG, avgB,
-          avgLum,
-          isWarm,
-          isBright,
-          style,
-          wallTone,
-          lightCondition,
-          recommendedTypeId,
-          recommendedTypeName,
-          recommendedColor,
-          matchScore,
-          aiReason,
-          tags,
-        });
-      } catch (err) {
-        console.warn('AI Vision Canvas analysis error, using smart fallback', err);
-        resolve(getDefaultRecommendation());
+        // Default single window indoor
+        const base = determineCurtainRecommendations({ doorType: 'window', location: 'indoor', windowPanels: 'single' });
+        base.lightCondition = isBright ? 'Ánh sáng tự nhiên dồi dào' : 'Ánh sáng dịu nhẹ';
+        base.wallTone = isWarm ? 'Tone Be Sữa & Gỗ Tự Nhiên' : 'Tone Trắng Sáng & Ghi Hiện Đại';
+        resolve(base);
+      } catch (e) {
+        resolve(determineCurtainRecommendations({ doorType: 'window', location: 'indoor', windowPanels: 'single' }));
       }
     };
 
     img.onerror = () => {
-      resolve(getDefaultRecommendation());
+      resolve(determineCurtainRecommendations({ doorType: 'window', location: 'indoor', windowPanels: 'single' }));
     };
 
     img.src = imageUrl;
   });
-}
-
-function getDefaultRecommendation() {
-  return {
-    avgR: 215, avgG: 205, avgB: 190,
-    avgLum: 180,
-    isWarm: true,
-    isBright: true,
-    style: 'Tranh Nghệ Thuật Botanical 3 Cửa Sổ',
-    wallTone: 'Tone Be Sữa & Gỗ Sáng Hiện Đại',
-    lightCondition: 'Ánh sáng tự nhiên dồi dào',
-    recommendedTypeId: 'roller-triptych',
-    recommendedTypeName: 'Bộ 3 Rèm Cuốn In Tranh Botanical 3 Cửa Sổ',
-    recommendedColor: '#234a3f',
-    matchScore: 99,
-    aiReason: 'AI nhận diện hệ cửa sổ rộng đa cánh và đề xuất Bộ 3 Rèm Cuốn In Tranh Botanical: phối sắc Xanh Ngọc & Kem Linen đối xứng tinh tế, 3 trục nhôm tròn riêng biệt cuộn kéo độc lập, tạo chiều sâu nghệ thuật sang trọng.',
-    tags: ['Hệ 3 Cửa Sổ', 'Tranh Botanical', '3 Trục Cuộn Tròn']
-  };
 }
