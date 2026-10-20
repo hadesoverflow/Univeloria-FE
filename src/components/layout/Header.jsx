@@ -9,13 +9,16 @@ import {
   ChevronDown,
   ShieldCheck,
   Gem,
-  Crown
+  Crown,
+  Menu,
+  X
 } from 'lucide-react';
 
 export function Header({ currentPage, navigateTo, themeClass = '' }) {
   const { user, isAuthenticated, logout } = useAuth();
   const { cartCount, openCart } = useCart();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   // Close dropdown when clicking outside
@@ -262,7 +265,146 @@ export function Header({ currentPage, navigateTo, themeClass = '' }) {
             </div>
           )}
         </div>
+
+        {/* Mobile Hamburger Menu Trigger */}
+        <button
+          type="button"
+          className={`topbar-mobile-menu-btn ${mobileMenuOpen ? 'active' : ''}`}
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu điều hướng'}
+          aria-expanded={mobileMenuOpen}
+        >
+          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
+
+      {/* Mobile Navigation Drawer Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-nav-backdrop" onClick={() => setMobileMenuOpen(false)}>
+          <div className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-nav-header">
+              <div className="mobile-nav-brand">
+                <span className="brand-uni">Uni</span>
+                <span className="brand-veloria">Veloria</span>
+                <span className="reg">®</span>
+              </div>
+              <button
+                type="button"
+                className="mobile-nav-close"
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Đóng menu"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <nav className="mobile-nav-links">
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentPage === 'home' ? 'active' : ''}`}
+                onClick={() => { setMobileMenuOpen(false); navigateTo('home'); }}
+              >
+                <span className="nav-item-icon">🏠</span>
+                <span className="nav-item-text">Không Gian Sống</span>
+                <span className="nav-item-chevron">›</span>
+              </button>
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentPage === 'collections' ? 'active' : ''}`}
+                onClick={() => { setMobileMenuOpen(false); navigateTo('collections'); }}
+              >
+                <span className="nav-item-icon">🏛️</span>
+                <span className="nav-item-text">Bộ Sưu Tập</span>
+                <span className="nav-item-chevron">›</span>
+              </button>
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentPage === 'products' ? 'active' : ''}`}
+                onClick={() => { setMobileMenuOpen(false); navigateTo('products'); }}
+              >
+                <span className="nav-item-icon">🪟</span>
+                <span className="nav-item-text">Sản Phẩm May Đo</span>
+                <span className="nav-item-chevron">›</span>
+              </button>
+              <button
+                type="button"
+                className={`mobile-nav-item studio-highlight ${currentPage === 'studio' ? 'active' : ''}`}
+                onClick={() => { setMobileMenuOpen(false); navigateTo('studio'); }}
+              >
+                <span className="nav-item-icon">✨</span>
+                <span className="nav-item-text">AI 3D Studio</span>
+                <span className="mobile-badge-3d">3D WebGL</span>
+              </button>
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentPage === 'about' ? 'active' : ''}`}
+                onClick={() => { setMobileMenuOpen(false); navigateTo('about'); }}
+              >
+                <span className="nav-item-icon">📖</span>
+                <span className="nav-item-text">Giới Thiệu Thương Hiệu</span>
+                <span className="nav-item-chevron">›</span>
+              </button>
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentPage === 'contact' ? 'active' : ''}`}
+                onClick={() => { setMobileMenuOpen(false); navigateTo('contact'); }}
+              >
+                <span className="nav-item-icon">📞</span>
+                <span className="nav-item-text">Liên Hệ & Khảo Sát</span>
+                <span className="nav-item-chevron">›</span>
+              </button>
+            </nav>
+
+            <div className="mobile-nav-footer">
+              {!isAuthenticated ? (
+                <button
+                  type="button"
+                  className="mobile-nav-login-btn"
+                  onClick={() => { setMobileMenuOpen(false); navigateTo('login'); }}
+                >
+                  <User size={16} />
+                  <span>Đăng nhập / Đăng ký</span>
+                </button>
+              ) : (
+                <div className="mobile-nav-user-panel">
+                  <div className="mobile-user-row">
+                    <span className="mobile-user-avatar">
+                      {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
+                    </span>
+                    <div className="mobile-user-info">
+                      <strong>{user?.fullName || user?.email}</strong>
+                      <small>{user?.role === 'Admin' ? 'Quản trị viên' : 'Khách hàng'}</small>
+                    </div>
+                  </div>
+                  <div className="mobile-user-actions">
+                    <button
+                      type="button"
+                      className="mobile-sub-btn"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        navigateTo(user?.role === 'Admin' ? 'admin' : 'customer', 'profile');
+                      }}
+                    >
+                      Hồ sơ
+                    </button>
+                    <button
+                      type="button"
+                      className="mobile-sub-btn logout"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        logout();
+                        navigateTo('home');
+                      }}
+                    >
+                      Đăng xuất
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

@@ -1,0 +1,1 @@
+const fs = require("fs"); const glb = fs.readFileSync("D:/UniVeloria/UniVeloria-FE/public/models/curtains/curtain-roman.glb"); const chunkLen = glb.readUInt32LE(12); const json = JSON.parse(glb.subarray(20, 20 + chunkLen).toString("utf8")); json.nodes.forEach(function(n, i){ console.log(i, n.name, "mesh:", n.mesh !== undefined, "children:", n.children); });

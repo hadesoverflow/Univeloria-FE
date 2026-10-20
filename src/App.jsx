@@ -134,8 +134,8 @@ export default function App() {
   const [hasUploaded, setHasUploaded] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analyzed, setAnalyzed] = useState(false);
-  const [activeType, setActiveType] = useState("linen");
-  const [studioColor, setStudioColor] = useState("#d7c2a5");
+  const [activeType, setActiveType] = useState("roman-linen");
+  const [studioColor, setStudioColor] = useState(curtainTypes[0]?.colors[0] || "#dfd7c8");
   const [activeStudioFilter, setActiveStudioFilter] = useState("Tất cả");
   const [viewMode, setViewMode] = useState("3D");
   const [zoom, setZoom] = useState(1);
