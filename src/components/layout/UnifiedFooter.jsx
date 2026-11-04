@@ -31,36 +31,40 @@ export function UnifiedFooter({ navigateTo }) {
           </p>
         </div>
 
-        <div className="footer-col">
-          <h4>Khám Phá</h4>
-          <a href="#collections" onClick={(e) => { e.preventDefault(); navigateTo('collections'); }}>Bộ sưu tập</a>
-          <a href="#products" onClick={(e) => { e.preventDefault(); navigateTo('products'); }}>Sản phẩm</a>
-          <a href="#studio" onClick={(e) => { e.preventDefault(); navigateTo('studio'); }}>AI 3D Studio</a>
-          <a href="#about" onClick={(e) => { e.preventDefault(); navigateTo('about'); }}>Giới thiệu</a>
+        <div className="footer-nav-grid">
+          <div className="footer-col">
+            <h4>Khám Phá</h4>
+            <a href="#collections" onClick={(e) => { e.preventDefault(); navigateTo('collections'); }}>Bộ sưu tập</a>
+            <a href="#products" onClick={(e) => { e.preventDefault(); navigateTo('products'); }}>Sản phẩm</a>
+            <a href="#studio" onClick={(e) => { e.preventDefault(); navigateTo('studio'); }}>AI 3D Studio</a>
+            <a href="#about" onClick={(e) => { e.preventDefault(); navigateTo('about'); }}>Giới thiệu</a>
+          </div>
+
+          <div className="footer-col">
+            <h4>Hỗ Trợ Khách Hàng</h4>
+            <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Tư vấn & May đo</a>
+            <a href="#measure" onClick={(e) => { e.preventDefault(); setShowMeasureGuide(true); }}>Cách đo cửa để đặt rèm</a>
+            <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Bảo hành 5 năm</a>
+            <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Câu hỏi thường gặp</a>
+          </div>
         </div>
 
-        <div className="footer-col">
-          <h4>Hỗ Trợ Khách Hàng</h4>
-          <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Tư vấn & May đo</a>
-          <a href="#measure" onClick={(e) => { e.preventDefault(); setShowMeasureGuide(true); }}>Cách đo cửa để đặt rèm</a>
-          <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Bảo hành 5 năm</a>
-          <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Câu hỏi thường gặp</a>
-        </div>
-
-        <div className="footer-col">
+        <div className="footer-col footer-contact-col">
           <h4>Liên Hệ</h4>
-          <p className="footer-contact-item">
-            <span>Hotline tư vấn: </span>
-            <a href="tel:0398356785" className="footer-highlight-link">039 835 6785</a>
-          </p>
-          <p className="footer-contact-item">
-            <span>Email hỗ trợ: </span>
-            <a href="mailto:univeloria@gmail.com" className="footer-highlight-link">univeloria@gmail.com</a>
-          </p>
-          <p className="footer-contact-item footer-hours">
-            <span>Thời gian phục vụ: </span>
-            <strong>8:00 - 21:00 (Tất cả các ngày)</strong>
-          </p>
+          <div className="footer-contact-items">
+            <p className="footer-contact-item">
+              <span>Hotline tư vấn: </span>
+              <a href="tel:0398356785" className="footer-highlight-link">039 835 6785</a>
+            </p>
+            <p className="footer-contact-item">
+              <span>Email hỗ trợ: </span>
+              <a href="mailto:univeloria@gmail.com" className="footer-highlight-link">univeloria@gmail.com</a>
+            </p>
+            <p className="footer-contact-item footer-hours">
+              <span>Thời gian phục vụ: </span>
+              <strong>8:00 - 21:00 (Tất cả các ngày)</strong>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -68,6 +72,7 @@ export function UnifiedFooter({ navigateTo }) {
         <p>© 2026 UNIVELORIA®. Bản quyền thuộc về thương hiệu rèm cửa cao cấp UNIVELORIA.</p>
         <div className="footer-links">
           <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Chính sách bảo mật</a>
+          <span className="footer-sep">•</span>
           <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Điều khoản dịch vụ</a>
         </div>
       </div>
