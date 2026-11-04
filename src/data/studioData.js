@@ -1,6 +1,8 @@
 export const curtainTypes = [
   {
     id: "roman-linen",
+    price: 850000,
+    priceDisplay: "Từ 850.000đ / bộ",
     name: "Rèm Roman Vải Linen Thô Dệt Nổi Slub Cao Cấp",
     desc: "Vải đũi xước hữu cơ dệt thô mộc cản nhiệt & lọc sáng tự nhiên • Cơ chế xếp lớp Roman kinh điển",
     colors: ["#dfd7c8", "#c8bcae", "#a89f91", "#f0ece3", "#7d7263"],
@@ -18,6 +20,8 @@ export const curtainTypes = [
   },
   {
     id: "honeycomb",
+    price: 980000,
+    priceDisplay: "Từ 980.000đ / bộ",
     name: "Rèm Tổ Ong Cách Nhiệt Kháng Khuẩn Cao Cấp",
     desc: "Cấu trúc nan tổ ong lục giác cản sáng 100% & cách nhiệt tối ưu · Cơ chế xếp nén hiện đại",
     colors: ["#c8beaf", "#b5ab9e", "#ded8cf", "#8c8275", "#5c544b"],
@@ -35,6 +39,8 @@ export const curtainTypes = [
   },
   {
     id: "pvc-tarpaulin",
+    price: 650000,
+    priceDisplay: "Từ 650.000đ / bộ",
     name: "Rèm Bạt Nhựa PVC Che Nắng Mưa Ban Công Villa",
     desc: "Bạt PVC 3 lớp dệt cốt sợi poly chịu lực · Sọc xanh trắng bóng chống thấm 100% · Bát kẹp inox ray nhôm",
     colors: ["#1a56b7", "#1b5e3b", "#4b5563", "#c25827", "#10223e"],
@@ -52,6 +58,8 @@ export const curtainTypes = [
   },
   {
     id: "roller-linen",
+    price: 550000,
+    priceDisplay: "Từ 550.000đ / bộ",
     name: "Rèm Cuốn Vải Dệt Linen Cản Sáng Tự Nhiên",
     desc: "Vải dệt thô sợi Linen tự nhiên cản sáng lọc nắng êm dịu · Máng nhôm bo viền trắng & Dây chuỗi hạt ngọc",
     colors: ["#dfd5c4", "#f4f0e8", "#c8c0b2", "#9b8d7e", "#9ca899", "#4a443e"],
@@ -70,6 +78,8 @@ export const curtainTypes = [
   },
   {
     id: "roller-quad",
+    price: 2450000,
+    priceDisplay: "Từ 2.450.000đ / bộ 4 ô",
     name: "Bộ 4 Rèm Cuốn In Tranh Panorama Mùa Thu Vàng",
     desc: "Bộ 4 rèm cuốn Panorama Đại lộ Ngân Hạnh Vàng Rực Rỡ · Thiết kế chuyên dụng 4 ô cửa sổ liền kề",
     colors: ["#ffffff"],
@@ -88,6 +98,8 @@ export const curtainTypes = [
   },
   {
     id: "roller-triptych",
+    price: 1850000,
+    priceDisplay: "Từ 1.850.000đ / bộ 3 ô",
     name: "Bộ 3 Rèm Cuốn In Tranh Botanical 3 Cửa Sổ",
     desc: "Bộ 3 rèm cuốn Botanical Xanh Rừng & Kem Linen · Thiết kế chuyên dụng 3 ô cửa sổ liền kề",
     colors: ["#ffffff"],
@@ -106,6 +118,8 @@ export const curtainTypes = [
   },
   {
     id: "roller-crystal",
+    price: 680000,
+    priceDisplay: "Từ 680.000đ / bộ",
     name: "Rèm Cuốn In Tranh Hoa Pha Lê & Kim Cương",
     desc: "Tranh nghệ thuật Hoa Thủy Tinh Pha Lê & Hồng Ngọc · Cơ chế cuộn tròn trục nhôm",
     colors: ["#ffffff"],
@@ -123,6 +137,8 @@ export const curtainTypes = [
   },
   {
     id: "roller-art",
+    price: 680000,
+    priceDisplay: "Từ 680.000đ / bộ",
     name: "Rèm Cuốn In Tranh Botanical Lá Khuynh Diệp",
     desc: "Tranh màu nước Botanical Lá Khuynh Diệp · Cơ chế cuộn tròn trục nhôm",
     colors: ["#ffffff"],
@@ -140,6 +156,8 @@ export const curtainTypes = [
   },
   {
     id: "single-pleat",
+    price: 1650000,
+    priceDisplay: "Từ 1.650.000đ / bộ",
     name: "Rèm Vải 1 Lớp Xếp Ly Định Hình Cao Cấp",
     desc: "Vải dệt melange xám bạc cản sáng 100% · May xếp ly đôi chuẩn khách sạn",
     colors: ["#9fa4a9", "#767c82", "#b4b9bf", "#61666b", "#c5beb5", "#6f7a85", "#383b3e"],
@@ -155,6 +173,8 @@ export const curtainTypes = [
   },
   {
     id: "sfold-luxury",
+    price: 2850000,
+    priceDisplay: "Từ 2.850.000đ / bộ",
     name: "Rèm Hai Lớp S-Fold Định Hình Cao Cấp",
     desc: "Vải dệt thô cao cấp Khaki/Greige & Voan xước đón sáng chuẩn 5 sao",
     colors: ["#d5cbbe", "#e4ded5", "#c2b4a3", "#a89986", "#877867", "#ded8cf", "#4a443e"],
@@ -171,6 +191,8 @@ export const curtainTypes = [
   },
   {
     id: "leaf-embroidery",
+    price: 3250000,
+    priceDisplay: "Từ 3.250.000đ / bộ",
     name: "Rèm Hai Lớp Thêu Lá Cao Cấp",
     desc: "Vải cản sáng Taupe & Voan thêu gân lá 3 tầng nghệ thuật",
     colors: ["#7e7065", "#8f8074", "#6b6057", "#9e8e81", "#544c45", "#cfc4b8", "#a89a8c"],

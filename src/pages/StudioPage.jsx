@@ -40,7 +40,8 @@ import {
   Zap,
   FastForward,
   Palette,
-  Ruler
+  Ruler,
+  Tag
 } from 'lucide-react';
 
 const CURTAIN_COLOR_NAMES = {
@@ -190,7 +191,8 @@ export function StudioPage({
   const [surveyAnswers, setSurveyAnswers] = useState({
     location: 'indoor', // 'indoor' | 'outdoor'
     doorType: 'window',  // 'window' | 'main'
-    windowPanels: 'single' // 'single' | '3' | '4'
+    windowPanels: 'single', // 'single' | '3' | '4'
+    budget: 'all' // 'all' | 'economy' | 'standard' | 'luxury'
   });
   const [isScanning, setIsScanning] = useState(false);
   const scanTimerRef = useRef(null);
@@ -278,6 +280,74 @@ export function StudioPage({
     const targetRatio = next ? 1.0 : 0.0;
     setCurtainOpenRatio(targetRatio);
     viewer3dRef.current?.setCurtainOpenRatio?.(targetRatio);
+  };
+
+  // Gợi ý mức giá theo cấu trúc khung cửa & phân khúc khách chọn
+  const getEstimatedPriceInfo = (answers) => {
+    if (answers.location === 'outdoor') {
+      return {
+        range: '650.000đ - 1.250.000đ',
+        unit: 'bộ',
+        desc: 'Bạt PVC 3 lớp dệt cốt sợi poly chịu lực gia cường, kháng nước 100%'
+      };
+    }
+    if (answers.doorType === 'main') {
+      if (answers.budget === 'economy') {
+        return {
+          range: '1.650.000đ - 2.850.000đ',
+          unit: 'bộ',
+          desc: 'Rèm vải 1 lớp xếp ly định hình cản sáng 100% chuẩn tối giản'
+        };
+      }
+      return {
+        range: '2.850.000đ - 5.650.000đ',
+        unit: 'bộ',
+        desc: 'Rèm 2 lớp cao cấp thêu lá / S-Fold chuẩn biệt thự & khách sạn 5 sao'
+      };
+    }
+    // Window
+    if (answers.windowPanels === '3') {
+      return {
+        range: '1.850.000đ - 2.950.000đ',
+        unit: 'bộ 3 ô',
+        desc: 'Bộ 3 rèm cuốn in tranh Botanical 3 cánh liền mạch đối xứng'
+      };
+    }
+    if (answers.windowPanels === '4') {
+      return {
+        range: '2.450.000đ - 3.850.000đ',
+        unit: 'bộ 4 ô',
+        desc: 'Bộ 4 rèm cuốn tranh Panorama Đại lộ Ngân Hạnh ghép 4 tấm'
+      };
+    }
+    // Single window
+    if (answers.budget === 'economy') {
+      return {
+        range: '550.000đ - 950.000đ',
+        unit: 'bộ',
+        desc: 'Rèm cuốn vải dệt Linen cản sáng tự nhiên, giải pháp tiết kiệm'
+      };
+    }
+    if (answers.budget === 'luxury') {
+      return {
+        range: '980.000đ - 1.850.000đ',
+        unit: 'bộ',
+        desc: 'Rèm tổ ong cách nhiệt tráng bạc 100% hoặc Rèm Roman Linen cao cấp'
+      };
+    }
+    if (answers.budget === 'standard') {
+      return {
+        range: '850.000đ - 1.850.000đ',
+        unit: 'bộ',
+        desc: 'Rèm Roman xếp lớp Slub hoặc Rèm tổ ong lục giác cản nhiệt'
+      };
+    }
+    // 'all'
+    return {
+      range: '550.000đ - 2.450.000đ',
+      unit: 'bộ',
+      desc: 'Khoảng giá linh hoạt từ rèm cuốn hiện đại đến rèm xếp lớp cao cấp'
+    };
   };
 
   // Trigger file selection -> open questionnaire survey
@@ -456,7 +526,7 @@ export function StudioPage({
                   setRoomImage('/assets/studio-room.png');
                   setHasUploaded(false);
                   setAnalyzed(false);
-                  const resetDiag = determineCurtainRecommendations({ doorType: 'window', location: 'indoor', windowPanels: 'single' });
+                  const resetDiag = determineCurtainRecommendations({ doorType: 'window', location: 'indoor', windowPanels: 'single', budget: 'all' });
                   setAiDiagnosis(resetDiag);
                 }}
                 aria-label="Đặt lại ảnh"
@@ -602,6 +672,13 @@ export function StudioPage({
                 <span className="lbl">Đề xuất:</span>
                 <span style={{ fontSize: '11px', color: '#8b6b3e', fontWeight: 600 }}>{aiDiagnosis.caseTitle}</span>
               </div>
+
+              {aiDiagnosis.estimatedPriceRange && (
+                <div className="summary-item">
+                  <span className="lbl">Giá gợi ý:</span>
+                  <strong style={{ color: '#935817', fontSize: '12px' }}>{aiDiagnosis.estimatedPriceRange}</strong>
+                </div>
+              )}
 
               <div className="recommended-chips-wrapper" style={{ marginTop: '8px' }}>
                 <span className="lbl" style={{ display: 'block', fontSize: '10.5px', marginBottom: '4px' }}>Các mẫu rèm AI gợi ý:</span>
@@ -1042,6 +1119,12 @@ export function StudioPage({
                       <strong>{type.name}</strong>
                       {isRecommended && <span className="ai-pick-badge">AI Khuyên dùng ⭐</span>}
                     </div>
+                    {type.priceDisplay && (
+                      <div className="recommend-card-price">
+                        <Tag size={11} color="#8b6b3e" />
+                        <span>{type.priceDisplay}</span>
+                      </div>
+                    )}
                     <small>{type.desc}</small>
                     <span className="mini-swatches" onClick={(e) => e.stopPropagation()}>
                       {type.colors.slice(0, 7).map((c) => {
@@ -1266,6 +1349,94 @@ export function StudioPage({
                       </div>
                     </div>
                   )}
+
+                  {/* Question: Gợi ý mức giá & Ngân sách mong muốn */}
+                  <div className="survey-question-group">
+                    <label className="question-title">
+                      <span className="q-num">{surveyAnswers.doorType === 'window' ? '4' : '3'}</span>
+                      Gợi ý mức giá & Ngân sách dự kiến:
+                    </label>
+                    <div className="question-options-grid-budget">
+                      <button
+                        type="button"
+                        className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'economy' ? 'selected' : '')}
+                        onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'economy' }))}
+                      >
+                        <span className="opt-emoji">🏷️</span>
+                        <div className="opt-text">
+                          <strong>Tiết kiệm</strong>
+                          <small>&lt; 1.5 triệu / bộ</small>
+                        </div>
+                        {surveyAnswers.budget === 'economy' && <Check size={14} className="opt-check" />}
+                      </button>
+
+                      <button
+                        type="button"
+                        className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'standard' ? 'selected' : '')}
+                        onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'standard' }))}
+                      >
+                        <span className="opt-emoji">💎</span>
+                        <div className="opt-text">
+                          <strong>Tiêu chuẩn</strong>
+                          <small>1.5 - 3.5 triệu (Khuyên dùng)</small>
+                        </div>
+                        {surveyAnswers.budget === 'standard' && <Check size={14} className="opt-check" />}
+                      </button>
+
+                      <button
+                        type="button"
+                        className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'luxury' ? 'selected' : '')}
+                        onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'luxury' }))}
+                      >
+                        <span className="opt-emoji">👑</span>
+                        <div className="opt-text">
+                          <strong>Cao cấp</strong>
+                          <small>&gt; 3.5 triệu / bộ</small>
+                        </div>
+                        {surveyAnswers.budget === 'luxury' && <Check size={14} className="opt-check" />}
+                      </button>
+
+                      <button
+                        type="button"
+                        className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'all' ? 'selected' : '')}
+                        onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'all' }))}
+                      >
+                        <span className="opt-emoji">✨</span>
+                        <div className="opt-text">
+                          <strong>Tất cả mức giá</strong>
+                          <small>Xem toàn bộ phân khúc</small>
+                        </div>
+                        {surveyAnswers.budget === 'all' && <Check size={14} className="opt-check" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Dynamic Price Estimate Highlight Box */}
+                  {(() => {
+                    const priceInfo = getEstimatedPriceInfo(surveyAnswers);
+                    return (
+                      <div className="survey-price-estimate-card">
+                        <div className="estimate-header">
+                          <div className="estimate-label">
+                            <Tag size={14} color="#8b6b3e" />
+                            <span>MỨC GIÁ GỢI Ý DỰ KIẾN:</span>
+                          </div>
+                          <div className="estimate-price-value">
+                            <strong>{priceInfo.range}</strong>
+                            <small>/{priceInfo.unit}</small>
+                          </div>
+                        </div>
+                        <p className="estimate-note">
+                          ✨ {priceInfo.desc}
+                        </p>
+                        <div className="estimate-included-perks">
+                          <span>✓ Miễn phí khảo sát & may đo</span>
+                          <span>✓ Kèm trọn bộ phụ kiện ray cao cấp</span>
+                          <span>✓ Bảo hành chính hãng 5 năm</span>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Confirm & Start AI Recognition Button */}
                   <div className="survey-actions-bar">
