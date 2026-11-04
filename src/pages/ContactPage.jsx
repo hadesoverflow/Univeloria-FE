@@ -91,16 +91,11 @@ export function ContactPage({
               <h2>Luôn đồng hành<br />cùng bạn</h2>
               <p>Dù bạn cần tư vấn chọn rèm, thiết kế theo yêu cầu hay trải nghiệm AI 3D, đội ngũ UNIVELORIA luôn sẵn sàng hỗ trợ.</p>
               <div className="contact-list">
-                <ContactItem icon="pin" title="Địa chỉ showroom">
-                  <span>123 Đường Hoa Phượng, Quận 7,</span>
-                  <span>TP. Hồ Chí Minh, Việt Nam</span>
-                </ContactItem>
                 <ContactItem icon="phone" title="Số điện thoại">
-                  <a href="tel:+842812345678">+84 28 1234 5678</a>
-                  <a href="tel:+84901234567">+84 90 123 4567</a>
+                  <a href="tel:0398356785">039 835 6785</a>
                 </ContactItem>
                 <ContactItem icon="mail" title="Email">
-                  <a href="mailto:hello@univeloria.vn">hello@univeloria.vn</a>
+                  <a href="mailto:univeloria@gmail.com">univeloria@gmail.com</a>
                 </ContactItem>
                 <ContactItem icon="clock" title="Giờ làm việc">
                   <span>Thứ 2 - Thứ 7: 8:30 - 18:00</span>
@@ -447,23 +442,21 @@ export function ContactPage({
                   <div className="map-road road-three" />
                   <div className="map-green green-one" />
                   <div className="map-green green-two" />
-                  <div className="map-label">Showroom UNIVELORIA</div>
+                  <div className="map-label">Trực Tuyến Toàn Quốc</div>
                   <div className="map-pin"><ContactIcon name="pin" size={24} /></div>
-                  <span className="map-caption">BẢN ĐỒ MINH HỌA</span>
+                  <span className="map-caption">DỊCH VỤ TOÀN QUỐC</span>
                 </div>
                 <div className="map-bottom">
                   <div className="map-pin-small"><ContactIcon name="pin" size={18} /></div>
                   <div className="map-address">
-                    <strong>UNIVELORIA Showroom</strong>
-                    <span>123 Đường Hoa Phượng, Quận 7, TP. Hồ Chí Minh</span>
+                    <strong>UNIVELORIA Online Studio & May Đo Tận Nơi</strong>
+                    <span>Tư vấn AI 3D trực tuyến & Giao hàng may đo toàn quốc</span>
                   </div>
                   <a
                     className="directions"
-                    href="https://maps.google.com/?q=Qu%E1%BA%ADn+7+TP+H%E1%BB%93+Ch%C3%AD+Minh"
-                    target="_blank"
-                    rel="noreferrer"
+                    href="tel:0398356785"
                   >
-                    Chỉ đường <ContactIcon name="arrow" size={14} />
+                    Gọi ngay <ContactIcon name="arrow" size={14} />
                   </a>
                 </div>
               </div>

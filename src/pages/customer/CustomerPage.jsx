@@ -358,9 +358,9 @@ export function CustomerPage({
               <p className="concierge-desc">
                 Cần tư vấn mẫu vải thực tế tại tư gia hoặc đo đạc gấp?
               </p>
-              <a href="tel:0334713541" className="concierge-phone">
+              <a href="tel:0398356785" className="concierge-phone">
                 <Phone size={13} />
-                <span>0334 713 541</span>
+                <span>039 835 6785</span>
               </a>
             </div>
           </aside>

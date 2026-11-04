@@ -10,8 +10,8 @@ export const contactFaqs = [
     a: "UNIVELORIA là thương hiệu chuyên bán lẻ và may đo rèm thành phẩm cao cấp theo kích thước. Chúng tôi không bao gồm nhân công lắp đặt tại nhà nhằm mang lại mức giá xưởng tốt nhất cho quý khách. Mỗi bộ rèm xuất xưởng đều được tặng kèm trọn bộ phụ kiện ray treo cao cấp và tài liệu/video hướng dẫn tự lắp đặt vô cùng nhanh chóng và dễ dàng."
   },
   {
-    q: "Tôi có thể đặt lịch hẹn tư vấn tại showroom không?",
-    a: "Có. Bạn có thể gửi biểu mẫu liên hệ để đội ngũ UNIVELORIA xác nhận thời gian phù hợp và chuẩn bị các mẫu vải thực tế trước khi bạn đến showroom."
+    q: "Tôi có thể đặt lịch hẹn tư vấn và xem mẫu vải tận nơi không?",
+    a: "Có. Bạn có thể gửi biểu mẫu liên hệ hoặc gọi hotline 039 835 6785 để đội ngũ UNIVELORIA tư vấn trực quan qua AI 3D hoặc mang mẫu vải thực tế đến tận nơi tư vấn cho bạn."
   },
   {
     q: "UNIVELORIA có may đo rèm theo kích thước yêu cầu không?",

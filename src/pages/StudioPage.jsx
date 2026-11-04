@@ -37,8 +37,76 @@ import {
   Scan,
   Compass,
   Zap,
-  FastForward
+  FastForward,
+  Palette
 } from 'lucide-react';
+
+const CURTAIN_COLOR_NAMES = {
+  // roman-linen
+  '#dfd7c8': 'Kem Linen tự nhiên',
+  '#c8bcae': 'Cát ấm mộc mạc',
+  '#a89f91': 'Be sẫm tân cổ điển',
+  '#f0ece3': 'Trắng ngà Slub',
+  '#7d7263': 'Xám tro Rustic',
+  // honeycomb
+  '#c8beaf': 'Be nhạt thanh lịch',
+  '#b5ab9e': 'Be ấm cách nhiệt',
+  '#ded8cf': 'Kem sáng Pastel',
+  '#8c8275': 'Nâu trầm Bắc Âu',
+  '#5c544b': 'Cà phê ấm áp',
+  // pvc-tarpaulin
+  '#1a56b7': 'Xanh dương sọc trắng',
+  '#1b5e3b': 'Xanh rêu ban công',
+  '#4b5563': 'Xám than hiện đại',
+  '#c25827': 'Cam đất nung',
+  '#10223e': 'Xanh Navy bảo vệ',
+  // roller-linen
+  '#dfd5c4': 'Kem mộc Linen',
+  '#f4f0e8': 'Trắng sứ tự nhiên',
+  '#c8c0b2': 'Cát xám thanh nhã',
+  '#9b8d7e': 'Nâu tây cản sáng',
+  '#9ca899': 'Xanh Sage dịu mát',
+  '#4a443e': 'Nâu đen tối giản',
+  // single-pleat
+  '#9fa4a9': 'Xám bạc thanh lịch',
+  '#767c82': 'Xám trung tính',
+  '#b4b9bf': 'Xám ngọc trai',
+  '#61666b': 'Xám than chì',
+  '#c5beb5': 'Be cát mềm mại',
+  '#6f7a85': 'Xanh xám hiện đại',
+  '#383b3e': 'Đen than huyền bí',
+  // sfold-luxury
+  '#d5cbbe': 'Kem cát S-Fold',
+  '#e4ded5': 'Trắng ngà sang trọng',
+  '#c2b4a3': 'Be vàng hoàng gia',
+  '#a89986': 'Nâu be quý phái',
+  '#877867': 'Nâu trầm ấm cúng',
+  // leaf-embroidery
+  '#7e7065': 'Nâu xám thêu lá',
+  '#8f8074': 'Be sẫm dệt thoi',
+  '#6b6057': 'Nâu tro cổ điển',
+  '#9e8e81': 'Xám ấm tinh tế',
+  '#544c45': 'Nâu hạt dẻ',
+  '#cfc4b8': 'Kem nhạt Slub',
+  '#a89a8c': 'Cát mộc Slub',
+  // art prints
+  '#ffffff': 'Trắng in tranh 3D'
+};
+
+function getCurtainColorName(hex) {
+  if (!hex) return 'Mặc định';
+  return CURTAIN_COLOR_NAMES[hex.toLowerCase()] || 'Màu vải cao cấp';
+}
+
+function isLightColorHex(hex) {
+  if (!hex || hex === 'transparent') return false;
+  const c = hex.replace('#', '');
+  const r = parseInt(c.substr(0, 2), 16) || 0;
+  const g = parseInt(c.substr(2, 2), 16) || 0;
+  const b = parseInt(c.substr(4, 2), 16) || 0;
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 155;
+}
 
 export function StudioPage({
   navigateTo,
@@ -79,7 +147,20 @@ export function StudioPage({
   const [isCurtainOpen, setIsCurtainOpen] = useState(false);
   const [activeAtmosphere, setActiveAtmosphere] = useState('noon');
   const viewer3dRef = useRef(null);
+  const stepperRef = useRef(null);
   const [showAdjuster, setShowAdjuster] = useState(false);
+  const [calibrationPrecision, setCalibrationPrecision] = useState('fine'); // 'fine' (2%) | 'medium' (5%) | 'coarse' (10%)
+
+  useEffect(() => {
+    // Ensure stepper starts scrolled fully to the left so Step 1 icon is never clipped on mobile
+    if (stepperRef.current) {
+      stepperRef.current.scrollLeft = 0;
+    }
+  }, []);
+
+  const curtainMoveStep = calibrationPrecision === 'fine' ? 0.02 : calibrationPrecision === 'medium' ? 0.04 : 0.08;
+  const curtainScaleStep = calibrationPrecision === 'fine' ? 0.025 : calibrationPrecision === 'medium' ? 0.05 : 0.10;
+  const photoScaleStep = calibrationPrecision === 'fine' ? 0.02 : calibrationPrecision === 'medium' ? 0.04 : 0.08;
 
   // Pagination for curtain recommendations (5 items per page)
   const ITEMS_PER_PAGE = 5;
@@ -276,7 +357,7 @@ export function StudioPage({
           <h1>Trải nghiệm phòng 3D<br/>tương tác thời gian thực<br/><em>AI Studio Siêu Thực</em></h1>
           <p>Tải lên ảnh căn phòng của bạn. AI sẽ khảo sát khung cửa, nhận diện thông minh và trực tiếp ướm rèm 3D vào khung cửa với mô phỏng ánh sáng, gió và chuyển động chân thực.</p>
         </div>
-        <div className="stepper" aria-label="Quy trình 4 bước">
+        <div className="stepper" ref={stepperRef} aria-label="Quy trình 4 bước">
           {[
             ['image', '1', 'Tải ảnh phòng'],
             ['sparkle', '2', 'AI Nhận diện'],
@@ -631,46 +712,82 @@ export function StudioPage({
           {showAdjuster && (
             <div className="external-adjuster-panel">
               <div className="adjuster-header">
-                <span>⚡ Căn chỉnh rèm theo khung cửa (3D Calibration)</span>
+                <div className="adjuster-header-left">
+                  <span className="adjuster-title">⚡ Căn chỉnh rèm 3D</span>
+                </div>
+                <div className="adjuster-precision-segmented">
+                  <button
+                    type="button"
+                    className={'prec-btn ' + (calibrationPrecision === 'fine' ? 'active' : '')}
+                    onClick={() => setCalibrationPrecision('fine')}
+                    title="Bước nhảy siêu tỉ mỉ 2% (khớp chuẩn từng cm)"
+                  >
+                    🎯 Tỉ mỉ 2%
+                  </button>
+                  <button
+                    type="button"
+                    className={'prec-btn ' + (calibrationPrecision === 'medium' ? 'active' : '')}
+                    onClick={() => setCalibrationPrecision('medium')}
+                    title="Bước nhảy vừa phải 5%"
+                  >
+                    ⚖️ Vừa 5%
+                  </button>
+                  <button
+                    type="button"
+                    className={'prec-btn ' + (calibrationPrecision === 'coarse' ? 'active' : '')}
+                    onClick={() => setCalibrationPrecision('coarse')}
+                    title="Bước nhảy nhanh 10%"
+                  >
+                    ⏩ Nhanh 10%
+                  </button>
+                </div>
                 <button className="adjuster-close" onClick={() => setShowAdjuster(false)} type="button">✕</button>
               </div>
+
               <div className="adjuster-grid">
-                <div className="adjuster-group" style={{ gridColumn: 'span 2' }}>
-                  <small>Khớp nhanh vị trí cửa sổ trong ảnh (hoặc click & kéo trực tiếp rèm 3D):</small>
-                  <div className="btn-row" style={{ marginTop: '4px' }}>
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(-0.88, 0)} title="Khớp vào cửa sổ bên trái ảnh" type="button" style={{ fontWeight: 600 }}>⇦ Cửa bên trái</button>
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0, 0)} title="Khớp vào cửa sổ chính giữa ảnh" type="button" style={{ fontWeight: 600 }}>⦿ Cửa chính giữa</button>
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0.88, 0)} title="Khớp vào cửa sổ bên phải ảnh" type="button" style={{ fontWeight: 600 }}>⇨ Cửa bên phải</button>
+                {/* 1. Window Presets */}
+                <div className="adjuster-row">
+                  <span className="adjuster-row-label">Khớp cửa:</span>
+                  <div className="adjuster-row-btns cols-3">
+                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(-0.88, 0)} title="Khớp vào cửa sổ bên trái ảnh" type="button">⇦ Cửa trái</button>
+                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0, 0)} title="Khớp vào cửa sổ chính giữa ảnh" type="button">⦿ Cửa giữa</button>
+                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0.88, 0)} title="Khớp vào cửa sổ bên phải ảnh" type="button">⇨ Cửa phải</button>
                   </div>
                 </div>
-                <div className="adjuster-group">
-                  <small>Dời vị trí tinh chỉnh</small>
-                  <div className="btn-row">
-                    <button onClick={() => viewer3dRef.current?.moveCurtain(-0.06, 0)} title="Sang trái" type="button"><ArrowLeft size={13}/> Trái</button>
-                    <button onClick={() => viewer3dRef.current?.moveCurtain(0.06, 0)} title="Sang phải" type="button"><ArrowRight size={13}/> Phải</button>
-                    <button onClick={() => viewer3dRef.current?.moveCurtain(0, 0.05)} title="Lên trên" type="button"><ArrowUp size={13}/> Lên</button>
-                    <button onClick={() => viewer3dRef.current?.moveCurtain(0, -0.05)} title="Xuống dưới" type="button"><ArrowDown size={13}/> Xuống</button>
+
+                {/* 2. Position Offset */}
+                <div className="adjuster-row">
+                  <span className="adjuster-row-label">Dời ({calibrationPrecision === 'fine' ? '±2cm' : calibrationPrecision === 'medium' ? '±4cm' : '±8cm'}):</span>
+                  <div className="adjuster-row-btns cols-4">
+                    <button onClick={() => viewer3dRef.current?.moveCurtain(-curtainMoveStep, 0)} title="Sang trái" type="button"><ArrowLeft size={11}/> Trái</button>
+                    <button onClick={() => viewer3dRef.current?.moveCurtain(curtainMoveStep, 0)} title="Sang phải" type="button"><ArrowRight size={11}/> Phải</button>
+                    <button onClick={() => viewer3dRef.current?.moveCurtain(0, curtainMoveStep)} title="Lên trên" type="button"><ArrowUp size={11}/> Lên</button>
+                    <button onClick={() => viewer3dRef.current?.moveCurtain(0, -curtainMoveStep)} title="Xuống dưới" type="button"><ArrowDown size={11}/> Xuống</button>
                   </div>
                 </div>
-                <div className="adjuster-group">
-                  <small>Kích thước rèm</small>
-                  <div className="btn-row">
-                    <button onClick={() => viewer3dRef.current?.scaleCurtain(0.10, 0)} title="Rộng hơn" type="button"><Maximize2 size={13}/> Rộng +</button>
-                    <button onClick={() => viewer3dRef.current?.scaleCurtain(-0.10, 0)} title="Hẹp hơn" type="button"><Minimize2 size={13}/> Hẹp -</button>
-                    <button onClick={() => viewer3dRef.current?.scaleCurtain(0, 0.10)} title="Dài hơn" type="button">Dài +</button>
-                    <button onClick={() => viewer3dRef.current?.scaleCurtain(0, -0.10)} title="Ngắn hơn" type="button">Ngắn -</button>
+
+                {/* 3. Curtain Scale */}
+                <div className="adjuster-row">
+                  <span className="adjuster-row-label">Cỡ rèm:</span>
+                  <div className="adjuster-row-btns cols-4">
+                    <button onClick={() => viewer3dRef.current?.scaleCurtain(curtainScaleStep, 0)} title="Rộng hơn" type="button">Rộng +</button>
+                    <button onClick={() => viewer3dRef.current?.scaleCurtain(-curtainScaleStep, 0)} title="Hẹp hơn" type="button">Hẹp -</button>
+                    <button onClick={() => viewer3dRef.current?.scaleCurtain(0, curtainScaleStep)} title="Dài hơn" type="button">Dài +</button>
+                    <button onClick={() => viewer3dRef.current?.scaleCurtain(0, -curtainScaleStep)} title="Ngắn hơn" type="button">Ngắn -</button>
                   </div>
                 </div>
-                <div className="adjuster-group">
-                  <small>Kích thước ảnh phòng</small>
-                  <div className="btn-row">
-                    <button onClick={() => viewer3dRef.current?.scalePhoto(-0.08)} title="Thu nhỏ kích thước ảnh căn phòng" type="button"><Minimize2 size={13}/> Thu nhỏ ảnh -</button>
-                    <button onClick={() => viewer3dRef.current?.scalePhoto(0.08)} title="Phóng to kích thước ảnh căn phòng" type="button"><Maximize2 size={13}/> Phóng to ảnh +</button>
+
+                {/* 4. Room Photo Zoom & Reset in 1 combined tidy row */}
+                <div className="adjuster-row">
+                  <span className="adjuster-row-label">Ảnh & ⟳:</span>
+                  <div className="adjuster-row-btns cols-photo-reset">
+                    <button onClick={() => viewer3dRef.current?.scalePhoto(-photoScaleStep)} title="Thu nhỏ ảnh căn phòng" type="button">Ảnh -</button>
+                    <button onClick={() => viewer3dRef.current?.scalePhoto(photoScaleStep)} title="Phóng to ảnh căn phòng" type="button">Ảnh +</button>
+                    <button className="adjuster-reset-btn" onClick={() => viewer3dRef.current?.resetCurtainTransform()} title="Khôi phục rèm về vị trí và kích thước ban đầu" type="button">
+                      <RotateCcw size={11}/> Đặt lại
+                    </button>
                   </div>
                 </div>
-                <button className="adjuster-reset-btn" onClick={() => viewer3dRef.current?.resetCurtainTransform()} type="button">
-                  <RotateCcw size={12}/> Đặt lại chuẩn
-                </button>
               </div>
             </div>
           )}
@@ -691,6 +808,35 @@ export function StudioPage({
               onConsultClick={() => navigateTo('contact')}
             />
           </div>
+
+          {/* Interactive Curtain Fabric Color Palette */}
+          {currentType?.colors && currentType.colors.length > 0 && (
+            <div className="studio-curtain-color-dock">
+              <div className="color-dock-info">
+                <Palette size={13} color="#c8a87d" />
+                <span className="color-dock-title">Màu rèm:</span>
+                <strong className="color-dock-active-name">{getCurtainColorName(studioColor)}</strong>
+              </div>
+              <div className="color-dock-swatches">
+                {currentType.colors.map((c, idx) => {
+                  const isActive = studioColor?.toLowerCase() === c.toLowerCase();
+                  return (
+                    <button
+                      key={c + idx}
+                      type="button"
+                      className={'studio-swatch-btn ' + (isActive ? 'active' : '')}
+                      style={{ backgroundColor: c }}
+                      onClick={() => setStudioColor(c)}
+                      title={`Chọn màu: ${getCurtainColorName(c)} (${c})`}
+                      aria-label={`Chọn màu ${getCurtainColorName(c)}`}
+                    >
+                      {isActive && <Check size={11} color={isLightColorHex(c) ? '#1a1816' : '#ffffff'} strokeWidth={3} />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="viewer-controls">
             {/* 3D Curtain Action Dock */}
@@ -840,10 +986,25 @@ export function StudioPage({
                       {isRecommended && <span className="ai-pick-badge">AI Khuyên dùng ⭐</span>}
                     </div>
                     <small>{type.desc}</small>
-                    <span className="mini-swatches">
-                      {type.colors.slice(0, 7).map((c) => (
-                        <i key={c} style={{ background: c }} />
-                      ))}
+                    <span className="mini-swatches" onClick={(e) => e.stopPropagation()}>
+                      {type.colors.slice(0, 7).map((c) => {
+                        const isCurrentActive = activeType === type.id && studioColor?.toLowerCase() === c.toLowerCase();
+                        return (
+                          <button
+                            key={c}
+                            type="button"
+                            className={'card-mini-swatch ' + (isCurrentActive ? 'active' : '')}
+                            style={{ backgroundColor: c }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              chooseType(type);
+                              setStudioColor(c);
+                            }}
+                            title={getCurtainColorName(c)}
+                            aria-label={`Chọn màu ${getCurtainColorName(c)}`}
+                          />
+                        );
+                      })}
                     </span>
                   </span>
                   <span className="recommend-arrow"><StudioIcon name="arrow" size={16} /></span>

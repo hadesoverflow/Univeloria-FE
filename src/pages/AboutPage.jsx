@@ -24,8 +24,8 @@ import {
 } from 'lucide-react';
 
 export function AboutPage({ navigateTo }) {
-  // State for collapsible "Xem thêm" in Core Values cards
-  const [expandedValues, setExpandedValues] = useState({});
+  // State for collapsible "Xem thêm" in Core Values cards (default expanded so full content is visible)
+  const [expandedValues, setExpandedValues] = useState({ 1: true, 2: true, 3: true, 4: true });
 
   const toggleExpand = (id) => {
     setExpandedValues((prev) => ({
@@ -118,32 +118,13 @@ export function AboutPage({ navigateTo }) {
       <section className="mission-vision-section" id="mission-vision">
         <div className="mv-container">
           <div className="mv-header">
-            <div className="eyebrow">MISSION & VISION <span /></div>
-            <h2>Sứ Mệnh & Tầm Nhìn</h2>
+            <div className="eyebrow">1.5.2 & 1.5.3 · TẦM NHÌN & SỨ MỆNH <span /></div>
+            <h2>Tầm Nhìn & Sứ Mệnh</h2>
             <p>Định hướng chiến lược và kim chỉ nam trên hành trình ứng dụng công nghệ hoàn thiện không gian sống</p>
           </div>
 
           <div className="mv-grid">
-            {/* Sứ mệnh Block */}
-            <div className="mv-block mv-mission-block">
-              <div className="mv-card-top">
-                <div className="mv-icon-badge">
-                  <Target size={20} />
-                </div>
-                <div className="mv-titles">
-                  <span className="mv-tag">{aboutMissionVision.mission.tag}</span>
-                  <span className="mv-subtag">{aboutMissionVision.mission.subTag}</span>
-                </div>
-              </div>
-              <h3>{aboutMissionVision.mission.title}</h3>
-              <div className="mv-highlight-box">
-                <Sparkles size={15} />
-                <span>{aboutMissionVision.mission.highlight}</span>
-              </div>
-              <p className="mv-body-text">{aboutMissionVision.mission.content}</p>
-            </div>
-
-            {/* Tầm nhìn Block */}
+            {/* 1.5.2 Tầm nhìn Block */}
             <div className="mv-block mv-vision-block">
               <div className="mv-card-top">
                 <div className="mv-icon-badge">
@@ -161,6 +142,25 @@ export function AboutPage({ navigateTo }) {
               </div>
               <p className="mv-body-text">{aboutMissionVision.vision.content}</p>
             </div>
+
+            {/* 1.5.3 Sứ mệnh Block */}
+            <div className="mv-block mv-mission-block">
+              <div className="mv-card-top">
+                <div className="mv-icon-badge">
+                  <Target size={20} />
+                </div>
+                <div className="mv-titles">
+                  <span className="mv-tag">{aboutMissionVision.mission.tag}</span>
+                  <span className="mv-subtag">{aboutMissionVision.mission.subTag}</span>
+                </div>
+              </div>
+              <h3>{aboutMissionVision.mission.title}</h3>
+              <div className="mv-highlight-box">
+                <Sparkles size={15} />
+                <span>{aboutMissionVision.mission.highlight}</span>
+              </div>
+              <p className="mv-body-text">{aboutMissionVision.mission.content}</p>
+            </div>
           </div>
         </div>
       </section>
@@ -169,8 +169,8 @@ export function AboutPage({ navigateTo }) {
       <section className="core-values-section" id="core-values">
         <div className="cv-container">
           <div className="core-values-header">
-            <div className="eyebrow">CORE VALUES <span /></div>
-            <h2>4 Giá Trị Cốt Lõi</h2>
+            <div className="eyebrow">1.5.4 · GIÁ TRỊ CỐT LÕI <span /></div>
+            <h2>1.5.4. Giá Trị Cốt Lõi (Core Values)</h2>
             <p>Nguyên tắc nền tảng định hình từng giải pháp, thuật toán AI và trải nghiệm khách hàng tại UniVeloria</p>
           </div>
 

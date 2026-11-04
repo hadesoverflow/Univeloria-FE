@@ -388,7 +388,7 @@ const handleLoginSubmit = async (e) => {
                         className="smart-forgot-link"
                         onClick={(e) => {
                           e.preventDefault();
-                          setErrorMsg('Vui lòng liên hệ hotline 0334713541 hoặc email univeloria@gmail.com để lấy lại mật khẩu.');
+                          setErrorMsg('Vui lòng liên hệ hotline 039 835 6785 hoặc email univeloria@gmail.com để lấy lại mật khẩu.');
                         }}
                       >
                         Quên mật khẩu?

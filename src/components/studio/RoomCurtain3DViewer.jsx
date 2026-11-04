@@ -53,16 +53,16 @@ export const ATMOSPHERE_MODES = {
     id: 'sunset',
     name: 'Hoàng hôn',
     icon: 'Sunset',
-    sunColor: '#ff7b32',
-    sunIntensity: 3.1,
-    sunPos: [4.6, 1.5, 3.6],
-    ambColor: '#e08f62',
-    ambIntensity: 0.95,
-    skyTop: '#ea5d28',
-    skyBottom: '#fbc572',
-    coveIntensity: 1.9,
-    coveColor: '#ffb56b',
-    roomTone: '#f3e1d3'
+    sunColor: '#fedca8',
+    sunIntensity: 2.2,
+    sunPos: [4.6, 1.4, 3.6],
+    ambColor: '#f2e7dc',
+    ambIntensity: 1.05,
+    skyTop: '#8b849c',
+    skyBottom: '#fed9b2',
+    coveIntensity: 0.7,
+    coveColor: '#fff1df',
+    roomTone: '#f6f0e8'
   },
   night: {
     id: 'night',
@@ -446,15 +446,20 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   const photoScaleRef = useRef(1.0);
   const basePhotoDimsRef = useRef({ w: 6.8, h: 3.87 });
 
-  // Interaction tracking (Continuous 360-degree rotation & distance)
+  // Interaction tracking (Safe clamped horizontal & vertical rotation)
   const isDraggingRef = useRef(false);
   const prevMouseRef = useRef({ x: 0, y: 0 });
   const initialPinchDistRef = useRef(null);
   const rotTargetRef = useRef({ x: 0, y: 0 });
   const rotCurrentRef = useRef({ x: 0, y: 0 });
+  const rotateDirectionRef = useRef(1); // 1 = right, -1 = left
   // Camera pulled back further for expansive depth (default: 5.4 as requested)
   const zoomTargetRef = useRef(5.4);
   const zoomCurrentRef = useRef(5.4);
+
+  // Maximum horizontal viewing angle limit (approx 66 degrees / 1.15 rad) to prevent 360-degree rotation behind the wall
+  const MAX_HORIZONTAL_ROTATION = 1.15;
+  const MIN_HORIZONTAL_ROTATION = -1.15;
 
   // Reset 3D camera
   const handleResetCamera = () => {
@@ -472,40 +477,48 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     zoomTargetRef.current = Math.min(15.0, Math.round((zoomTargetRef.current + delta) * 100) / 100);
   };
 
-  const rotate = (angle = Math.PI / 8) => {
-    rotTargetRef.current.y += angle;
+  const rotate = (angle = Math.PI / 10) => {
+    let next = rotTargetRef.current.y + angle * rotateDirectionRef.current;
+    if (next >= MAX_HORIZONTAL_ROTATION) {
+      rotateDirectionRef.current = -1;
+      next = MAX_HORIZONTAL_ROTATION - angle * 0.5;
+    } else if (next <= MIN_HORIZONTAL_ROTATION) {
+      rotateDirectionRef.current = 1;
+      next = MIN_HORIZONTAL_ROTATION + angle * 0.5;
+    }
+    rotTargetRef.current.y = Math.max(MIN_HORIZONTAL_ROTATION, Math.min(MAX_HORIZONTAL_ROTATION, next));
   };
 
   const moveCurtain = (dx, dy) => {
     setCurtainOffset((prev) => ({
-      x: Math.round((prev.x + dx) * 100) / 100,
-      y: Math.round((prev.y + dy) * 100) / 100,
+      x: Math.round((prev.x + dx) * 1000) / 1000,
+      y: Math.round((prev.y + dy) * 1000) / 1000,
     }));
   };
 
   const scaleCurtain = (dw, dh) => {
     setCurtainScale((prev) => ({
-      w: Math.max(0.15, Math.min(3.8, Math.round((prev.w + dw) * 100) / 100)),
-      h: Math.max(0.15, Math.min(3.8, Math.round((prev.h + dh) * 100) / 100)),
+      w: Math.max(0.15, Math.min(3.8, Math.round((prev.w + dw) * 1000) / 1000)),
+      h: Math.max(0.15, Math.min(3.8, Math.round((prev.h + dh) * 1000) / 1000)),
     }));
   };
 
   const setCurtainDimensions = (w, h) => {
     setCurtainScale({
-      w: Math.max(0.15, Math.min(3.8, Math.round(w * 100) / 100)),
-      h: Math.max(0.15, Math.min(3.8, Math.round(h * 100) / 100)),
+      w: Math.max(0.15, Math.min(3.8, Math.round(w * 1000) / 1000)),
+      h: Math.max(0.15, Math.min(3.8, Math.round(h * 1000) / 1000)),
     });
   };
 
   const setCurtainPosition = (x, y) => {
     setCurtainOffset({
-      x: Math.round(x * 100) / 100,
-      y: Math.round(y * 100) / 100,
+      x: Math.round(x * 1000) / 1000,
+      y: Math.round(y * 1000) / 1000,
     });
   };
 
   const scalePhoto = (delta) => {
-    const next = Math.max(0.4, Math.min(2.5, Math.round(((photoScaleRef.current || 1.0) + delta) * 100) / 100));
+    const next = Math.max(0.4, Math.min(2.5, Math.round(((photoScaleRef.current || 1.0) + delta) * 1000) / 1000));
     photoScaleRef.current = next;
     setPhotoScale(next);
     if (photoWallMeshRef.current && loadedTextureRef.current && basePhotoDimsRef.current) {
@@ -549,6 +562,11 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     resetCurtainTransform,
     scalePhoto,
     resetPhotoScale,
+    getCurtainTransform: () => ({
+      offset: curtainOffset,
+      scale: curtainScale,
+      photoScale: photoScaleRef.current
+    }),
   }));
 
   // Update curtain assembly transform and overhead lighting when offset or scale changes
@@ -1778,8 +1796,8 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       return;
     }
 
-    // Continuous 360-degree horizontal rotation (no clamp!)
-    rotTargetRef.current.y -= deltaX * 0.007;
+    // Horizontal rotation safely clamped within natural room perspective (-1.15 to +1.15 rad / ~66 deg)
+    rotTargetRef.current.y = Math.max(MIN_HORIZONTAL_ROTATION, Math.min(MAX_HORIZONTAL_ROTATION, rotTargetRef.current.y - deltaX * 0.007));
 
     // Vertical pitch tilt safely clamped
     rotTargetRef.current.x = Math.max(-0.28, Math.min(0.35, rotTargetRef.current.x + deltaY * 0.004));
@@ -1815,8 +1833,8 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       if (isAdjusting) {
         // Drag curtain with finger in calibration mode
         setCurtainOffset((prev) => {
-          const nextX = Math.round((prev.x + deltaX * 0.007) * 100) / 100;
-          const nextY = Math.round((prev.y - deltaY * 0.007) * 100) / 100;
+          const nextX = Math.round((prev.x + deltaX * 0.007) * 1000) / 1000;
+          const nextY = Math.round((prev.y - deltaY * 0.007) * 1000) / 1000;
           if (coveLightRef.current) {
             coveLightRef.current.position.set(nextX, 1.30 + nextY, 0.25);
           }
@@ -1825,8 +1843,8 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
         return;
       }
 
-      // Smooth horizontal rotation
-      rotTargetRef.current.y -= deltaX * 0.008;
+      // Smooth horizontal rotation safely clamped within natural room perspective (-1.15 to +1.15 rad / ~66 deg)
+      rotTargetRef.current.y = Math.max(MIN_HORIZONTAL_ROTATION, Math.min(MAX_HORIZONTAL_ROTATION, rotTargetRef.current.y - deltaX * 0.008));
       // Vertical pitch tilt safely clamped
       rotTargetRef.current.x = Math.max(-0.28, Math.min(0.35, rotTargetRef.current.x + deltaY * 0.005));
     } else if (e.touches.length === 2 && initialPinchDistRef.current !== null) {
@@ -1891,7 +1909,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       <div className="stage-3d-badge">
         <span className="live-dot" />
         <span>
-          3D SHOWROOM · {ATMOSPHERE_MODES[activeAtmosphere]?.name.toUpperCase()} · XOAY 360° CHUẨN VẬT LÝ
+          3D STUDIO · {ATMOSPHERE_MODES[activeAtmosphere]?.name.toUpperCase()} · TƯƠNG TÁC CHUẨN VẬT LÝ
         </span>
       </div>
     </div>

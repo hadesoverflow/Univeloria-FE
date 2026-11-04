@@ -49,7 +49,7 @@ export function UnifiedFooter({ navigateTo }) {
           <h4>Liên Hệ</h4>
           <p className="footer-contact-item">
             <span>Hotline tư vấn: </span>
-            <a href="tel:0334713541" className="footer-highlight-link">0334713541</a>
+            <a href="tel:0398356785" className="footer-highlight-link">039 835 6785</a>
           </p>
           <p className="footer-contact-item">
             <span>Email hỗ trợ: </span>
