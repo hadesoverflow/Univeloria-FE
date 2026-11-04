@@ -562,6 +562,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     resetCurtainTransform,
     scalePhoto,
     resetPhotoScale,
+    setCurtainOpenRatio: applyCurtainOpenRatio,
     getCurtainTransform: () => ({
       offset: curtainOffset,
       scale: curtainScale,
@@ -702,6 +703,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
 
     // 0. For Single Roller Blind (Rèm Cuốn In Tranh Nghệ Thuật)
     if (customPvcBottomRollerRef.current && customPvcSheetRef.current) {
+        const t = performance.now() * 0.001;
         if (activeAtmosphere === 'rain') {
           const windForce = Math.sin(t * 1.8) * 0.035 + Math.cos(t * 3.2) * 0.015;
           customPvcSheetRef.current.rotation.x = windForce * 0.25;
@@ -755,26 +757,23 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       customRightDrapeRef.current.visible = true;
     }
 
-    // 2. For Procedural Curtain (fallback)
-    const curtainWidth = 1.7;
-    const curtainHeight = 2.45;
-    const waves = curtainType.id === 'sheer' ? 8 : 6;
-
+    // 2. For Procedural Curtain (fallback) - Instant matrix scale without geometry reallocation
+    const procScaleX = Math.max(0.16, 1.0 - ratio * 0.84);
     if (leftCurtainMeshRef.current) {
-      leftCurtainMeshRef.current.geometry.dispose();
-      leftCurtainMeshRef.current.geometry = createCurtainGeometry(curtainWidth, curtainHeight, waves, ratio, true);
+      leftCurtainMeshRef.current.scale.x = procScaleX;
+      leftCurtainMeshRef.current.position.x = -ratio * 0.75;
     }
     if (rightCurtainMeshRef.current) {
-      rightCurtainMeshRef.current.geometry.dispose();
-      rightCurtainMeshRef.current.geometry = createCurtainGeometry(curtainWidth, curtainHeight, waves, ratio, false);
+      rightCurtainMeshRef.current.scale.x = procScaleX;
+      rightCurtainMeshRef.current.position.x = ratio * 0.75;
     }
     if (leftSheerMeshRef.current) {
-      leftSheerMeshRef.current.geometry.dispose();
-      leftSheerMeshRef.current.geometry = createCurtainGeometry(curtainWidth, curtainHeight, 10, ratio * 0.35, true);
+      leftSheerMeshRef.current.scale.x = Math.max(0.35, 1.0 - ratio * 0.35);
+      leftSheerMeshRef.current.position.x = -ratio * 0.25;
     }
     if (rightSheerMeshRef.current) {
-      rightSheerMeshRef.current.geometry.dispose();
-      rightSheerMeshRef.current.geometry = createCurtainGeometry(curtainWidth, curtainHeight, 10, ratio * 0.35, false);
+      rightSheerMeshRef.current.scale.x = Math.max(0.35, 1.0 - ratio * 0.35);
+      rightSheerMeshRef.current.position.x = ratio * 0.25;
     }
   };
 

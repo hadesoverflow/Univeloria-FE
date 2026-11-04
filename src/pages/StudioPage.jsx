@@ -155,10 +155,20 @@ export function StudioPage({
   const [calibrationPrecision, setCalibrationPrecision] = useState('fine'); // 'fine' (2%) | 'medium' (5%) | 'coarse' (10%)
 
   useEffect(() => {
-    // Ensure stepper starts scrolled fully to the left so Step 1 icon is never clipped on mobile
-    if (stepperRef.current) {
-      stepperRef.current.scrollLeft = 0;
-    }
+    // Ensure stepper starts scrolled fully to the left so Step 1 icon is never clipped on mobile (iPhone 14/15/16/17)
+    const resetStepperScroll = () => {
+      if (stepperRef.current) {
+        stepperRef.current.scrollLeft = 0;
+      }
+    };
+    resetStepperScroll();
+    const timer = setTimeout(resetStepperScroll, 100);
+    window.addEventListener('resize', resetStepperScroll);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', resetStepperScroll);
+      if (sliderRafRef.current) cancelAnimationFrame(sliderRafRef.current);
+    };
   }, []);
 
   const curtainMoveStep = calibrationPrecision === 'fine' ? 0.02 : calibrationPrecision === 'medium' ? 0.04 : 0.08;
@@ -247,10 +257,27 @@ export function StudioPage({
     setIsCurtainOpen(false);
   }, [activeType]);
 
+  const sliderRafRef = useRef(null);
+
+  const handleSliderChange = (e) => {
+    const val = parseFloat(e.target.value);
+    // Instant 3D WebGL transform update without waiting for React cycle
+    viewer3dRef.current?.setCurtainOpenRatio?.(val);
+
+    // Throttle React state update via requestAnimationFrame for 60fps responsiveness
+    if (sliderRafRef.current) cancelAnimationFrame(sliderRafRef.current);
+    sliderRafRef.current = requestAnimationFrame(() => {
+      setCurtainOpenRatio(val);
+      setIsCurtainOpen(val > 0.35);
+    });
+  };
+
   const handleToggleCurtainOpen = () => {
     const next = !isCurtainOpen;
     setIsCurtainOpen(next);
-    setCurtainOpenRatio(next ? 1.0 : 0.0);
+    const targetRatio = next ? 1.0 : 0.0;
+    setCurtainOpenRatio(targetRatio);
+    viewer3dRef.current?.setCurtainOpenRatio?.(targetRatio);
   };
 
   // Trigger file selection -> open questionnaire survey
@@ -890,11 +917,10 @@ export function StudioPage({
                   max="1.0"
                   step="0.01"
                   value={curtainOpenRatio}
-                  onChange={(e) => {
-                    const val = parseFloat(e.target.value);
-                    setCurtainOpenRatio(val);
-                    setIsCurtainOpen(val > 0.35);
-                  }}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onChange={handleSliderChange}
                 />
                 <span className="ratio-percent">{Math.round(curtainOpenRatio * 100)}%</span>
               </div>

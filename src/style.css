@@ -1308,12 +1308,12 @@
 }
 
 .stepper {
-  align-self: center;
+  align-self: stretch;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px;
-  padding: 13px 15px;
+  padding: 11px 15px;
   border: 1px solid rgba(255, 255, 255, 0.65);
   border-radius: 25px;
   background: rgba(250, 244, 235, 0.62);
@@ -2138,34 +2138,52 @@
     overflow-y: hidden !important;
     justify-content: flex-start !important;
     gap: 6px !important;
-    padding: 8px 12px !important;
+    padding: 7px 10px !important;
     border-radius: 16px !important;
+    scrollbar-width: none !important;
     -webkit-overflow-scrolling: touch !important;
-    scroll-padding-left: 10px !important;
+    scroll-padding-left: 0 !important;
   }
   .step {
-    flex: 0 0 auto !important;
-    min-width: 105px !important;
-    padding: 6px 10px !important;
-    gap: 6px !important;
+    flex: 1 1 0 !important;
+    min-width: 76px !important;
+    padding: 5px 6px !important;
+    gap: 5px !important;
     box-sizing: border-box !important;
     display: inline-flex !important;
     align-items: center !important;
+    border-radius: 99px !important;
+  }
+  .step:first-child {
+    margin-left: 0 !important;
+    padding-left: 6px !important;
   }
   .step-icon {
-    width: 30px !important;
-    height: 30px !important;
-    min-width: 30px !important;
-    min-height: 30px !important;
-    flex: 0 0 30px !important;
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+    flex: 0 0 26px !important;
     flex-shrink: 0 !important;
     display: grid !important;
     place-items: center !important;
     border-radius: 50% !important;
   }
-  .step-text b { font-size: 14px; }
-  .step-text small { font-size: 9px; }
-  .step-chevron { font-size: 18px; display: none; }
+  .step-text {
+    flex: 1 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+  .step-text b { font-size: 11px !important; line-height: 1 !important; }
+  .step-text small {
+    font-size: 8px !important;
+    line-height: 1.1 !important;
+    display: block !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  .step-chevron { font-size: 14px; display: none !important; }
   .workspace { display: flex; flex-direction: column; padding: 0 14px; gap: 12px; }
   .upload-panel, .recommend-panel { padding: 17px; }
   .preview-panel { min-height: 440px; padding: 13px; }
@@ -15196,7 +15214,7 @@
 .external-curtain-dock .curtain-toggle-btn.active {
   background: linear-gradient(135deg, #5c3e28 0%, #422c1d 100%) !important;
   color: #ffffff !important;
-  border: 1.5px solid #c8a87d !important;
+  border: 1px solid #c8a87d !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
 }
 
@@ -15222,17 +15240,24 @@
   color: #f5ede4 !important;
   font-size: 12px;
   font-weight: 700 !important;
+  touch-action: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  overscroll-behavior: contain !important;
 }
 
 .slider-track-wrap input[type="range"] {
   width: 110px;
   accent-color: #c8a87d;
   cursor: pointer;
+  touch-action: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
 }
 
 .ratio-percent {
   display: inline-block;
-  min-width: 32px;
+  min-width: 36px;
   text-align: right;
   font-variant-numeric: tabular-nums;
   color: #f1ece5;
@@ -16643,35 +16668,37 @@ button:active:not(:disabled),
     display: flex !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    padding: 8px 12px !important;
+    padding: 7px 10px !important;
     gap: 6px !important;
     scrollbar-width: none !important;
     -webkit-overflow-scrolling: touch !important;
     justify-content: flex-start !important;
     border-radius: 16px !important;
-    scroll-padding-left: 10px !important;
+    scroll-padding-left: 0 !important;
   }
   .stepper::-webkit-scrollbar {
     display: none !important;
   }
   .step {
-    flex: 0 0 auto !important;
-    min-width: 105px !important;
-    padding: 6px 10px !important;
-    gap: 6px !important;
+    flex: 1 1 0 !important;
+    min-width: 76px !important;
+    padding: 5px 6px !important;
+    gap: 5px !important;
     box-sizing: border-box !important;
     display: inline-flex !important;
     align-items: center !important;
+    border-radius: 99px !important;
   }
   .step:first-child {
     margin-left: 0 !important;
+    padding-left: 6px !important;
   }
   .step-icon {
-    width: 28px !important;
-    height: 28px !important;
-    min-width: 28px !important;
-    min-height: 28px !important;
-    flex: 0 0 28px !important;
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+    flex: 0 0 26px !important;
     flex-shrink: 0 !important;
     display: grid !important;
     place-items: center !important;
@@ -16680,12 +16707,19 @@ button:active:not(:disabled),
   .step-text {
     flex: 1 !important;
     min-width: 0 !important;
+    overflow: hidden !important;
   }
   .step-text b {
-    font-size: 13px !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
   }
   .step-text small {
-    font-size: 8.5px !important;
+    font-size: 8px !important;
+    line-height: 1.1 !important;
+    display: block !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
   .step-chevron {
     display: none !important;
@@ -16729,12 +16763,13 @@ button:active:not(:disabled),
     animation: mobileFadeIn 0.22s ease-out;
   }
 
-  /* 3D Stage on Mobile: optimized height so controls and canvas fit comfortably */
+  /* 3D Stage on Mobile: stable height so controls and canvas never shift vertically during drag */
   .room-stage {
-    height: clamp(340px, 48vh, 440px) !important;
-    min-height: 320px !important;
-    max-height: 52vh !important;
+    height: 380px !important;
+    min-height: 340px !important;
+    max-height: 420px !important;
     border-radius: 14px !important;
+    contain: layout style !important;
   }
 
   .preview-panel {
@@ -17001,6 +17036,8 @@ button:active:not(:disabled),
     padding: 8px 12px !important;
     gap: 8px !important;
     border-radius: 12px !important;
+    touch-action: pan-y !important;
+    contain: content !important;
   }
 
   .viewer-controls .curtain-toggle-btn,
@@ -17008,8 +17045,9 @@ button:active:not(:disabled),
   .curtain-toggle-btn {
     flex: 0 0 auto !important;
     min-height: 40px !important;
-    padding: 8px 13px !important;
-    font-size: 11.5px !important;
+    min-width: 116px !important;
+    padding: 8px 10px !important;
+    font-size: 11px !important;
     border-radius: 99px !important;
     font-weight: 700 !important;
     background: linear-gradient(135deg, #c8a87d 0%, #b89758 100%) !important;
@@ -17017,6 +17055,7 @@ button:active:not(:disabled),
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     box-shadow: 0 2px 8px rgba(200, 168, 125, 0.35) !important;
     white-space: nowrap !important;
+    box-sizing: border-box !important;
   }
 
   .viewer-controls .curtain-toggle-btn.active,
@@ -17024,13 +17063,17 @@ button:active:not(:disabled),
   .curtain-toggle-btn.active {
     background: linear-gradient(135deg, #5c3e28 0%, #422c1d 100%) !important;
     color: #ffffff !important;
-    border: 1.5px solid #c8a87d !important;
+    border: 1px solid #c8a87d !important;
   }
 
   .slider-track-wrap {
     flex: 1 !important;
     min-width: 0 !important;
     gap: 6px !important;
+    touch-action: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    overscroll-behavior: contain !important;
   }
   .slider-track-wrap label {
     font-size: 10px !important;
@@ -17040,10 +17083,14 @@ button:active:not(:disabled),
     flex: 1 !important;
     min-width: 50px !important;
     height: 8px !important;
+    touch-action: none !important;
+    cursor: pointer;
   }
   .ratio-percent {
     font-size: 11px !important;
-    min-width: 32px !important;
+    min-width: 34px !important;
+    text-align: right !important;
+    font-variant-numeric: tabular-nums !important;
   }
 
   /* 3D Camera Controls: 4 equal touch buttons on phone */
