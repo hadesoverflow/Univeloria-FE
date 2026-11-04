@@ -225,6 +225,27 @@ export function ProductsPage({
                 </div>
               </div>
 
+              {/* Roller Curtains Custom Print & Personalization Banner */}
+              {(selectedProductCategory === 'Rèm cuốn' || selectedProductTypes.includes('Rèm cuốn')) && (
+                <div className="catalog-roller-banner">
+                  <div className="roller-banner-content">
+                    <span className="roller-badge">✨ DỊCH VỤ IN TRANH THEO YÊU CẦU</span>
+                    <h3>Hỗ trợ thiết kế và in hình ảnh, họa tiết theo yêu cầu của khách hàng</h3>
+                    <p>
+                      Các mục Rèm cuốn của UniVeloria hỗ trợ in ấn tranh nghệ thuật, phong cảnh và logo theo kích thước chuẩn từng khung cửa.
+                      Khách hàng có nhu cầu cá nhân hóa sản phẩm vui lòng nhấn <strong>“Liên hệ tư vấn”</strong> để được hỗ trợ chuyên sâu 1:1.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-roller-banner-contact"
+                    onClick={() => navigateTo('contact')}
+                  >
+                    💬 Liên hệ tư vấn
+                  </button>
+                </div>
+              )}
+
               <div className={`product-grid ${productView === 'list' ? 'list-view' : ''}`} id="product-grid">
                 {filteredProducts.length === 0 && (
                   <div className="empty-state">

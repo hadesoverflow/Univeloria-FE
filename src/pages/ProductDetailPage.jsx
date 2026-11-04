@@ -25,6 +25,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { reviewApi } from '../api/reviewApi';
 import { apiClient } from '../api/apiClient';
+import { WindowMeasurementGuideModal } from '../components/ui/WindowMeasurementGuideModal';
 
 export function ProductDetailPage({
   productId,
@@ -183,6 +184,14 @@ export function ProductDetailPage({
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
+  const [showMeasureGuide, setShowMeasureGuide] = useState(false);
+
+  const isRollerCurtain = Boolean(
+    product?.category?.toLowerCase().includes('cuốn') ||
+    product?.name?.toLowerCase().includes('cuốn') ||
+    product?.name?.toLowerCase().includes('roller') ||
+    product?.category?.toLowerCase().includes('roller')
+  );
 
   // Reset active image when product changes
   useEffect(() => {
@@ -420,11 +429,42 @@ export function ProductDetailPage({
                 </div>
               </div>
 
+              {/* Roller Curtain Customization & Print Notice */}
+              {isRollerCurtain && (
+                <div className="pdetail-roller-custom-card">
+                  <div className="custom-card-header">
+                    <Sparkles size={16} color="#c8a87d" />
+                    <strong>Hỗ trợ in tranh & họa tiết theo yêu cầu</strong>
+                  </div>
+                  <p className="custom-card-desc">
+                    (Hỗ trợ thiết kế và in hình ảnh, họa tiết theo yêu cầu của khách hàng). Khách hàng có nhu cầu cá nhân hóa sản phẩm vui lòng nhấn <strong>“Liên hệ tư vấn”</strong> để được hỗ trợ.
+                  </p>
+                  <button
+                    type="button"
+                    className="btn-roller-consult-link"
+                    onClick={() => navigateTo && navigateTo('contact')}
+                  >
+                    💬 Liên hệ tư vấn
+                  </button>
+                </div>
+              )}
+
               {/* Dimension & Measuring Inputs */}
               <div className="pdetail-option-group">
-                <div className="pdetail-option-label">
-                  <span>Kích thước may đo cửa sổ / cửa đi:</span>
-                  <small className="label-tip">(Hỗ trợ thợ kỹ thuật khảo sát lại tại nhà)</small>
+                <div className="pdetail-option-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                  <div>
+                    <span>Kích thước may đo cửa sổ / cửa đi:</span>
+                    <small className="label-tip">(Hỗ trợ thợ kỹ thuật khảo sát lại tại nhà)</small>
+                  </div>
+                  <button
+                    type="button"
+                    className="pdetail-btn-measure-guide"
+                    onClick={() => setShowMeasureGuide(true)}
+                    title="Xem quy chuẩn 5 bước đo cửa chính xác"
+                  >
+                    <Ruler size={13} />
+                    <span>Cách đo cửa để đặt rèm</span>
+                  </button>
                 </div>
                 <div className="pdetail-dimension-grid">
                   <div className="dimension-field">
@@ -569,6 +609,12 @@ export function ProductDetailPage({
               onClick={() => setActiveTab('reviews')}
             >
               Đánh giá khách hàng ({displayReviewsCount})
+            </button>
+            <button
+              className={`pdetail-tab-btn ${activeTab === 'measuring' ? 'active' : ''}`}
+              onClick={() => setActiveTab('measuring')}
+            >
+              📏 Cách đo cửa để đặt rèm
             </button>
           </div>
 
@@ -864,6 +910,86 @@ export function ProductDetailPage({
                 </div>
               </div>
             )}
+
+            {activeTab === 'measuring' && (
+              <div className="tab-pane measuring-tab-pane">
+                <div className="measuring-tab-intro">
+                  <div className="tab-intro-badge">
+                    <Ruler size={16} color="#c8a87d" />
+                    <span>QUY CHUẨN KỸ THUẬT</span>
+                  </div>
+                  <h3>Cách đo cửa để đặt rèm chính xác</h3>
+                  <p>Áp dụng chuẩn xác cho tất cả dòng rèm: rèm cuốn, rèm roman, rèm xếp ly, rèm tổ ong và rèm s-fold.</p>
+                </div>
+
+                <div className="measuring-steps-grid-view">
+                  <div className="m-step-card">
+                    <div className="m-step-header">
+                      <span className="step-tag">Bước 1</span>
+                      <h4>Đo chiều ngang của cửa</h4>
+                    </div>
+                    <p>Dùng thước đo từ mép bên trái sang mép bên phải của cửa. <strong>Nên đo ở ít nhất 2–3 vị trí:</strong> phía trên, giữa và phía dưới.</p>
+                  </div>
+
+                  <div className="m-step-card">
+                    <div className="m-step-header">
+                      <span className="step-tag">Bước 2</span>
+                      <h4>Đo chiều dọc của cửa</h4>
+                    </div>
+                    <p>Đo từ mép trên xuống mép dưới của cửa. <strong>Cũng nên đo ở 2–3 vị trí:</strong> bên trái, giữa và bên phải.</p>
+                  </div>
+
+                  <div className="m-step-card">
+                    <div className="m-step-header">
+                      <span className="step-tag">Bước 3</span>
+                      <h4>Giữ thước thật thẳng</h4>
+                    </div>
+                    <p>Khi đo chiều ngang, <strong>giữ thước nằm ngang</strong>. Khi đo chiều dọc, <strong>giữ thước thẳng đứng</strong> để số đo chính xác hơn.</p>
+                  </div>
+
+                  <div className="m-step-card highlight">
+                    <div className="m-step-header">
+                      <span className="step-tag highlight">Bước 4</span>
+                      <h4>Chọn số đo nhỏ nhất</h4>
+                    </div>
+                    <p>Nếu các vị trí có số đo khác nhau, <strong>hãy lấy số nhỏ nhất</strong>. Điều này giúp tránh trường hợp khung cửa hơi lệch hoặc không vuông.</p>
+                  </div>
+
+                  <div className="m-step-card highlight">
+                    <div className="m-step-header">
+                      <span className="step-tag highlight">Bước 5</span>
+                      <h4>Trừ thêm 0,5–1 cm</h4>
+                    </div>
+                    <p>Sau khi lấy được số đo nhỏ nhất, <strong>trừ thêm khoảng 0,5–1 cm</strong> để rèm có khoảng hở phù hợp khi lắp đặt.</p>
+                  </div>
+                </div>
+
+                <div className="measuring-example-card">
+                  <div className="ex-badge">
+                    <Sparkles size={16} color="#c8a87d" />
+                    <strong>Ví dụ:</strong>
+                  </div>
+                  <div className="ex-content">
+                    <p>Nếu chiều ngang đo được là <strong>120 cm</strong>, <strong>119,5 cm</strong> và <strong>120,5 cm</strong> → lấy <strong>119,5 cm</strong>.</p>
+                    <p>Sau đó trừ thêm 0,5–1 cm → kích thước đặt rèm khoảng <strong>118,5–119 cm</strong>.</p>
+                  </div>
+                </div>
+
+                <div className="measuring-tab-footer-callout">
+                  <div className="callout-text">
+                    <strong>Bạn muốn nhân viên kỹ thuật UniVeloria khảo sát tận nơi?</strong>
+                    <span>Chúng tôi hỗ trợ mang mẫu thực tế và đo đạc lại chính xác 100% tại nhà bạn trước khi sản xuất.</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-callout-contact"
+                    onClick={() => navigateTo && navigateTo('contact')}
+                  >
+                    💬 Liên hệ tư vấn đo đạc
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -979,6 +1105,16 @@ export function ProductDetailPage({
       <div className={`toast ${showToast ? 'visible' : ''}`} role="status">
         <Check size={16} /> {toastMsg}
       </div>
+
+      {/* WINDOW MEASUREMENT GUIDE MODAL */}
+      <WindowMeasurementGuideModal
+        isOpen={showMeasureGuide}
+        onClose={() => setShowMeasureGuide(false)}
+        onConsult={() => {
+          setShowMeasureGuide(false);
+          if (navigateTo) navigateTo('contact');
+        }}
+      />
     </div>
   );
 }

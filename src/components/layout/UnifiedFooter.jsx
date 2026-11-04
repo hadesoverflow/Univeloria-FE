@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { WindowMeasurementGuideModal } from '../ui/WindowMeasurementGuideModal';
 
 export function UnifiedFooter({ navigateTo }) {
+  const [showMeasureGuide, setShowMeasureGuide] = useState(false);
   return (
     <footer className="footer unified-footer">
       <div className="footer-glow" />
@@ -40,8 +42,8 @@ export function UnifiedFooter({ navigateTo }) {
         <div className="footer-col">
           <h4>Hỗ Trợ Khách Hàng</h4>
           <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Tư vấn & May đo</a>
+          <a href="#measure" onClick={(e) => { e.preventDefault(); setShowMeasureGuide(true); }}>Cách đo cửa để đặt rèm</a>
           <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Bảo hành 5 năm</a>
-          <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Hướng dẫn chọn rèm</a>
           <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Câu hỏi thường gặp</a>
         </div>
 
@@ -69,6 +71,16 @@ export function UnifiedFooter({ navigateTo }) {
           <a href="#contact" onClick={(e) => { e.preventDefault(); navigateTo('contact'); }}>Điều khoản dịch vụ</a>
         </div>
       </div>
+
+      {/* WINDOW MEASUREMENT GUIDE MODAL */}
+      <WindowMeasurementGuideModal
+        isOpen={showMeasureGuide}
+        onClose={() => setShowMeasureGuide(false)}
+        onConsult={() => {
+          setShowMeasureGuide(false);
+          if (navigateTo) navigateTo('contact');
+        }}
+      />
     </footer>
   );
 }

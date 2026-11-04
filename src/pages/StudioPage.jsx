@@ -5,6 +5,7 @@ import { StudioIcon } from '../components/ui/Icons';
 import { curtainTypes, studioStyleFilters } from '../data/studioData';
 import { RoomCurtain3DViewer } from '../components/studio/RoomCurtain3DViewer';
 import { analyzeRoomPhoto, determineCurtainRecommendations } from '../utils/aiRoomAnalyzer';
+import { WindowMeasurementGuideModal } from '../components/ui/WindowMeasurementGuideModal';
 import { 
   Eye, 
   Sparkles, 
@@ -38,7 +39,8 @@ import {
   Compass,
   Zap,
   FastForward,
-  Palette
+  Palette,
+  Ruler
 } from 'lucide-react';
 
 const CURTAIN_COLOR_NAMES = {
@@ -149,6 +151,7 @@ export function StudioPage({
   const viewer3dRef = useRef(null);
   const stepperRef = useRef(null);
   const [showAdjuster, setShowAdjuster] = useState(false);
+  const [showMeasureGuide, setShowMeasureGuide] = useState(false);
   const [calibrationPrecision, setCalibrationPrecision] = useState('fine'); // 'fine' (2%) | 'medium' (5%) | 'coarse' (10%)
 
   useEffect(() => {
@@ -689,6 +692,15 @@ export function StudioPage({
             <div className="external-toolbar-right">
               <button
                 className="atmo-action-btn"
+                onClick={() => setShowMeasureGuide(true)}
+                type="button"
+                title="Xem quy chuẩn 5 bước đo cửa chính xác"
+              >
+                <Ruler size={13} />
+                <span>Cách đo cửa</span>
+              </button>
+              <button
+                className="atmo-action-btn"
                 onClick={() => viewer3dRef.current?.resetCamera()}
                 type="button"
                 title="Đặt lại góc nhìn chính diện"
@@ -835,6 +847,25 @@ export function StudioPage({
                   );
                 })}
               </div>
+            </div>
+          )}
+
+          {/* Roller Curtain Customization Notice */}
+          {(currentType?.isRoller || currentType?.id?.includes('roller')) && (
+            <div className="studio-roller-notice-banner">
+              <div className="roller-notice-content">
+                <Sparkles size={15} color="#c8a87d" />
+                <span>
+                  <strong>Mục Rèm cuốn:</strong> (Hỗ trợ thiết kế và in hình ảnh, họa tiết theo yêu cầu của khách hàng). Khách hàng có nhu cầu cá nhân hóa sản phẩm vui lòng nhấn:
+                </span>
+              </div>
+              <button
+                type="button"
+                className="btn-studio-roller-consult"
+                onClick={() => navigateTo && navigateTo('contact')}
+              >
+                Liên hệ tư vấn
+              </button>
             </div>
           )}
 
@@ -1270,6 +1301,16 @@ export function StudioPage({
           </div>
         </div>
       )}
+
+      {/* WINDOW MEASUREMENT GUIDE MODAL */}
+      <WindowMeasurementGuideModal
+        isOpen={showMeasureGuide}
+        onClose={() => setShowMeasureGuide(false)}
+        onConsult={() => {
+          setShowMeasureGuide(false);
+          if (navigateTo) navigateTo('contact');
+        }}
+      />
 
       <UnifiedFooter navigateTo={navigateTo} />
     </div>
