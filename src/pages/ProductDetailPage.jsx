@@ -325,9 +325,14 @@ export function ProductDetailPage({
 
               {/* Header Info */}
               <div className="pdetail-eyebrow-row">
-                <span className="pdetail-collection-tag">
-                  {product.room ? `Bộ sưu tập ${product.room}` : 'UniVeloria Haute Couture'}
-                </span>
+                <div className="pdetail-tags-group">
+                  <span className="pdetail-category-pill">
+                    {product.category || 'Rèm cao cấp'}
+                  </span>
+                  <span className="pdetail-collection-tag">
+                    {product.room ? `Bộ sưu tập ${product.room}` : 'UniVeloria Haute Couture'}
+                  </span>
+                </div>
                 <span className="pdetail-stock-tag">
                   <Check size={12} /> Sẵn sàng may đo lắp đặt
                 </span>
@@ -337,6 +342,9 @@ export function ProductDetailPage({
               
               <div className="pdetail-meta-row">
                 <span className="pdetail-code-badge">Mã SP: {product.code || (`UVL-${product.id}`)}</span>
+                <span className="pdetail-category-badge">
+                  Danh mục: <strong>{product.category || 'Rèm cao cấp'}</strong>
+                </span>
                 <div className="pdetail-rating">
                   <div className="stars">
                     <Star size={14} fill="#e5a93b" color="#e5a93b" />

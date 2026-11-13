@@ -15207,6 +15207,26 @@ a:focus-visible {
   margin-bottom: 10px;
 }
 
+.pdetail-tags-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pdetail-category-pill {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #173352;
+  color: #ffffff;
+  padding: 3px 9px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+
 .pdetail-collection-tag {
   font-size: 11px;
   font-weight: 700;
@@ -15251,6 +15271,24 @@ a:focus-visible {
   padding: 4px 10px;
   border-radius: 6px;
   letter-spacing: 0.04em;
+}
+
+.pdetail-category-badge {
+  background: #fdf6ec;
+  color: #8D5B23;
+  border: 1px solid rgba(141, 91, 35, 0.2);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pdetail-category-badge strong {
+  font-weight: 700;
+  color: #173352;
 }
 
 .pdetail-rating {
@@ -16859,6 +16897,33 @@ a:focus-visible {
   flex-grow: 1 !important;
   justify-content: space-between !important;
   box-sizing: border-box !important;
+}
+
+.card-category-strip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-bottom: 6px !important;
+  flex-wrap: wrap !important;
+}
+
+.card-category-tag {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  color: #8D5B23 !important;
+  letter-spacing: 0.05em !important;
+  background: rgba(141, 91, 35, 0.1) !important;
+  padding: 2px 7px !important;
+  border-radius: 4px !important;
+  line-height: 1.2 !important;
+  display: inline-block !important;
+}
+
+.card-room-tag {
+  font-size: 10.5px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
 }
 
 .product-info h3 {

@@ -382,6 +382,10 @@ export function ProductsPage({
                       </button>
                     </div>
                     <div className="product-info">
+                      <div className="card-category-strip">
+                        <span className="card-category-tag">{product.category}</span>
+                        {product.room && <span className="card-room-tag">· {product.room}</span>}
+                      </div>
                       <h3 onClick={(e) => { e.stopPropagation(); navigateTo('product-detail', product.id); }}>
                         {product.name}
                       </h3>
