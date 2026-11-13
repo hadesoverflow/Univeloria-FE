@@ -12,30 +12,92 @@ import {
   Crown,
   Menu,
   X,
-  Search
+  Search,
+  ExternalLink,
+  Store
 } from 'lucide-react';
+
+export const AFFILIATE_PARTNERS = [
+  {
+    id: 'bedding',
+    category: 'Chăn, ga, gối, đệm',
+    icon: '🛏️',
+    partners: [
+      {
+        name: 'Chăn ga M2T Bedding',
+        desc: 'Bộ chăn ga gối Lụa Thái mềm mịn mát',
+        url: 'https://shopee.vn/B%E1%BB%99-ch%C4%83n-ga-g%E1%BB%91i-L%E1%BB%A5a-Th%C3%A1i-M2T-bedding-m%E1%BB%81m-m%E1%BB%8Bn-m%C3%A1t-g%E1%BB%93m-ch%C4%83n-h%C3%A8-ch%E1%BA%A7n-b%C3%B4ng-ga-gi%C6%B0%E1%BB%9Dng-v%C3%A0-2-v%E1%BB%8F-g%E1%BB%91i-n%E1%BA%B1m-i.240825360.19831465954?extraParams=%7B%22display_model_id%22%3A163961267063%2C%22model_selection_logic%22%3A3%7D&image_ids=vn-11134207-81ztc-mqg3xp8ouwhu64'
+      }
+    ]
+  },
+  {
+    id: 'lighting',
+    category: 'Đèn chiếu sáng & Decor',
+    icon: '💡',
+    partners: [
+      {
+        name: 'RamboToy',
+        desc: 'Đèn cây đứng 170cm phong cách Bắc Âu, đèn sàn dáng cao',
+        url: 'https://shopee.vn/%C4%90%C3%A8n-c%C3%A2y-%C4%91%E1%BB%A9ng-cao-170cm-chi%E1%BA%BFu-s%C3%A1ng-phong-c%C3%A1ch-B%E1%BA%AFc-%C3%82u-%C4%91%C3%A8n-s%C3%A0n-d%C3%A1ng-cao-th%C3%A2n-x%E1%BA%BFp-l%E1%BB%9Bp-%C4%91%C3%A8n-ph%C3%B2ng-kh%C3%A1ch-ph%C3%B2ng-ng%E1%BB%A7-i.474590847.57750951153?extraParams=%7B%22display_model_id%22%3A365086021862%2C%22model_selection_logic%22%3A3%7D&image_ids=vn-11134207-820l4-mgrd17who1s97c'
+      },
+      {
+        name: "HOBI's Decor",
+        desc: 'Đèn trang trí không gian 3D & thiết bị chiếu sáng',
+        url: 'https://shopee.vn/hobi_3d?uls_trackid=574b580100k1&utm_content=3Bt4MK4hqdkhyrPtdPKuyNHg1DtK'
+      }
+    ]
+  },
+  {
+    id: 'plants',
+    category: 'Cây cảnh & Không gian xanh',
+    icon: '🌿',
+    partners: [
+      {
+        name: 'LEEHOZY GARDEN',
+        desc: 'Cây cảnh nội thất, cây phong thủy xanh mát không gian',
+        url: 'https://shopee.vn/leehozy?uls_trackid=574b5a0401lv&utm_content=3Bt4MK4hqdaCmeD94wc2i9RHD6z3'
+      }
+    ]
+  },
+  {
+    id: 'art',
+    category: 'Tranh treo tường nghệ thuật',
+    icon: '🖼️',
+    partners: [
+      {
+        name: 'Tiệm tranh Men Decor',
+        desc: 'Tranh tráng gương, tranh canvas decor sang trọng',
+        url: 'https://shopee.vn/tiemtranhmendecor?uls_trackid=574b5bvo00k1&utm_content=3Bt4MK4hqcr2uBDpeKxU943ypXks'
+      }
+    ]
+  }
+];
 
 export function Header({ currentPage, navigateTo, themeClass = '' }) {
   const { user, isAuthenticated, logout } = useAuth();
   const { cartCount, openCart } = useCart();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [partnersDropdownOpen, setPartnersDropdownOpen] = useState(false);
+  const [mobilePartnersOpen, setMobilePartnersOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const partnersRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
+      if (partnersRef.current && !partnersRef.current.contains(event.target)) {
+        setPartnersDropdownOpen(false);
+      }
     };
-    if (dropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [dropdownOpen]);
+  }, []);
 
   return (
     <header className={`topbar ${themeClass}`.trim()}>
@@ -89,6 +151,68 @@ export function Header({ currentPage, navigateTo, themeClass = '' }) {
         >
           AI 3D Studio
         </button>
+
+        {/* ĐƠN VỊ LIÊN KẾT (SHOPEE PARTNERS DROPDOWN) */}
+        <div 
+          className="nav-dropdown-wrapper" 
+          ref={partnersRef}
+          onMouseEnter={() => setPartnersDropdownOpen(true)}
+          onMouseLeave={() => setPartnersDropdownOpen(false)}
+        >
+          <button
+            type="button"
+            className={`nav-capsule-btn nav-dropdown-trigger ${partnersDropdownOpen ? 'active-nav-btn' : ''}`}
+            onClick={() => setPartnersDropdownOpen(!partnersDropdownOpen)}
+            aria-expanded={partnersDropdownOpen}
+            aria-haspopup="true"
+          >
+            <span>Đơn Vị Liên Kết</span>
+            <ChevronDown size={13} className={`nav-chevron ${partnersDropdownOpen ? 'open' : ''}`} />
+          </button>
+
+          {partnersDropdownOpen && (
+            <div className="nav-partners-mega-menu font-menu-auth" onClick={(e) => e.stopPropagation()}>
+              <div className="partners-menu-header">
+                <div>
+                  <h4>Hệ Sinh Thái Nội Thất Liên Kết</h4>
+                  <p>Đối tác cung cấp chăn ga, đèn chiếu sáng, cây cảnh & tranh uy tín qua Shopee</p>
+                </div>
+                <span className="partners-pill">Shopee Partner</span>
+              </div>
+              <div className="partners-grid">
+                {AFFILIATE_PARTNERS.map((cat) => (
+                  <div key={cat.id} className="partner-cat-block">
+                    <div className="partner-cat-head">
+                      <span className="partner-cat-icon">{cat.icon}</span>
+                      <strong>{cat.category}</strong>
+                    </div>
+                    <div className="partner-links-group">
+                      {cat.partners.map((partner, idx) => (
+                        <a
+                          key={idx}
+                          href={partner.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="partner-link-card"
+                          title={`Mở gian hàng ${partner.name} trên Shopee`}
+                        >
+                          <div className="partner-info">
+                            <span className="partner-name">{partner.name}</span>
+                            <small className="partner-desc">{partner.desc}</small>
+                          </div>
+                          <span className="partner-shopee-pill">
+                            Shopee <ExternalLink size={10} />
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
         <button
           type="button"
           className={`nav-capsule-btn ${currentPage === 'about' ? 'active-nav-btn' : ''}`}
@@ -338,6 +462,47 @@ export function Header({ currentPage, navigateTo, themeClass = '' }) {
                 <span className="nav-item-text">AI 3D Studio</span>
                 <span className="mobile-badge-3d">3D WebGL</span>
               </button>
+
+              {/* Mobile Partner Accordion */}
+              <div className="mobile-partner-accordion-wrapper">
+                <button
+                  type="button"
+                  className={`mobile-nav-item ${mobilePartnersOpen ? 'active' : ''}`}
+                  onClick={() => setMobilePartnersOpen(!mobilePartnersOpen)}
+                >
+                  <span className="nav-item-icon">🛍️</span>
+                  <span className="nav-item-text">Đơn Vị Liên Kết (Shopee)</span>
+                  <ChevronDown size={15} className={`nav-chevron ${mobilePartnersOpen ? 'open' : ''}`} />
+                </button>
+                {mobilePartnersOpen && (
+                  <div className="mobile-partner-submenu">
+                    {AFFILIATE_PARTNERS.map((cat) => (
+                      <div key={cat.id} className="mobile-partner-cat">
+                        <div className="mobile-cat-title">
+                          <span>{cat.icon}</span> {cat.category}
+                        </div>
+                        {cat.partners.map((p, idx) => (
+                          <a
+                            key={idx}
+                            href={p.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mobile-partner-link-row"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            <div className="mobile-p-text">
+                              <strong>{p.name}</strong>
+                              <small>{p.desc}</small>
+                            </div>
+                            <span className="shopee-badge">Shopee ↗</span>
+                          </a>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <button
                 type="button"
                 className={`mobile-nav-item ${currentPage === 'about' ? 'active' : ''}`}

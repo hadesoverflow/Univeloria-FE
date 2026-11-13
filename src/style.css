@@ -21784,22 +21784,22 @@ button:active:not(:disabled),
   left: 50% !important;
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
-  background: rgba(247, 237, 224, 0.82) !important;
+  background: rgba(247, 237, 224, 0.88) !important;
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
   border-radius: 9999px !important;
-  border: 1px solid rgba(225, 210, 192, 0.65) !important;
-  padding: 7px 24px !important;
+  border: 1px solid rgba(225, 210, 192, 0.75) !important;
+  padding: 6px 18px !important;
   display: flex !important;
   align-items: center !important;
-  gap: clamp(14px, 1.8vw, 24px) !important;
+  gap: clamp(8px, 1.25vw, 16px) !important;
   box-shadow: 0 4px 20px rgba(45, 30, 15, 0.05) !important;
   z-index: 60 !important;
 }
 
 .nav-capsule-btn {
   font-family: 'TT InterPhases', 'TT Interphases Pro', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   color: #173352 !important;
   background: transparent !important;
@@ -21817,6 +21817,275 @@ button:active:not(:disabled),
 .nav-capsule-btn.active-nav-btn {
   color: #8c6036 !important;
   font-weight: 700 !important;
+}
+
+/* Nav Dropdown Wrapper & Trigger */
+.nav-dropdown-wrapper {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.nav-dropdown-trigger {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.nav-chevron {
+  transition: transform 0.22s ease !important;
+  color: inherit !important;
+}
+
+.nav-chevron.open {
+  transform: rotate(180deg) !important;
+}
+
+/* Shopee Affiliate Partners Mega Dropdown Menu */
+.nav-partners-mega-menu {
+  position: absolute !important;
+  top: calc(100% + 14px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 580px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(200, 168, 125, 0.45) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 20px 48px rgba(18, 28, 33, 0.16) !important;
+  padding: 16px 18px 18px !important;
+  z-index: 9999 !important;
+  animation: dropdownFadeIn 0.22s ease forwards !important;
+}
+
+.nav-partners-mega-menu::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -6px !important;
+  left: 50% !important;
+  transform: translateX(-50%) rotate(45deg) !important;
+  width: 11px !important;
+  height: 11px !important;
+  background: #ffffff !important;
+  border-left: 1px solid rgba(200, 168, 125, 0.45) !important;
+  border-top: 1px solid rgba(200, 168, 125, 0.45) !important;
+}
+
+.partners-menu-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 12px !important;
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid rgba(220, 210, 195, 0.45) !important;
+}
+
+.partners-menu-header h4 {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #173352 !important;
+  margin: 0 0 2px 0 !important;
+}
+
+.partners-menu-header p {
+  font-size: 11px !important;
+  color: #64748b !important;
+  margin: 0 !important;
+}
+
+.partners-pill {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  color: #ee4d2d !important;
+  background: rgba(238, 77, 45, 0.1) !important;
+  border: 1px solid rgba(238, 77, 45, 0.25) !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  white-space: nowrap !important;
+}
+
+.partners-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+.partner-cat-block {
+  background: #fdfaf6 !important;
+  border: 1px solid rgba(200, 168, 125, 0.25) !important;
+  border-radius: 12px !important;
+  padding: 10px 11px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.partner-cat-block:hover {
+  background: #ffffff !important;
+  border-color: rgba(200, 168, 125, 0.6) !important;
+  box-shadow: 0 4px 14px rgba(140, 96, 54, 0.08) !important;
+}
+
+.partner-cat-head {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 11px !important;
+  color: #8c6036 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+}
+
+.partner-cat-icon {
+  font-size: 14px !important;
+}
+
+.partner-links-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+.partner-link-card {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  padding: 7px 9px !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.18s ease !important;
+}
+
+.partner-link-card:hover {
+  background: #fff8f5 !important;
+  border-color: rgba(238, 77, 45, 0.35) !important;
+  transform: translateX(2px) !important;
+}
+
+.partner-info {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+.partner-name {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  color: #173352 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.partner-desc {
+  font-size: 10px !important;
+  color: #64748b !important;
+  margin-top: 1px !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.partner-shopee-pill {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: #ee4d2d !important;
+  background: #ffebe7 !important;
+  padding: 3px 7px !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  flex-shrink: 0 !important;
+  transition: all 0.18s ease !important;
+}
+
+.partner-link-card:hover .partner-shopee-pill {
+  background: #ee4d2d !important;
+  color: #ffffff !important;
+}
+
+/* Mobile Partner Accordion Styles */
+.mobile-partner-accordion-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+
+.mobile-partner-submenu {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 8px 12px 14px 20px !important;
+  background: #fbf9f5 !important;
+  border-left: 3px solid #8c6036 !important;
+  margin: 4px 0 8px 10px !important;
+  border-radius: 0 10px 10px 0 !important;
+}
+
+.mobile-partner-cat {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.mobile-cat-title {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #8c6036 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.mobile-partner-link-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  padding: 7px 10px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(200, 168, 125, 0.25) !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+}
+
+.mobile-p-text {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+.mobile-p-text strong {
+  font-size: 11.5px !important;
+  color: #173352 !important;
+  line-height: 1.25 !important;
+}
+
+.mobile-p-text small {
+  font-size: 9.5px !important;
+  color: #64748b !important;
+}
+
+.mobile-partner-link-row .shopee-badge {
+  font-size: 9.5px !important;
+  font-weight: 700 !important;
+  color: #ee4d2d !important;
+  background: #ffebe7 !important;
+  padding: 2px 6px !important;
+  border-radius: 5px !important;
+  flex-shrink: 0 !important;
 }
 
 /* Right Action Buttons Group */
