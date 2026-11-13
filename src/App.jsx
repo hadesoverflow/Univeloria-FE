@@ -16,6 +16,7 @@ import { LoginPage } from './pages/LoginPage';
 import { CustomerPage } from './pages/customer/CustomerPage';
 import { AdminPage } from './pages/admin/AdminPage';
 import { CartDrawer } from './components/cart/CartDrawer';
+import { FloatingPetdexChat } from './components/chat/FloatingPetdexChat';
 import { customerApi } from './api/customerApi';
 import { apiClient } from './api/apiClient';
 import { storageService } from './services/storageService';
@@ -244,7 +245,9 @@ export default function App() {
             origin: p.origin,
             warranty: p.warranty
           }));
-          setProductsList(mapped);
+          if (mapped.some((p) => p.category === 'Rèm cầu vồng' || p.category === 'Thanh rèm' || p.category === 'Rèm cuốn')) {
+            setProductsList(mapped);
+          }
         }
       })
       .catch((err) => console.log('Using default product catalog:', err));
@@ -270,14 +273,10 @@ export default function App() {
         });
       });
       const priceOk = p.price <= maxProductPrice;
-      const categoryOk = selectedProductCategory === "Tất cả" || (
-        selectedProductCategory === "Phòng khách" ? ["Rèm vải", "Rèm voan", "Rèm hai lớp"].includes(p.category) :
-        selectedProductCategory === "Phòng ngủ" ? ["Rèm vải", "Rèm voan", "Rèm roman", "Rèm hai lớp"].includes(p.category) :
-        selectedProductCategory === "Phòng ăn" ? ["Rèm voan", "Rèm vải"].includes(p.category) :
-        selectedProductCategory === "Văn phòng" ? ["Rèm cuốn", "Rèm roman", "Rèm vải"].includes(p.category) :
-        ["Rèm gỗ", "Rèm cuốn"].includes(p.category)
-      );
-      const queryOk = `${p.name} ${p.code} ${p.category} ${p.style}`.toLowerCase().includes(productSearch.toLowerCase());
+      const categoryOk = selectedProductCategory === "Tất cả" ||
+        p.category === selectedProductCategory ||
+        p.room === selectedProductCategory;
+      const queryOk = `${p.name} ${p.code} ${p.category} ${p.style} ${p.room || ''} ${p.material || ''}`.toLowerCase().includes(productSearch.toLowerCase());
       return typeOk && styleOk && colorOk && priceOk && categoryOk && queryOk;
     });
 
@@ -409,9 +408,8 @@ export default function App() {
   useEffect(() => {
     if (currentPage === 'home') {
       const ctx = gsap.context(() => {
-        gsap.from('.hero-copy > *', { y: 24, opacity: 0, duration: 0.8, stagger: 0.12, delay: 0.2, ease: 'power3.out' });
-        gsap.from('.preview-card', { y: 30, opacity: 0, duration: 0.8, delay: 0.65, ease: 'power3.out' });
-        gsap.from('.hero-art', { scale: 0.96, opacity: 0, duration: 1.2, delay: 0.1, ease: 'power2.out' });
+        gsap.from('.hero-copy-block > *', { y: 24, opacity: 0, duration: 0.8, stagger: 0.12, delay: 0.2, ease: 'power3.out' });
+        gsap.from('.hero-features-capsule', { y: 30, opacity: 0, duration: 0.8, delay: 0.5, ease: 'power3.out' });
       });
       return () => ctx.revert();
     } else if (currentPage === 'collections') {
@@ -429,9 +427,8 @@ export default function App() {
       return () => ctx.revert();
     } else if (currentPage === 'studio') {
       const ctx = gsap.context(() => {
-        gsap.from('.studio-intro .studio-intro-copy > *', { y: 22, opacity: 0, duration: 0.8, stagger: 0.1, delay: 0.15, ease: 'power3.out' });
-        gsap.from('.stepper', { y: 20, opacity: 0, duration: 0.7, delay: 0.25, ease: 'power3.out' });
-        gsap.from('.workspace > *', { y: 26, opacity: 0, duration: 0.75, stagger: 0.1, delay: 0.35, ease: 'power3.out' });
+        gsap.from('.studio-header-banner > *', { y: 20, opacity: 0, duration: 0.7, stagger: 0.1, delay: 0.15, ease: 'power3.out' });
+        gsap.from('.workspace > *', { y: 26, opacity: 0, duration: 0.75, stagger: 0.1, delay: 0.3, ease: 'power3.out' });
       });
       return () => ctx.revert();
     } else if (currentPage === 'about') {
@@ -616,8 +613,12 @@ export default function App() {
       <div className="page-transition-curtain-wrap" aria-hidden="true">
         <div className="page-transition-curtain" />
         <div className="curtain-brand-glow">
-          <img src="/logo/logo.png" alt="UNIVELORIA" />
-          <span className="curtain-brand-title">UNIVELORIA</span>
+          <img src="/logo/logo.png" alt="UniVeloria Logo" />
+          <span className="curtain-brand-title">
+            <span className="brand-uni">Uni</span>
+            <span className="brand-veloria">Veloria</span>
+            <span className="reg">®</span>
+          </span>
           <span className="curtain-brand-sub">KHÔNG GIAN SỐNG & BỘ SƯU TẬP CAO CẤP</span>
         </div>
       </div>
@@ -768,6 +769,11 @@ export default function App() {
 
       {currentPage === 'login' && (
         <LoginPage navigateTo={navigateTo} />
+      )}
+
+      {/* Floating Petdex AI Assistant on All Client Pages */}
+      {['home', 'collections', 'products', 'product-detail', 'studio', 'about', 'contact'].includes(currentPage) && (
+        <FloatingPetdexChat navigateTo={navigateTo} />
       )}
     </main>
   );

@@ -41,7 +41,9 @@ import {
   FastForward,
   Palette,
   Ruler,
-  Tag
+  Tag,
+  Star,
+  Settings
 } from 'lucide-react';
 
 const CURTAIN_COLOR_NAMES = {
@@ -154,6 +156,7 @@ export function StudioPage({
   const [showAdjuster, setShowAdjuster] = useState(false);
   const [showMeasureGuide, setShowMeasureGuide] = useState(false);
   const [calibrationPrecision, setCalibrationPrecision] = useState('fine'); // 'fine' (2%) | 'medium' (5%) | 'coarse' (10%)
+  const [curtainThickness, setCurtainThickness] = useState('Tiêu chuẩn');
 
   useEffect(() => {
     // Ensure stepper starts scrolled fully to the left so Step 1 icon is never clipped on mobile (iPhone 14/15/16/17)
@@ -171,6 +174,16 @@ export function StudioPage({
       if (sliderRafRef.current) cancelAnimationFrame(sliderRafRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && fullScreen) {
+        setFullScreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [fullScreen, setFullScreen]);
 
   const curtainMoveStep = calibrationPrecision === 'fine' ? 0.02 : calibrationPrecision === 'medium' ? 0.04 : 0.08;
   const curtainScaleStep = calibrationPrecision === 'fine' ? 0.025 : calibrationPrecision === 'medium' ? 0.05 : 0.10;
@@ -224,6 +237,9 @@ export function StudioPage({
 
     return list.filter((t) => {
       if (activeStudioFilter === 'Tất cả') return true;
+      if (activeStudioFilter === 'Rèm vải') return t.isRoman || t.id === 'single-pleat' || t.id === 'sfold-luxury' || t.id === 'leaf-embroidery';
+      if (activeStudioFilter === 'Rèm cầu vồng') return t.id === 'honeycomb' || t.isHoneycomb || t.id === 'roller-quad';
+      if (activeStudioFilter === 'Rèm cuốn') return t.isRoller || t.isRollerLinen || t.id?.includes('roller') || t.isPvc;
       if (activeStudioFilter === 'Rèm Cuốn') return t.isRollerLinen || t.id === 'roller-linen';
       if (activeStudioFilter === 'Rèm Roman') return t.isRoman;
       if (activeStudioFilter === 'Rèm Tổ Ong') return t.id === 'honeycomb';
@@ -450,28 +466,54 @@ export function StudioPage({
       {/* Studio Topbar */}
       <Header currentPage="studio" navigateTo={navigateTo} themeClass="topbar-studio" />
 
-      {/* Intro & Stepper */}
-      <section className="studio-intro" id="top">
-        <div className="studio-intro-copy">
-          <div className="kicker">AI 3D STUDIO <span /></div>
-          <h1>Trải nghiệm phòng 3D<br/>tương tác thời gian thực<br/><em>AI Studio Siêu Thực</em></h1>
-          <p>Tải lên ảnh căn phòng của bạn. AI sẽ khảo sát khung cửa, nhận diện thông minh và trực tiếp ướm rèm 3D vào khung cửa với mô phỏng ánh sáng, gió và chuyển động chân thực.</p>
+      {/* Studio Header Banner: Title & Stepper side-by-side */}
+      <section className="studio-header-banner" id="top">
+        <div className="studio-header-left">
+          <span className="studio-accent-line" />
+          <div className="studio-title-wrap">
+            <h1>Trải nghiệm phòng 3D<br />và AI cùng UniVeloria</h1>
+            <p>Khám phá không gian sống lý tưởng với rèm cửa phù hợp nhất cho bạn.</p>
+          </div>
         </div>
-        <div className="stepper" ref={stepperRef} aria-label="Quy trình 4 bước">
-          {[
-            ['image', '1', 'Tải ảnh phòng'],
-            ['sparkle', '2', 'AI Nhận diện'],
-            ['cube', '3', 'Không gian 3D'],
-            ['grid', '4', 'Cân chỉnh rèm'],
-          ].map(([icon, n, label], i) => (
-            <React.Fragment key={n}>
-              <div className={'step ' + (analyzed ? 'step-done' : i === 0 ? 'step-active' : '')}>
-                <span className="step-icon"><StudioIcon name={icon} size={22} /></span>
-                <span className="step-text"><b>{n}</b><small>{label}</small></span>
-              </div>
-              {i < 3 && <span className="step-chevron">›</span>}
-            </React.Fragment>
-          ))}
+
+        <div className="studio-stepper-capsule" ref={stepperRef} aria-label="Quy trình 4 bước">
+          <div className="step-pill step-1 active">
+            <span className="step-icon-circle"><Home size={15} /></span>
+            <span className="step-label">
+              <b>1</b>
+              <span>Tải ảnh phòng</span>
+            </span>
+          </div>
+
+          <span className="step-arrow-divider">›</span>
+
+          <div className="step-pill step-2">
+            <span className="step-icon-circle"><Layers size={15} /></span>
+            <span className="step-label">
+              <b>2</b>
+              <span>Chọn rèm</span>
+            </span>
+          </div>
+
+          <span className="step-arrow-divider">›</span>
+
+          <div className="step-pill step-3">
+            <span className="step-icon-circle"><Palette size={15} /></span>
+            <span className="step-label">
+              <b>3</b>
+              <span>Tùy chỉnh</span>
+            </span>
+          </div>
+
+          <span className="step-arrow-divider">›</span>
+
+          <div className="step-pill step-4">
+            <span className="step-icon-circle"><Check size={15} /></span>
+            <span className="step-label">
+              <b>4</b>
+              <span>Xem kết quả</span>
+            </span>
+          </div>
         </div>
       </section>
 
@@ -514,62 +556,73 @@ export function StudioPage({
       <section className={'workspace show-tab-' + mobileActiveTab} id="studio-workspace">
         {/* Panel 1: Upload */}
         <aside className="upload-panel glass-panel">
-          <div className="panel-heading">
-            <div>
-              <span className="panel-step">01 / YOUR SPACE</span>
-              <h2>Tải ảnh căn phòng của bạn</h2>
+          <div>
+            <div className="panel1-header">
+              <h2>
+                <Sparkles size={16} color="#C8A87D" />
+                <span>Tải ảnh phòng của bạn</span>
+              </h2>
+              <p>Chỉ cần một bức ảnh, chúng mình sẽ lo phần còn lại!</p>
             </div>
-            {hasUploaded && (
-              <button
-                className="icon-button"
-                onClick={() => {
-                  setRoomImage('/assets/studio-room.png');
-                  setHasUploaded(false);
-                  setAnalyzed(false);
-                  const resetDiag = determineCurtainRecommendations({ doorType: 'window', location: 'indoor', windowPanels: 'single', budget: 'all' });
-                  setAiDiagnosis(resetDiag);
-                }}
-                aria-label="Đặt lại ảnh"
-                title="Khôi phục ảnh mẫu"
-              >
-                <StudioIcon name="rotate" size={17} />
-              </button>
-            )}
-          </div>
-          <p className="panel-description">Chụp bằng điện thoại hoặc tải ảnh phòng lên. AI sẽ khảo sát loại cửa, vị trí để gợi ý các mẫu rèm chuẩn xác.</p>
 
-          <div
-            className={'dropzone ' + (dragging ? 'dragging' : '')}
-            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={(e) => { e.preventDefault(); setDragging(false); handlePhotoSelected(e.dataTransfer.files?.[0]); }}
-          >
-            <span className="upload-illustration"><StudioIcon name="image" size={34} /><i>+</i></span>
-            <strong>Kéo thả ảnh phòng vào đây</strong>
-            <span className="or">Hoặc</span>
-            <div className="upload-actions">
-              <button
-                className="button button-dark"
-                type="button"
-                onClick={() => {
-                  if (cameraInputRef.current) {
-                    cameraInputRef.current.click();
-                  }
-                }}
-              >
-                <Camera size={17} /> Chụp ảnh
-              </button>
-              <button
-                className="button button-light"
-                type="button"
-                onClick={() => {
-                  if (galleryInputRef.current) {
-                    galleryInputRef.current.click();
-                  }
-                }}
-              >
-                <Upload size={17} /> Tải ảnh lên
-              </button>
+            <div
+              className={'panel1-dropzone ' + (dragging ? 'dragging' : '')}
+              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={(e) => { e.preventDefault(); setDragging(false); handlePhotoSelected(e.dataTransfer.files?.[0]); }}
+            >
+              <div style={{ color: '#94A3B8', marginBottom: '8px' }}>
+                <Camera size={26} />
+              </div>
+              <strong style={{ fontSize: '13px', color: '#173352', display: 'block', marginBottom: '4px' }}>
+                Kéo thả ảnh phòng vào đây
+              </strong>
+              <span style={{ fontSize: '11px', color: '#94A3B8', display: 'block', marginBottom: '10px' }}>
+                hoặc
+              </span>
+
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                <button
+                  type="button"
+                  style={{
+                    backgroundColor: '#173352',
+                    color: '#FEF3E3',
+                    border: 'none',
+                    padding: '7px 16px',
+                    borderRadius: '999px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                  onClick={() => galleryInputRef.current?.click()}
+                >
+                  <Camera size={13} />
+                  <span>Chọn ảnh</span>
+                </button>
+                <button
+                  type="button"
+                  style={{
+                    backgroundColor: '#FEF3E3',
+                    color: '#173352',
+                    border: '1.5px solid #173352',
+                    padding: '6px 16px',
+                    borderRadius: '999px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                  onClick={() => cameraInputRef.current?.click()}
+                >
+                  <Upload size={13} />
+                  <span>Tải ảnh lên</span>
+                </button>
+              </div>
 
               {/* Mobile Camera direct capture input */}
               <input
@@ -589,610 +642,504 @@ export function StudioPage({
                 accept="image/*"
                 onChange={(e) => handlePhotoSelected(e.target.files?.[0])}
               />
-            </div>
-            <small>Hỗ trợ JPG, PNG, WEBP · Khảo sát & AI nhận diện</small>
-          </div>
 
-          <div className="tips-title" style={{ marginTop: '14px', marginBottom: '8px', fontSize: '11px', fontWeight: 600, color: 'var(--text-muted, #8c827a)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Click thử nhanh với phòng mẫu 3D:
-          </div>
-          <div className="tips-grid">
-            <div 
-              style={{ cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-              onClick={() => handleOpenSurveyForPreset('/assets/living-room.jpg')}
-              title="Khảo sát & nhận diện phòng khách"
-            >
-              <img src="/assets/tip-window.jpg" alt="Phòng khách" />
-              <span><i><StudioIcon name="check" size={11} /></i>Phòng khách</span>
+              <small style={{ display: 'block', marginTop: '10px', fontSize: '10.5px', color: '#94A3B8' }}>
+                Hỗ trợ: JPG, PNG, tối đa 10MB
+              </small>
             </div>
-            <div 
-              style={{ cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-              onClick={() => handleOpenSurveyForPreset('/assets/bedroom.jpg')}
-              title="Khảo sát & nhận diện phòng ngủ"
-            >
-              <img src="/assets/tip-light.jpg" alt="Phòng ngủ" />
-              <span><i><StudioIcon name="check" size={11} /></i>Phòng ngủ</span>
-            </div>
-            <div 
-              style={{ cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-              onClick={() => handleOpenSurveyForPreset('/assets/studio-room.png')}
-              title="Khảo sát & nhận diện studio mẫu"
-            >
-              <img src="/assets/tip-angle.jpg" alt="Studio tối giản" />
-              <span><i><StudioIcon name="check" size={11} /></i>Studio mẫu</span>
-            </div>
-          </div>
 
-          
-
-          {aiDiagnosis && (
-            <div className="analysis-summary-box">
-              <div className="summary-badge" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Sparkles size={14} color="#d4a373" />
-                  <span>AI ĐÃ PHÂN TÍCH XONG</span>
+            {/* Room Samples Carousel */}
+            <div className="panel1-samples-section">
+              <div className="panel1-samples-title">
+                <Sparkles size={13} color="#C8A87D" />
+                <span>Khám phá phòng mẫu</span>
+              </div>
+              <div className="panel1-samples-row">
+                <button
+                  type="button"
+                  className="panel1-sample-btn"
+                  onClick={() => handleOpenSurveyForPreset('/assets/living-room.jpg')}
+                  title="Trước"
+                >
+                  <ChevronLeft size={14} />
+                </button>
+                <div
+                  className="panel1-sample-card"
+                  onClick={() => handleOpenSurveyForPreset('/assets/living-room.jpg')}
+                  title="Phòng khách"
+                >
+                  <img src="/assets/tip-window.jpg" alt="Phòng khách" />
+                </div>
+                <div
+                  className="panel1-sample-card"
+                  onClick={() => handleOpenSurveyForPreset('/assets/bedroom.jpg')}
+                  title="Phòng ngủ"
+                >
+                  <img src="/assets/tip-light.jpg" alt="Phòng ngủ" />
+                </div>
+                <div
+                  className="panel1-sample-card"
+                  onClick={() => handleOpenSurveyForPreset('/assets/studio-room.png')}
+                  title="Studio mẫu"
+                >
+                  <img src="/assets/tip-angle.jpg" alt="Studio mẫu" />
                 </div>
                 <button
                   type="button"
-                  onClick={() => {
-                    setPendingImage(roomImage);
-                    setSurveyModalOpen(true);
-                  }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '11px',
-                    color: '#8b6b3e',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                  title="Thay đổi lựa chọn khảo sát"
+                  className="panel1-sample-btn"
+                  onClick={() => handleOpenSurveyForPreset('/assets/bedroom.jpg')}
+                  title="Sau"
                 >
-                  <Sliders size={12} />
-                  <span>Khảo sát lại</span>
+                  <ChevronRight size={14} />
                 </button>
               </div>
-              
-              <div className="summary-item">
-                <span className="lbl">Không gian:</span>
-                <strong>{aiDiagnosis.spaceTypeLabel || 'Trong nhà'}</strong>
-              </div>
-
-              <div className="summary-item">
-                <span className="lbl">Loại cửa:</span>
-                <strong>{aiDiagnosis.doorTypeLabel || 'Cửa sổ đơn'}</strong>
-              </div>
-
-              <div className="summary-item">
-                <span className="lbl">Đề xuất:</span>
-                <span style={{ fontSize: '11px', color: '#8b6b3e', fontWeight: 600 }}>{aiDiagnosis.caseTitle}</span>
-              </div>
-
-              {aiDiagnosis.estimatedPriceRange && (
-                <div className="summary-item">
-                  <span className="lbl">Giá gợi ý:</span>
-                  <strong style={{ color: '#935817', fontSize: '12px' }}>{aiDiagnosis.estimatedPriceRange}</strong>
-                </div>
-              )}
-
-              <div className="recommended-chips-wrapper" style={{ marginTop: '8px' }}>
-                <span className="lbl" style={{ display: 'block', fontSize: '10.5px', marginBottom: '4px' }}>Các mẫu rèm AI gợi ý:</span>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                  {aiDiagnosis.recommendedTypeIds?.map((recId) => {
-                    const found = curtainTypes.find(c => c.id === recId);
-                    if (!found) return null;
-                    const isActive = activeType === found.id;
-                    return (
-                      <button
-                        key={recId}
-                        type="button"
-                        onClick={() => {
-                          chooseType(found);
-                          setMobileActiveTab('preview');
-                        }}
-                        style={{
-                          fontSize: '10.5px',
-                          padding: '3px 8px',
-                          borderRadius: '6px',
-                          border: isActive ? '1px solid #8b6b3e' : '1px solid #d4c7b8',
-                          background: isActive ? '#f4ece1' : '#ffffff',
-                          color: isActive ? '#653d12' : '#334155',
-                          fontWeight: isActive ? 700 : 500,
-                          cursor: 'pointer'
-                        }}
-                        title="Click để áp dụng mẫu rèm này vào phòng 3D"
-                      >
-                        {found.name.split(' ')[0]} {found.name.split(' ')[1] || ''}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
             </div>
-          )}
+          </div>
+
+          {/* AI Mascot Card */}
+          <div className="panel1-mascot-card">
+            <div className="mascot-info">
+              <strong>
+                <Sparkles size={12} color="#C8A87D" />
+                <span>AI phân tích không gian</span>
+              </strong>
+              <p>Gợi ý loại rèm phù hợp với phong cách và nhu cầu của bạn</p>
+            </div>
+            <img src="/assets/ai-mascot.png" alt="UniVeloria AI Mascot" className="mascot-img" />
+          </div>
         </aside>
 
         {/* Panel 2: Pure 3D Interactive Visualization */}
-        <section className={'preview-panel glass-panel ' + (fullScreen ? 'preview-fullscreen' : '')} aria-label="Kết quả mô phỏng">
-          <div className="preview-header">
-            <div>
-              <span className="panel-step">02 / VISUALIZATION</span>
-              <h2>Không gian 3D tương tác</h2>
+        <section className={'preview-panel glass-panel ' + (fullScreen ? 'preview-fullscreen' : '')} aria-label="Không gian 3D của bạn">
+          <div className="panel2-header">
+            <div className="panel2-header-title">
+              <Box size={16} color="#173352" />
+              <span>Không gian 3D của bạn</span>
             </div>
-            <span className="status-pill status-ready">
-              <i />3D WebGL Active
-            </span>
-            <button
-              className="icon-button"
-              onClick={() => {
-                setPendingImage(roomImage);
-                setSurveyModalOpen(true);
-              }}
-              aria-label="Phân tích lại ảnh"
-              title="Khảo sát & nhận diện lại khung cửa"
-            >
-              <StudioIcon name="rotate" size={17} />
-            </button>
-          </div>
-
-          {/* EXTERNAL 3D ATMOSPHERE & ENVIRONMENT TOOLBAR */}
-          <div className="studio-3d-external-toolbar">
-            <div className="external-toolbar-left">
-              <span className="atmo-toolbar-label">MÔ PHỎNG ÁNH SÁNG & THỜI TIẾT:</span>
-              <div className="external-atmo-group">
+            <div className="panel2-header-right">
+              <span className="panel2-status-pill">
+                <span className="dot" />
+                <span>3D View Active</span>
+              </span>
+              {fullScreen && (
                 <button
-                  className={'atmo-pill-btn ' + (activeAtmosphere === 'morning' ? 'active' : '')}
-                  onClick={() => setActiveAtmosphere('morning')}
                   type="button"
-                  title="Ánh sáng ban mai nhẹ nhàng"
+                  className="fullscreen-exit-btn"
+                  onClick={() => setFullScreen(false)}
                 >
-                  <Sunrise size={14} color="#ff9e3b" />
-                  <span>Sáng sớm</span>
+                  <Minimize2 size={13} />
+                  <span>Thoát toàn màn hình (Esc)</span>
                 </button>
-                <button
-                  className={'atmo-pill-btn ' + (activeAtmosphere === 'noon' ? 'active' : '')}
-                  onClick={() => setActiveAtmosphere('noon')}
-                  type="button"
-                  title="Ánh sáng trưa rực rỡ & cản sáng"
-                >
-                  <Sun size={14} color="#f4b400" />
-                  <span>Trưa nắng</span>
-                </button>
-                <button
-                  className={'atmo-pill-btn ' + (activeAtmosphere === 'sunset' ? 'active' : '')}
-                  onClick={() => setActiveAtmosphere('sunset')}
-                  type="button"
-                  title="Hoàng hôn vàng hổ phách"
-                >
-                  <Sunset size={14} color="#f25c3b" />
-                  <span>Hoàng hôn</span>
-                </button>
-                <button
-                  className={'atmo-pill-btn ' + (activeAtmosphere === 'night' ? 'active' : '')}
-                  onClick={() => setActiveAtmosphere('night')}
-                  type="button"
-                  title="Ban tối ấm áp với đèn LED hắt trần"
-                >
-                  <Moon size={14} color="#7ba4d5" />
-                  <span>Ban tối</span>
-                </button>
-                <button
-                  className={'atmo-pill-btn ' + (activeAtmosphere === 'rain' ? 'active' : '')}
-                  onClick={() => setActiveAtmosphere('rain')}
-                  type="button"
-                  title="Trời mưa rả rích kèm gió lay rèm"
-                >
-                  <CloudRain size={14} color="#89b2c9" />
-                  <span>Trời mưa + Gió</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="external-toolbar-right">
-              <button
-                className="atmo-action-btn"
-                onClick={() => setShowMeasureGuide(true)}
-                type="button"
-                title="Xem quy chuẩn 5 bước đo cửa chính xác"
-              >
-                <Ruler size={13} />
-                <span>Cách đo cửa</span>
-              </button>
-              <button
-                className="atmo-action-btn"
-                onClick={() => viewer3dRef.current?.resetCamera()}
-                type="button"
-                title="Đặt lại góc nhìn chính diện"
-              >
-                <RotateCcw size={13} />
-                <span>Chính diện</span>
-              </button>
-              <button
-                className={'atmo-action-btn ' + (showAdjuster ? 'active' : '')}
-                onClick={() => setShowAdjuster(!showAdjuster)}
-                type="button"
-                title="Căn chỉnh vị trí & kích thước rèm khớp khung cửa"
-              >
-                <Sliders size={13} />
-                <span>Căn chỉnh rèm</span>
-              </button>
-            </div>
-          </div>
-
-          {/* External Window Fit Calibration Drawer */}
-          {showAdjuster && (
-            <div className="external-adjuster-panel">
-              <div className="adjuster-header">
-                <div className="adjuster-header-left">
-                  <span className="adjuster-title">⚡ Căn chỉnh rèm 3D</span>
-                </div>
-                <div className="adjuster-precision-segmented">
-                  <button
-                    type="button"
-                    className={'prec-btn ' + (calibrationPrecision === 'fine' ? 'active' : '')}
-                    onClick={() => setCalibrationPrecision('fine')}
-                    title="Bước nhảy siêu tỉ mỉ 2% (khớp chuẩn từng cm)"
-                  >
-                    🎯 Tỉ mỉ 2%
-                  </button>
-                  <button
-                    type="button"
-                    className={'prec-btn ' + (calibrationPrecision === 'medium' ? 'active' : '')}
-                    onClick={() => setCalibrationPrecision('medium')}
-                    title="Bước nhảy vừa phải 5%"
-                  >
-                    ⚖️ Vừa 5%
-                  </button>
-                  <button
-                    type="button"
-                    className={'prec-btn ' + (calibrationPrecision === 'coarse' ? 'active' : '')}
-                    onClick={() => setCalibrationPrecision('coarse')}
-                    title="Bước nhảy nhanh 10%"
-                  >
-                    ⏩ Nhanh 10%
-                  </button>
-                </div>
-                <button className="adjuster-close" onClick={() => setShowAdjuster(false)} type="button">✕</button>
-              </div>
-
-              <div className="adjuster-grid">
-                {/* 1. Window Presets */}
-                <div className="adjuster-row">
-                  <span className="adjuster-row-label">Khớp cửa:</span>
-                  <div className="adjuster-row-btns cols-3">
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(-0.88, 0)} title="Khớp vào cửa sổ bên trái ảnh" type="button">⇦ Cửa trái</button>
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0, 0)} title="Khớp vào cửa sổ chính giữa ảnh" type="button">⦿ Cửa giữa</button>
-                    <button onClick={() => viewer3dRef.current?.setCurtainPosition(0.88, 0)} title="Khớp vào cửa sổ bên phải ảnh" type="button">⇨ Cửa phải</button>
-                  </div>
-                </div>
-
-                {/* 2. Position Offset */}
-                <div className="adjuster-row">
-                  <span className="adjuster-row-label">Dời ({calibrationPrecision === 'fine' ? '±2cm' : calibrationPrecision === 'medium' ? '±4cm' : '±8cm'}):</span>
-                  <div className="adjuster-row-btns cols-4">
-                    <button onClick={() => viewer3dRef.current?.moveCurtain(-curtainMoveStep, 0)} title="Sang trái" type="button"><ArrowLeft size={11}/> Trái</button>
-                    <button onClick={() => viewer3dRef.current?.moveCurtain(curtainMoveStep, 0)} title="Sang phải" type="button"><ArrowRight size={11}/> Phải</button>
-                    <button onClick={() => viewer3dRef.current?.moveCurtain(0, curtainMoveStep)} title="Lên trên" type="button"><ArrowUp size={11}/> Lên</button>
-                    <button onClick={() => viewer3dRef.current?.moveCurtain(0, -curtainMoveStep)} title="Xuống dưới" type="button"><ArrowDown size={11}/> Xuống</button>
-                  </div>
-                </div>
-
-                {/* 3. Curtain Scale */}
-                <div className="adjuster-row">
-                  <span className="adjuster-row-label">Cỡ rèm:</span>
-                  <div className="adjuster-row-btns cols-4">
-                    <button onClick={() => viewer3dRef.current?.scaleCurtain(curtainScaleStep, 0)} title="Rộng hơn" type="button">Rộng +</button>
-                    <button onClick={() => viewer3dRef.current?.scaleCurtain(-curtainScaleStep, 0)} title="Hẹp hơn" type="button">Hẹp -</button>
-                    <button onClick={() => viewer3dRef.current?.scaleCurtain(0, curtainScaleStep)} title="Dài hơn" type="button">Dài +</button>
-                    <button onClick={() => viewer3dRef.current?.scaleCurtain(0, -curtainScaleStep)} title="Ngắn hơn" type="button">Ngắn -</button>
-                  </div>
-                </div>
-
-                {/* 4. Room Photo Zoom & Reset in 1 combined tidy row */}
-                <div className="adjuster-row">
-                  <span className="adjuster-row-label">Ảnh & ⟳:</span>
-                  <div className="adjuster-row-btns cols-photo-reset">
-                    <button onClick={() => viewer3dRef.current?.scalePhoto(-photoScaleStep)} title="Thu nhỏ ảnh căn phòng" type="button">Ảnh -</button>
-                    <button onClick={() => viewer3dRef.current?.scalePhoto(photoScaleStep)} title="Phóng to ảnh căn phòng" type="button">Ảnh +</button>
-                    <button className="adjuster-reset-btn" onClick={() => viewer3dRef.current?.resetCurtainTransform()} title="Khôi phục rèm về vị trí và kích thước ban đầu" type="button">
-                      <RotateCcw size={11}/> Đặt lại
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="room-stage">
-            <RoomCurtain3DViewer
-              ref={viewer3dRef}
-              roomImage={roomImage}
-              hasUploaded={hasUploaded}
-              isAdjusting={showAdjuster}
-              studioColor={studioColor}
-              curtainType={currentType}
-              isAnalyzing={analyzingState}
-              aiDiagnosis={aiDiagnosis}
-              openRatio={curtainOpenRatio}
-              activeAtmosphere={activeAtmosphere}
-              setActiveAtmosphere={setActiveAtmosphere}
-              onConsultClick={() => navigateTo('contact')}
-            />
-          </div>
-
-          {/* Interactive Curtain Fabric Color Palette */}
-          {currentType?.colors && currentType.colors.length > 0 && (
-            <div className="studio-curtain-color-dock">
-              <div className="color-dock-info">
-                <Palette size={13} color="#c8a87d" />
-                <span className="color-dock-title">Màu rèm:</span>
-                <strong className="color-dock-active-name">{getCurtainColorName(studioColor)}</strong>
-              </div>
-              <div className="color-dock-swatches">
-                {currentType.colors.map((c, idx) => {
-                  const isActive = studioColor?.toLowerCase() === c.toLowerCase();
-                  return (
-                    <button
-                      key={c + idx}
-                      type="button"
-                      className={'studio-swatch-btn ' + (isActive ? 'active' : '')}
-                      style={{ backgroundColor: c }}
-                      onClick={() => setStudioColor(c)}
-                      title={`Chọn màu: ${getCurtainColorName(c)} (${c})`}
-                      aria-label={`Chọn màu ${getCurtainColorName(c)}`}
-                    >
-                      {isActive && <Check size={11} color={isLightColorHex(c) ? '#1a1816' : '#ffffff'} strokeWidth={3} />}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Roller Curtain Customization Notice */}
-          {(currentType?.isRoller || currentType?.id?.includes('roller')) && (
-            <div className="studio-roller-notice-banner">
-              <div className="roller-notice-content">
-                <Sparkles size={15} color="#c8a87d" />
-                <span>
-                  <strong>Mục Rèm cuốn:</strong> (Hỗ trợ thiết kế và in hình ảnh, họa tiết theo yêu cầu của khách hàng). Khách hàng có nhu cầu cá nhân hóa sản phẩm vui lòng nhấn:
-                </span>
-              </div>
+              )}
               <button
                 type="button"
-                className="btn-studio-roller-consult"
-                onClick={() => navigateTo && navigateTo('contact')}
-              >
-                Liên hệ tư vấn
-              </button>
-            </div>
-          )}
-
-          <div className="viewer-controls">
-            {/* 3D Curtain Action Dock */}
-            <div className="external-curtain-dock">
-              <button
-                className={'curtain-toggle-btn ' + (isCurtainOpen ? 'active' : '')}
-                onClick={handleToggleCurtainOpen}
-                title="Kéo mở hoặc đóng rèm"
-                type="button"
-              >
-                <Eye size={15} />
-                <span>{currentType?.isRoman ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Kéo xếp lớp Roman') : currentType?.isHoneycomb ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Kéo xếp rèm lên') : currentType?.isPvc ? (isCurtainOpen ? 'Hạ bạt xuống' : 'Cuộn bạt lên') : currentType?.isRoller ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Cuộn rèm lên') : (isCurtainOpen ? 'Đóng rèm' : 'Mở rèm 3D')}</span>
-              </button>
-
-              <div className="slider-track-wrap">
-                <label>{currentType?.isRoman ? 'Độ xếp lớp:' : currentType?.isHoneycomb ? 'Độ kéo xếp:' : currentType?.isPvc ? 'Độ cuộn bạt:' : currentType?.isRoller ? 'Độ cuộn:' : 'Độ mở:'}</label>
-                <input
-                  type="range"
-                  min="0.0"
-                  max="1.0"
-                  step="0.01"
-                  value={curtainOpenRatio}
-                  onTouchStart={(e) => e.stopPropagation()}
-                  onTouchMove={(e) => e.stopPropagation()}
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onChange={handleSliderChange}
-                />
-                <span className="ratio-percent">{Math.round(curtainOpenRatio * 100)}%</span>
-              </div>
-            </div>
-
-            <span className="control-divider" />
-
-            {/* 3D Camera Controls */}
-            <div className="camera-view-actions">
-              <button
-                onClick={() => viewer3dRef.current?.rotate()}
-                title="Xoay góc nhìn 3D"
-                type="button"
-              >
-                <StudioIcon name="rotate" size={15} /> Xoay 3D
-              </button>
-              <button
-                onClick={() => viewer3dRef.current?.zoomIn()}
-                title="Phóng to không gian (Zoom In)"
-                type="button"
-              >
-                <ZoomIn size={15} /> Phóng to
-              </button>
-              <button
-                onClick={() => viewer3dRef.current?.zoomOut()}
-                title="Thu nhỏ không gian (Zoom Out)"
-                type="button"
-              >
-                <ZoomOut size={15} /> Thu nhỏ
-              </button>
-              <button
+                className="icon-button"
+                style={{ width: '28px', height: '28px' }}
                 onClick={() => setFullScreen(!fullScreen)}
-                title={fullScreen ? 'Thoát toàn màn hình' : 'Mở rộng toàn màn hình'}
-                type="button"
+                title={fullScreen ? 'Thu nhỏ' : 'Toàn màn hình'}
               >
-                <StudioIcon name="expand" size={15} /> {fullScreen ? 'Thu gọn' : 'Toàn màn hình'}
+                {fullScreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+              </button>
+              <button
+                type="button"
+                className={'icon-button ' + (showAdjuster ? 'active' : '')}
+                style={{ width: '28px', height: '28px' }}
+                onClick={() => setShowAdjuster(!showAdjuster)}
+                title={showAdjuster ? 'Đóng cài đặt & căn chỉnh' : 'Cài đặt mô phỏng ánh sáng & căn chỉnh rèm 3D'}
+              >
+                <Settings size={14} />
               </button>
             </div>
           </div>
 
-          {/* Mobile In-Studio Quick Action Buttons */}
-          <div className="mobile-studio-quick-nav">
+          {/* UNIFIED SETTINGS & CALIBRATION PANEL (Mô phỏng bên trái, Căn chỉnh rèm bên phải) */}
+          {showAdjuster && (
+            <div className="studio-unified-settings-panel">
+              <div className="unified-settings-header">
+                <div className="unified-settings-title">
+                  <Settings size={14} color="#C8A87D" />
+                  <span>Cài đặt mô phỏng ánh sáng & Căn chỉnh rèm 3D</span>
+                </div>
+                <button
+                  type="button"
+                  className="unified-settings-close"
+                  onClick={() => setShowAdjuster(false)}
+                  title="Đóng bảng cài đặt"
+                >
+                  <X size={15} />
+                </button>
+              </div>
+
+              <div className="unified-settings-body">
+                {/* CỘT TRÁI: Mô phỏng ánh sáng & thời tiết */}
+                <div className="unified-col unified-col-atmo">
+                  <div className="unified-section-label">
+                    <span>Mô phỏng ánh sáng & thời tiết</span>
+                  </div>
+
+                  <div className="unified-atmo-pills">
+                    <button
+                      className={'atmo-pill-btn ' + (activeAtmosphere === 'morning' ? 'active' : '')}
+                      onClick={() => setActiveAtmosphere('morning')}
+                      type="button"
+                      title="Ánh sáng ban mai nhẹ nhàng"
+                    >
+                      <Sunrise size={13} color="#ff9e3b" />
+                      <span>Sáng sớm</span>
+                    </button>
+                    <button
+                      className={'atmo-pill-btn ' + (activeAtmosphere === 'noon' ? 'active' : '')}
+                      onClick={() => setActiveAtmosphere('noon')}
+                      type="button"
+                      title="Ánh sáng trưa rực rỡ & cản sáng"
+                    >
+                      <Sun size={13} color="#f4b400" />
+                      <span>Trưa nắng</span>
+                    </button>
+                    <button
+                      className={'atmo-pill-btn ' + (activeAtmosphere === 'sunset' ? 'active' : '')}
+                      onClick={() => setActiveAtmosphere('sunset')}
+                      type="button"
+                      title="Hoàng hôn vàng hổ phách"
+                    >
+                      <Sunset size={13} color="#f25c3b" />
+                      <span>Hoàng hôn</span>
+                    </button>
+                    <button
+                      className={'atmo-pill-btn ' + (activeAtmosphere === 'night' ? 'active' : '')}
+                      onClick={() => setActiveAtmosphere('night')}
+                      type="button"
+                      title="Ban tối ấm áp với đèn LED hắt trần"
+                    >
+                      <Moon size={13} color="#7ba4d5" />
+                      <span>Ban tối</span>
+                    </button>
+                    <button
+                      className={'atmo-pill-btn ' + (activeAtmosphere === 'rain' ? 'active' : '')}
+                      onClick={() => setActiveAtmosphere('rain')}
+                      type="button"
+                      title="Trời mưa rả rích kèm gió lay rèm"
+                    >
+                      <CloudRain size={13} color="#89b2c9" />
+                      <span>Trời mưa + Gió</span>
+                    </button>
+                  </div>
+
+                  <div className="unified-atmo-tools">
+                    <button
+                      className="atmo-action-btn"
+                      onClick={() => setShowMeasureGuide(true)}
+                      type="button"
+                      title="Xem quy chuẩn 5 bước đo cửa chính xác"
+                    >
+                      <Ruler size={12} />
+                      <span>Cách đo cửa</span>
+                    </button>
+                    <button
+                      className="atmo-action-btn"
+                      onClick={() => viewer3dRef.current?.resetCamera()}
+                      type="button"
+                      title="Đặt lại góc nhìn chính diện"
+                    >
+                      <RotateCcw size={12} />
+                      <span>Chính diện</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* CỘT PHẢI: Căn chỉnh rèm 3D */}
+                <div className="unified-col unified-col-adjust">
+                  <div className="unified-section-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>Căn chỉnh rèm 3D</span>
+                    <div className="adjuster-precision-segmented">
+                      <button
+                        type="button"
+                        className={`prec-btn ${calibrationPrecision === 'fine' ? 'active' : ''}`}
+                        onClick={() => setCalibrationPrecision('fine')}
+                        title="Chỉnh tỉ mỉ 2%"
+                      >
+                        Tỉ mỉ 2%
+                      </button>
+                      <button
+                        type="button"
+                        className={`prec-btn ${calibrationPrecision === 'medium' ? 'active' : ''}`}
+                        onClick={() => setCalibrationPrecision('medium')}
+                        title="Chỉnh tiêu chuẩn 5%"
+                      >
+                        Chuẩn 5%
+                      </button>
+                      <button
+                        type="button"
+                        className={`prec-btn ${calibrationPrecision === 'coarse' ? 'active' : ''}`}
+                        onClick={() => setCalibrationPrecision('coarse')}
+                        title="Chỉnh nhanh 10%"
+                      >
+                        Nhanh 10%
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="adjuster-grid compact">
+                    {/* 1. Window Presets */}
+                    <div className="adjuster-row">
+                      <span className="adjuster-row-label">Khớp cửa:</span>
+                      <div className="adjuster-row-btns cols-3">
+                        <button onClick={() => viewer3dRef.current?.setCurtainPosition(-0.88, 0)} title="Khớp vào cửa sổ bên trái ảnh" type="button">⇦ Cửa trái</button>
+                        <button onClick={() => viewer3dRef.current?.setCurtainPosition(0, 0)} title="Khớp vào cửa sổ chính giữa ảnh" type="button">⦿ Cửa giữa</button>
+                        <button onClick={() => viewer3dRef.current?.setCurtainPosition(0.88, 0)} title="Khớp vào cửa sổ bên phải ảnh" type="button">⇨ Cửa phải</button>
+                      </div>
+                    </div>
+
+                    {/* 2. Position Offset */}
+                    <div className="adjuster-row">
+                      <span className="adjuster-row-label">Dời ({calibrationPrecision === 'fine' ? '±2cm' : calibrationPrecision === 'medium' ? '±4cm' : '±8cm'}):</span>
+                      <div className="adjuster-row-btns cols-4">
+                        <button onClick={() => viewer3dRef.current?.moveCurtain(-curtainMoveStep, 0)} title="Sang trái" type="button"><ArrowLeft size={10}/> Trái</button>
+                        <button onClick={() => viewer3dRef.current?.moveCurtain(curtainMoveStep, 0)} title="Sang phải" type="button"><ArrowRight size={10}/> Phải</button>
+                        <button onClick={() => viewer3dRef.current?.moveCurtain(0, curtainMoveStep)} title="Lên trên" type="button"><ArrowUp size={10}/> Lên</button>
+                        <button onClick={() => viewer3dRef.current?.moveCurtain(0, -curtainMoveStep)} title="Xuống dưới" type="button"><ArrowDown size={10}/> Xuống</button>
+                      </div>
+                    </div>
+
+                    {/* 3. Curtain Scale */}
+                    <div className="adjuster-row">
+                      <span className="adjuster-row-label">Cỡ rèm:</span>
+                      <div className="adjuster-row-btns cols-4">
+                        <button onClick={() => viewer3dRef.current?.scaleCurtain(curtainScaleStep, 0)} title="Rộng hơn" type="button">Rộng +</button>
+                        <button onClick={() => viewer3dRef.current?.scaleCurtain(-curtainScaleStep, 0)} title="Hẹp hơn" type="button">Hẹp −</button>
+                        <button onClick={() => viewer3dRef.current?.scaleCurtain(0, curtainScaleStep)} title="Dài hơn" type="button">Dài +</button>
+                        <button onClick={() => viewer3dRef.current?.scaleCurtain(0, -curtainScaleStep)} title="Ngắn hơn" type="button">Ngắn −</button>
+                      </div>
+                    </div>
+
+                    {/* 4. Room Photo Zoom & Reset */}
+                    <div className="adjuster-row">
+                      <span className="adjuster-row-label">Ảnh & ⟳:</span>
+                      <div className="adjuster-row-btns cols-photo-reset">
+                        <button onClick={() => viewer3dRef.current?.scalePhoto(-photoScaleStep)} title="Thu nhỏ ảnh căn phòng" type="button">Ảnh −</button>
+                        <button onClick={() => viewer3dRef.current?.scalePhoto(photoScaleStep)} title="Phóng to ảnh căn phòng" type="button">Ảnh +</button>
+                        <button className="adjuster-reset-btn" onClick={() => viewer3dRef.current?.resetCurtainTransform()} title="Khôi phục rèm về vị trí và kích thước ban đầu" type="button">
+                          <RotateCcw size={10}/> Đặt lại
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 3D Canvas with Floating Left Dock */}
+          <div className="panel2-canvas-wrapper">
+            <div className="panel2-zoom-dock">
+              <button onClick={() => viewer3dRef.current?.zoomIn()} title="Phóng to">+</button>
+              <button onClick={() => viewer3dRef.current?.zoomOut()} title="Thu nhỏ">−</button>
+              <button onClick={() => viewer3dRef.current?.resetCamera()} title="Đặt lại góc nhìn">↺</button>
+              <button onClick={() => setFullScreen(!fullScreen)} title="Toàn màn hình">⛶</button>
+            </div>
+
+            <div className="room-stage" style={{ height: '100%' }}>
+              <RoomCurtain3DViewer
+                ref={viewer3dRef}
+                roomImage={roomImage}
+                hasUploaded={hasUploaded}
+                isAdjusting={showAdjuster}
+                studioColor={studioColor}
+                curtainType={currentType}
+                isAnalyzing={analyzingState}
+                aiDiagnosis={aiDiagnosis}
+                openRatio={curtainOpenRatio}
+                activeAtmosphere={activeAtmosphere}
+                setActiveAtmosphere={setActiveAtmosphere}
+                onConsultClick={() => navigateTo('contact')}
+              />
+            </div>
+          </div>
+
+          {/* KÉO XẾP LỚP DOCK: Curtain Open / Fold Action & Ratio Slider */}
+          <div className="external-curtain-dock">
             <button
+              className={'curtain-toggle-btn ' + (isCurtainOpen ? 'active' : '')}
+              onClick={handleToggleCurtainOpen}
+              title="Kéo mở hoặc đóng rèm"
               type="button"
-              className="mobile-quick-btn curtains"
-              onClick={() => setMobileActiveTab('curtains')}
             >
-              <Layers size={15} />
-              <span>Đổi mẫu rèm ({curtainTypes?.length || 11} mẫu)</span>
+              <Eye size={15} />
+              <span>
+                {currentType?.isRoman
+                  ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Kéo xếp lớp Roman')
+                  : currentType?.isHoneycomb
+                  ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Kéo xếp rèm lên')
+                  : currentType?.isPvc
+                  ? (isCurtainOpen ? 'Hạ bạt xuống' : 'Cuộn bạt lên')
+                  : currentType?.isRoller
+                  ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Cuộn rèm lên')
+                  : (isCurtainOpen ? 'Đóng rèm' : 'Mở rèm 3D')}
+              </span>
             </button>
-            <button
-              type="button"
-              className="mobile-quick-btn upload"
-              onClick={() => setMobileActiveTab('upload')}
-            >
-              <StudioIcon name="image" size={15} />
-              <span>Đổi ảnh căn phòng</span>
-            </button>
+
+            <div className="slider-track-wrap">
+              <label>
+                {currentType?.isRoman ? 'Độ xếp lớp:' : currentType?.isHoneycomb ? 'Độ kéo xếp:' : currentType?.isPvc ? 'Độ cuộn bạt:' : currentType?.isRoller ? 'Độ cuộn:' : 'Độ mở:'}
+              </label>
+              <input
+                type="range"
+                min="0.0"
+                max="1.0"
+                step="0.01"
+                value={curtainOpenRatio}
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
+                onChange={handleSliderChange}
+              />
+              <span className="ratio-badge">{Math.round(curtainOpenRatio * 100)}%</span>
+            </div>
+          </div>
+
+          {/* Streamlined Bottom Control Bar matching Image 2 */}
+          <div className="panel2-bottom-bar">
+            <div className="panel2-ctrl-item">
+              <span>Loại rèm</span>
+              <select
+                className="panel2-ctrl-select"
+                value={activeType}
+                onChange={(e) => {
+                  const found = curtainTypes.find(c => c.id === e.target.value);
+                  if (found) {
+                    chooseType(found);
+                    setCurtainOpenRatio(0.0);
+                    setIsCurtainOpen(false);
+                  }
+                }}
+              >
+                {curtainTypes.map(c => (
+                  <option key={c.id} value={c.id}>{c.name.split(' ').slice(0, 3).join(' ')}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="panel2-ctrl-item">
+              <span>Màu sắc</span>
+              <div className="panel2-swatches">
+                {(currentType?.colors?.slice(0, 5) || ['#dfd7c8', '#10223e', '#e9d8c2', '#c5a27d', '#e07a5f']).map((col, idx) => (
+                  <button
+                    key={col + idx}
+                    type="button"
+                    className={`panel2-swatch-circle ${studioColor === col ? 'selected' : ''}`}
+                    style={{ backgroundColor: col }}
+                    onClick={() => setStudioColor(col)}
+                    title={getCurtainColorName(col)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="panel2-ctrl-item">
+              <span>Độ dày</span>
+              <select
+                className="panel2-ctrl-select"
+                value={curtainThickness}
+                onChange={(e) => setCurtainThickness(e.target.value)}
+              >
+                <option value="Chọn độ dày">Chọn độ dày</option>
+                <option value="Mỏng nhẹ">Mỏng nhẹ (Voan)</option>
+                <option value="Tiêu chuẩn">Tiêu chuẩn (2 lớp)</option>
+                <option value="Dày dặn">Dày dặn (Cản sáng)</option>
+              </select>
+            </div>
           </div>
         </section>
 
         {/* Panel 3: AI Recommendations */}
         <aside className="recommend-panel glass-panel">
-          <div className="recommend-heading">
-            <div>
-              <span className="panel-step">03 / AI RECOMMENDATIONS</span>
-              <h2>Mẫu rèm phù hợp nhất</h2>
-            </div>
-            <span className="recommend-count">{aiDiagnosis?.recommendedTypeIds?.length || 4}</span>
-          </div>
-
-          {/* AI Reasoning Widget in Panel 3 */}
-          {aiDiagnosis && (
-            <div className="ai-diagnostic-pill">
-              <div className="diag-header">
-                <Sparkles size={15} color="#c9a473" />
-                <strong>{aiDiagnosis.caseTitle || 'Gợi ý từ Chuyên gia AI:'}</strong>
-              </div>
-              <p>{aiDiagnosis.aiReason}</p>
-              <div className="diag-tags">
-                {aiDiagnosis.tags?.map((t) => (
-                  <span key={t} className="tag">✓ {t}</span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="filter-tabs">
-            {studioStyleFilters.map((filter) => (
+          <div>
+            <div className="panel3-header">
+              <h2>
+                <Star size={16} fill="#E2A96A" color="#E2A96A" />
+                <span>Gợi ý rèm phù hợp</span>
+              </h2>
               <button
-                key={filter}
-                className={activeStudioFilter === filter ? 'selected' : ''}
-                onClick={() => setActiveStudioFilter(filter)}
+                type="button"
+                className="icon-button"
+                style={{ width: '28px', height: '28px' }}
+                onClick={() => setShowAdjuster(!showAdjuster)}
+                title="Căn chỉnh chi tiết"
               >
-                {filter}
+                <Sliders size={14} color="#64748B" />
               </button>
-            ))}
-          </div>
-
-          <div className="recommend-list">
-            {paginatedCurtainTypes.map((type) => {
-              const isRecommended = aiDiagnosis?.recommendedTypeIds?.includes(type.id);
-              return (
-                <button
-                  className={'recommend-card ' + (activeType === type.id ? 'active ' : '') + (isRecommended ? 'is-ai-pick' : '')}
-                  key={type.id}
-                  onClick={() => {
-                    chooseType(type);
-                    setCurtainOpenRatio(0.0);
-                    setIsCurtainOpen(false);
-                    setMobileActiveTab('preview');
-                  }}
-                >
-                  <span className={'fabric-thumb fabric-' + type.id}>
-                    <img src={type.thumb || roomImage} alt={type.name} />
-                  </span>
-                  <span className="recommend-info">
-                    <div className="card-top-title">
-                      <strong>{type.name}</strong>
-                      {isRecommended && <span className="ai-pick-badge">AI Khuyên dùng ⭐</span>}
-                    </div>
-                    {type.priceDisplay && (
-                      <div className="recommend-card-price">
-                        <Tag size={11} color="#8b6b3e" />
-                        <span>{type.priceDisplay}</span>
-                      </div>
-                    )}
-                    <small>{type.desc}</small>
-                    <span className="mini-swatches" onClick={(e) => e.stopPropagation()}>
-                      {type.colors.slice(0, 7).map((c) => {
-                        const isCurrentActive = activeType === type.id && studioColor?.toLowerCase() === c.toLowerCase();
-                        return (
-                          <button
-                            key={c}
-                            type="button"
-                            className={'card-mini-swatch ' + (isCurrentActive ? 'active' : '')}
-                            style={{ backgroundColor: c }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              chooseType(type);
-                              setStudioColor(c);
-                            }}
-                            title={getCurtainColorName(c)}
-                            aria-label={`Chọn màu ${getCurtainColorName(c)}`}
-                          />
-                        );
-                      })}
-                    </span>
-                  </span>
-                  <span className="recommend-arrow"><StudioIcon name="arrow" size={16} /></span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Pagination Controls */}
-          {totalCurtainPages > 1 && (
-            <div className="studio-curtain-pagination">
-              <div className="studio-pagination-info">
-                <span>
-                  Trang <strong>{curtainPage}</strong> / {totalCurtainPages} ({filteredCurtainTypes.length} mẫu rèm)
-                </span>
-              </div>
-              <div className="studio-pagination-btns">
-                <button
-                  type="button"
-                  className="studio-pagi-nav"
-                  disabled={curtainPage === 1}
-                  onClick={() => setCurtainPage((p) => Math.max(1, p - 1))}
-                  aria-label="Trang trước"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                {Array.from({ length: totalCurtainPages }, (_, i) => i + 1).map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    type="button"
-                    className={'studio-pagi-btn ' + (curtainPage === pageNum ? 'active' : '')}
-                    onClick={() => setCurtainPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  className="studio-pagi-nav"
-                  disabled={curtainPage === totalCurtainPages}
-                  onClick={() => setCurtainPage((p) => Math.min(totalCurtainPages, p + 1))}
-                  aria-label="Trang sau"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
             </div>
-          )}
+
+            <div className="panel3-tabs">
+              {['Tất cả', 'Rèm vải', 'Rèm cầu vồng', 'Rèm cuốn'].map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  className={`panel3-tab-btn ${activeStudioFilter === filter ? 'active' : ''}`}
+                  onClick={() => setActiveStudioFilter(filter)}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+
+            <div className="panel3-card-list">
+              {[
+                { id: 'roman-linen', name: 'Rèm Vải Elysia', desc: 'Mềm mại, sang trọng', price: 'Từ 420.000đ/m²', thumb: '/assets/product-linen.jpg' },
+                { id: 'honeycomb', name: 'Rèm Cầu Vồng Duo Riviera', desc: 'Hiện đại, linh hoạt', price: 'Từ 380.000đ/m²', thumb: '/assets/curtains/curtain-honeycomb.jpg' },
+                { id: 'roller-linen', name: 'Rèm Cuốn Customize Mélange', desc: 'Tối ưu ánh sáng', price: 'Từ 290.000đ/m²', thumb: '/assets/curtains/curtain-roller-linen.jpg' },
+                { id: 'single-pleat', name: 'Rèm Cuốn Aria', desc: 'Tinh tế, tối giản', price: 'Từ 260.000đ/m²', thumb: '/assets/curtains/curtain-single-pleat.jpg' },
+              ].map((item) => {
+                const isSelected = activeType === item.id;
+                const matchedType = curtainTypes.find(c => c.id === item.id);
+                return (
+                  <div
+                    key={item.id}
+                    className={`panel3-card ${isSelected ? 'selected' : ''}`}
+                    onClick={() => {
+                      if (matchedType) chooseType(matchedType);
+                      setCurtainOpenRatio(0.0);
+                      setIsCurtainOpen(false);
+                      setMobileActiveTab('preview');
+                    }}
+                  >
+                    <div className="panel3-card-thumb">
+                      <img src={item.thumb} alt={item.name} onError={(e) => { e.target.src = '/assets/product-linen.jpg'; }} />
+                    </div>
+                    <div className="panel3-card-info">
+                      <strong>{item.name}</strong>
+                      <small>{item.desc}</small>
+                      <div className="panel3-card-price">{item.price}</div>
+                    </div>
+                    <button
+                      type="button"
+                      className={`panel3-card-btn ${isSelected ? 'selected' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (matchedType) chooseType(matchedType);
+                        setCurtainOpenRatio(0.0);
+                        setIsCurtainOpen(false);
+                        setMobileActiveTab('preview');
+                      }}
+                    >
+                      {isSelected ? 'Đã chọn' : 'Chọn'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <a
+            href="#products"
+            className="panel3-view-more"
+            onClick={(e) => {
+              e.preventDefault();
+              if (navigateTo) navigateTo('products');
+            }}
+          >
+            Xem thêm sản phẩm →
+          </a>
         </aside>
       </section>
 

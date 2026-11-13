@@ -40,6 +40,8 @@ export function ProductsPage({
   setActiveCardColors,
 }) {
   const { addToCart: addCartItem } = useCart();
+  const [recOffset, setRecOffset] = useState(0);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
 
   // Luxury Pagination Suite: 8 items per page by default
   const [itemsPerPage, setItemsPerPage] = useState(8);
@@ -120,6 +122,105 @@ export function ProductsPage({
                 </div>
               </button>
             ))}
+          </section>
+
+          {/* Products Search Strip */}
+          <section className="products-search-strip" style={{
+            maxWidth: '1240px',
+            margin: '0 auto 24px',
+            padding: '0 20px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '16px',
+              backgroundColor: '#ffffff',
+              padding: '12px 20px',
+              borderRadius: '16px',
+              border: '1px solid rgba(23, 51, 82, 0.08)',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+              flexWrap: 'wrap'
+            }}>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: '#173352', minWidth: '160px' }}>
+                Tìm kiếm sản phẩm
+              </div>
+
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                flex: 1,
+                minWidth: '260px',
+                gap: '10px'
+              }}>
+                <div style={{
+                  position: 'relative',
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}>
+                  <input
+                    type="text"
+                    value={productSearch || ''}
+                    onChange={(e) => setProductSearch(e.target.value)}
+                    placeholder="Tìm kiếm sản phẩm rèm bạn cần..."
+                    style={{
+                      width: '100%',
+                      padding: '10px 16px 10px 38px',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(23, 51, 82, 0.16)',
+                      fontSize: '13.5px',
+                      outline: 'none',
+                      backgroundColor: '#faf8f5',
+                      fontFamily: 'inherit'
+                    }}
+                  />
+                  <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, pointerEvents: 'none' }}>
+                    <ProductIcon name="search" size={16} />
+                  </span>
+                  {productSearch && (
+                    <button
+                      type="button"
+                      onClick={() => setProductSearch('')}
+                      style={{
+                        position: 'absolute',
+                        right: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#64748b',
+                        fontSize: '14px'
+                      }}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  style={{
+                    backgroundColor: '#173352',
+                    color: '#FEF3E3',
+                    border: 'none',
+                    padding: '10px 24px',
+                    borderRadius: '999px',
+                    fontWeight: 700,
+                    fontSize: '13.5px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 2px 8px rgba(23, 51, 82, 0.2)'
+                  }}
+                  onClick={() => {
+                    document.getElementById('product-grid')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Tìm kiếm
+                </button>
+              </div>
+            </div>
           </section>
 
           {/* Catalog Layout */}
@@ -443,6 +544,259 @@ export function ProductsPage({
                   </div>
                 </div>
               )}
+            </div>
+          </section>
+
+          {/* Section: Gợi ý dành riêng cho bạn (Recommendations) */}
+          <section className="products-recommendations-section" style={{
+            maxWidth: '1240px',
+            margin: '50px auto 30px',
+            padding: '0 20px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
+              marginBottom: '24px'
+            }}>
+              <div>
+                <h2 style={{
+                  fontSize: '24px',
+                  fontWeight: 700,
+                  color: '#173352',
+                  margin: '0 0 6px 0',
+                  letterSpacing: '-0.02em'
+                }}>
+                  Gợi ý dành riêng cho bạn
+                </h2>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#64748b',
+                  margin: 0
+                }}>
+                  Khám phá những thiết kế rèm được yêu thích nhất cho không gian sống của bạn
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  type="button"
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    backgroundColor: '#ffffff',
+                    border: '1.5px solid #173352',
+                    color: '#173352',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: recOffset === 0 ? 'not-allowed' : 'pointer',
+                    opacity: recOffset === 0 ? 0.4 : 1
+                  }}
+                  onClick={() => setRecOffset((p) => Math.max(0, p - 1))}
+                  disabled={recOffset === 0}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  type="button"
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    backgroundColor: '#173352',
+                    border: 'none',
+                    color: '#FEF3E3',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: recOffset + 4 >= productsData.length ? 'not-allowed' : 'pointer',
+                    opacity: recOffset + 4 >= productsData.length ? 0.4 : 1
+                  }}
+                  onClick={() => setRecOffset((p) => (p + 4 < productsData.length ? p + 1 : p))}
+                  disabled={recOffset + 4 >= productsData.length}
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+              gap: '20px'
+            }}>
+              {productsData.slice(recOffset, recOffset + 4).map((p) => (
+                <article
+                  key={p.id}
+                  onClick={() => navigateTo('product-detail', p.id)}
+                  style={{
+                    backgroundColor: '#ffffff',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(23, 51, 82, 0.08)',
+                    overflow: 'hidden',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                  }}
+                >
+                  <div style={{ height: '200px', overflow: 'hidden', position: 'relative' }}>
+                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    {p.badge && (
+                      <span style={{
+                        position: 'absolute',
+                        top: '12px',
+                        left: '12px',
+                        backgroundColor: '#173352',
+                        color: '#FEF3E3',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        padding: '4px 10px',
+                        borderRadius: '999px'
+                      }}>
+                        {p.badge}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ padding: '16px' }}>
+                    <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#173352', margin: '0 0 4px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {p.name}
+                    </h3>
+                    <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>
+                      ★ {p.rating} ({p.reviews} đánh giá)
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
+                      <div>
+                        <span style={{ fontSize: '11px', color: '#64748b', display: 'block' }}>Từ</span>
+                        <strong style={{ fontSize: '15px', color: '#173352' }}>{formatProductPrice(p.price)}</strong>
+                      </div>
+                      <button
+                        type="button"
+                        style={{
+                          backgroundColor: '#173352',
+                          color: '#FEF3E3',
+                          border: 'none',
+                          padding: '7px 16px',
+                          borderRadius: '999px',
+                          fontWeight: 700,
+                          fontSize: '12px',
+                          cursor: 'pointer'
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (addCartItem) addCartItem(p);
+                          else addToCart(p);
+                        }}
+                      >
+                        Thêm giỏ
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* Section: Khung nhận ưu đãi & tư vấn (Ready to get our new stuff?) */}
+          <section className="products-newsletter-section" style={{
+            maxWidth: '1240px',
+            margin: '30px auto 60px',
+            padding: '0 20px'
+          }}>
+            <div style={{
+              backgroundColor: '#f6f3ed',
+              borderRadius: '24px',
+              padding: '40px 36px',
+              border: '1px solid rgba(23, 51, 82, 0.08)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '30px',
+              alignItems: 'center'
+            }}>
+              <div>
+                <h2 style={{
+                  fontSize: '24px',
+                  fontWeight: 700,
+                  color: '#173352',
+                  margin: '0 0 8px 0',
+                  letterSpacing: '-0.02em'
+                }}>
+                  Sẵn sàng đón nhận những điều mới mẻ?
+                </h2>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#64748b',
+                  margin: '0 0 20px 0',
+                  lineHeight: '1.6'
+                }}>
+                  Nhập email của bạn để nhận tư vấn thiết kế và ưu đãi độc quyền từ UniVeloria.
+                </p>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!newsletterEmail) return;
+                    alert(`Cảm ơn bạn! UniVeloria đã ghi nhận email: ${newsletterEmail}`);
+                    setNewsletterEmail('');
+                  }}
+                  style={{ display: 'flex', gap: '8px', maxWidth: '420px' }}
+                >
+                  <input
+                    type="email"
+                    placeholder="Nhập email của bạn..."
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    required
+                    style={{
+                      flex: 1,
+                      padding: '12px 18px',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(23, 51, 82, 0.18)',
+                      fontSize: '13.5px',
+                      outline: 'none',
+                      backgroundColor: '#ffffff'
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    style={{
+                      backgroundColor: '#173352',
+                      color: '#FEF3E3',
+                      border: 'none',
+                      padding: '12px 26px',
+                      borderRadius: '999px',
+                      fontWeight: 700,
+                      fontSize: '13.5px',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 12px rgba(23, 51, 82, 0.2)'
+                    }}
+                  >
+                    Gửi
+                  </button>
+                </form>
+              </div>
+
+              <div style={{
+                paddingLeft: '20px',
+                borderLeft: '1px solid rgba(23, 51, 82, 0.1)'
+              }}>
+                <h3 style={{
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  color: '#173352',
+                  margin: '0 0 6px 0'
+                }}>
+                  UniVeloria cho tổ ấm & không gian sống
+                </h3>
+                <p style={{
+                  fontSize: '13.5px',
+                  color: '#64748b',
+                  lineHeight: '1.7',
+                  margin: 0
+                }}>
+                  Chúng tôi đem đến sự kết hợp hoàn hảo giữa công nghệ mô phỏng AI 3D tiên tiến và nghệ thuật may đo rèm thủ công tinh xảo, đáp ứng chuẩn mực thẩm mỹ của mọi ngôi nhà.
+                </p>
+              </div>
             </div>
           </section>
 

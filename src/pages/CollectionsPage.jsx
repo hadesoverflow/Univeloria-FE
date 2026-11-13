@@ -27,7 +27,7 @@ export function CollectionsPage({
 
             <div className="hero-copy">
               <div className="eyebrow"><span>BỘ SƯU TẬP</span><i /></div>
-              <h1>Luxury Curtains<br /><em>for Every Space</em></h1>
+              <h1>Rèm Cửa Cao Cấp<br /><em>Cho Mọi Không Gian</em></h1>
               <p>
                 Khám phá bộ sưu tập rèm cao cấp, được thiết kế<br className="desktop-break" />
                 dành riêng cho từng không gian sống.

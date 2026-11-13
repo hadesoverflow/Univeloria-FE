@@ -3,6 +3,7 @@ import {
   Heart,
   ShoppingCart,
   ArrowLeft,
+  ArrowRight,
   Star,
   ShieldCheck,
   Ruler,
@@ -151,28 +152,17 @@ export function ProductDetailPage({
     return () => { isMounted = false; };
   }, [productId]);
 
-  // Find target product or fallback to id 4
+  // Find target product or fallback to id 1
   const baseProduct = productsList.find((p) => String(p.id) === String(productId)) ||
     productsData.find((p) => String(p.id) === String(productId)) ||
-    productsData.find((p) => p.code === 'UVL-4') ||
+    productsData.find((p) => p.code === 'UVL-SFOLD01') ||
     productsData[0];
 
   const product = liveProduct || baseProduct;
 
-  // Gallery state - Exactly matching user reference for UVL-4
-  const isUvl4 = product.code === 'UVL-4' || String(product.id) === '4';
-  const primaryImg = isUvl4 ? '/assets/uvl4-main.jpg' : (product.mainImage || (product.imageUrls && product.imageUrls[0]) || product.image || '/assets/product-linen.jpg');
-  const allImages = Array.isArray(product.imageUrls) && product.imageUrls.length > 0
-    ? product.imageUrls
-    : (product.image ? [product.image] : [primaryImg]);
-
-  const subImgs = isUvl4
-    ? ['/assets/uvl4-sub1.jpg', '/assets/uvl4-sub2.jpg', '/assets/uvl4-sub3.jpg']
-    : (allImages.length > 1
-        ? allImages.slice(1, 4)
-        : (Array.isArray(product.subImages) && product.subImages.length > 0
-            ? product.subImages
-            : []));
+  // Gallery state - Single main image per user requirement
+  const primaryImg = product.mainImage || product.image || (product.imageUrls && product.imageUrls[0]) || '/product/Rèm/Rèm Vải/Rèm Hai Lớp S-Fold Định Hình Cao Cấp.png';
+  const subImgs = []; // Only 1 image is displayed on Detail page
 
   const [activeImage, setActiveImage] = useState(primaryImg);
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
@@ -195,8 +185,7 @@ export function ProductDetailPage({
 
   // Reset active image when product changes
   useEffect(() => {
-    const isUvl4 = product.code === 'UVL-4' || String(product.id) === '4';
-    const initialImg = isUvl4 ? '/assets/uvl4-main.jpg' : (product.mainImage || (product.imageUrls && product.imageUrls[0]) || product.image || '/assets/product-linen.jpg');
+    const initialImg = product.mainImage || product.image || (product.imageUrls && product.imageUrls[0]) || '/product/Rèm/Rèm Vải/Rèm Hai Lớp S-Fold Định Hình Cao Cấp.png';
     setActiveImage(initialImg);
     setSelectedColorIdx(0);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -235,32 +224,39 @@ export function ProductDetailPage({
     ? reviewSummary.totalReviews
     : (product.reviews || 0);
 
+  const isSetUnit = product.unit === 'bộ' || product.category === 'Thanh rèm';
   const calculatedArea = (width * height).toFixed(2);
   const unitPrice = product.price || 980000;
-  const estimatedTotal = Math.round(unitPrice * calculatedArea * quantity);
+  const estimatedTotal = isSetUnit
+    ? Math.round(unitPrice * quantity)
+    : Math.round(unitPrice * calculatedArea * quantity);
 
   const handleAddToCart = () => {
     const chosenColor = colors[selectedColorIdx] || colors[0];
     const customizedProduct = {
       ...product,
-      calculatedArea,
+      calculatedArea: isSetUnit ? null : calculatedArea,
       width,
-      height,
-      pleatStyle,
+      height: isSetUnit ? null : height,
+      pleatStyle: isSetUnit ? null : pleatStyle,
       price: unitPrice
     };
     if (addToCart) {
       addToCart(customizedProduct, quantity, chosenColor);
     }
-    setToastMsg(`Đã thêm "${product.name}" (${quantity} bộ - ${calculatedArea}m²) vào giỏ hàng!`);
+    const specInfo = isSetUnit ? `${quantity} bộ` : `${quantity} bộ - ${calculatedArea}m²`;
+    setToastMsg(`Đã thêm "${product.name}" (${specInfo}) vào giỏ hàng!`);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3500);
   };
 
   const isFavorited = productFavorites.includes(product.id);
 
-  // Related products
-  const relatedProducts = productsData.filter((p) => p.id !== product.id).slice(0, 4);
+  // Related products (same category preferred)
+  const relatedProducts = [
+    ...productsData.filter((p) => p.id !== product.id && p.category === product.category),
+    ...productsData.filter((p) => p.id !== product.id && p.category !== product.category)
+  ].slice(0, 4);
 
   return (
     <div className="product-detail-page">
@@ -299,15 +295,13 @@ export function ProductDetailPage({
           <div className="pdetail-gallery-column">
             <div className="pdetail-gallery-composite">
               
-              {/* 1. Main Large Image */}
+              {/* 1. Main Large Image (Single View) */}
               <div className="gallery-main-frame">
                 <img
                   src={activeImage}
                   alt={product.name}
                   className="gallery-main-photo"
                 />
-
-
 
                 {/* Inspect Fullscreen Button */}
                 <button
@@ -320,32 +314,6 @@ export function ProductDetailPage({
                   <span>Phóng to chi tiết</span>
                 </button>
               </div>
-
-              {/* 2. Sub Images Vertically Stacked on Right (only if subImgs exist) */}
-              {subImgs && subImgs.length > 0 && (
-                <div className="gallery-sub-column" role="region" aria-label="Ảnh phụ chi tiết góc chụp">
-                  {subImgs.slice(0, 3).map((subImg, idx) => {
-                    const isActive = activeImage === subImg;
-                    const label = (isUvl4 && subLabels[idx]) || { title: `Góc chụp chi tiết ${idx + 1}`, desc: 'Cận cảnh sản phẩm' };
-                    return (
-                      <div
-                        key={idx}
-                        className={`gallery-sub-thumb-card ${isActive ? 'active' : ''}`}
-                        onClick={() => setActiveImage(subImg)}
-                        title={label.title}
-                      >
-                        <div className="gallery-sub-thumb-img-wrap">
-                          <img
-                            src={subImg}
-                            alt={`${product.name} - ${label.title}`}
-                            className="gallery-sub-thumb-img"
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
 
             </div>
 
@@ -386,7 +354,7 @@ export function ProductDetailPage({
               <div className="pdetail-price-box">
                 <div className="pdetail-price-main">
                   <span className="pdetail-current-price">{formatProductPrice(product.price || 980000)}</span>
-                  <span className="pdetail-price-unit">/ m² hoàn thiện</span>
+                  <span className="pdetail-price-unit">/ {product.unit || 'm² hoàn thiện'}</span>
                 </div>
                 {product.oldPrice && (
                   <div className="pdetail-price-sub">
@@ -409,7 +377,7 @@ export function ProductDetailPage({
               <div className="pdetail-option-group">
                 <div className="pdetail-option-label">
                   <span>Màu sắc tuyển chọn:</span>
-                  <strong>{colorNames[colors[selectedColorIdx]] || colors[selectedColorIdx]}</strong>
+                  <strong>{product.colorNames?.[selectedColorIdx] || colorNames[colors[selectedColorIdx]] || colors[selectedColorIdx]}</strong>
                 </div>
                 <div className="pdetail-color-swatches">
                   {colors.map((color, idx) => {
@@ -450,56 +418,84 @@ export function ProductDetailPage({
               )}
 
               {/* Dimension & Measuring Inputs */}
-              <div className="pdetail-option-group">
-                <div className="pdetail-option-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                  <div>
-                    <span>Kích thước may đo cửa sổ / cửa đi:</span>
-                    <small className="label-tip">(Hỗ trợ thợ kỹ thuật khảo sát lại tại nhà)</small>
+              {!isSetUnit ? (
+                <div className="pdetail-option-group">
+                  <div className="pdetail-option-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                    <div>
+                      <span>Kích thước may đo cửa sổ / cửa đi:</span>
+                      <small className="label-tip">(Hỗ trợ thợ kỹ thuật khảo sát lại tại nhà)</small>
+                    </div>
+                    <button
+                      type="button"
+                      className="pdetail-btn-measure-guide"
+                      onClick={() => setShowMeasureGuide(true)}
+                      title="Xem quy chuẩn 5 bước đo cửa chính xác"
+                    >
+                      <Ruler size={13} />
+                      <span>Cách đo cửa để đặt rèm</span>
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    className="pdetail-btn-measure-guide"
-                    onClick={() => setShowMeasureGuide(true)}
-                    title="Xem quy chuẩn 5 bước đo cửa chính xác"
-                  >
-                    <Ruler size={13} />
-                    <span>Cách đo cửa để đặt rèm</span>
-                  </button>
+                  <div className="pdetail-dimension-grid">
+                    <div className="dimension-field">
+                      <label>Chiều rộng (m)</label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        min="0.5"
+                        max="20"
+                        value={width}
+                        onChange={(e) => setWidth(Math.max(0.5, parseFloat(e.target.value) || 0.5))}
+                      />
+                    </div>
+                    <div className="dimension-field">
+                      <label>Chiều cao (m)</label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        min="0.5"
+                        max="10"
+                        value={height}
+                        onChange={(e) => setHeight(Math.max(0.5, parseFloat(e.target.value) || 0.5))}
+                      />
+                    </div>
+                    <div className="dimension-calc-badge">
+                      <Ruler size={14} />
+                      <span>Diện tích: <strong>{calculatedArea} m²</strong></span>
+                    </div>
+                  </div>
                 </div>
-                <div className="pdetail-dimension-grid">
-                  <div className="dimension-field">
-                    <label>Chiều rộng (m)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="0.5"
-                      max="20"
-                      value={width}
-                      onChange={(e) => setWidth(Math.max(0.5, parseFloat(e.target.value) || 0.5))}
-                    />
+              ) : (
+                <div className="pdetail-option-group">
+                  <div className="pdetail-option-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                    <div>
+                      <span>Quy cách lắp đặt thanh rèm:</span>
+                      <small className="label-tip">(Đo theo kích thước thực tế ô cửa tại công trình)</small>
+                    </div>
                   </div>
-                  <div className="dimension-field">
-                    <label>Chiều cao (m)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="0.5"
-                      max="10"
-                      value={height}
-                      onChange={(e) => setHeight(Math.max(0.5, parseFloat(e.target.value) || 0.5))}
-                    />
-                  </div>
-                  <div className="dimension-calc-badge">
-                    <Ruler size={14} />
-                    <span>Diện tích: <strong>{calculatedArea} m²</strong></span>
+                  <div className="pdetail-dimension-grid" style={{ gridTemplateColumns: '1fr auto' }}>
+                    <div className="dimension-field">
+                      <label>Chiều dài thanh ray dự kiến (m)</label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        min="1"
+                        max="12"
+                        value={width}
+                        onChange={(e) => setWidth(Math.max(1, parseFloat(e.target.value) || 1))}
+                      />
+                    </div>
+                    <div className="dimension-calc-badge">
+                      <Ruler size={14} />
+                      <span>Chiều dài ray: <strong>{width} mét</strong></span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Quantity & Estimated Total */}
               <div className="pdetail-action-summary">
                 <div className="quantity-controller">
-                  <span className="qty-label">Số lượng bộ:</span>
+                  <span className="qty-label">Số lượng {product.unit || 'bộ'}:</span>
                   <div className="qty-stepper">
                     <button onClick={() => setQuantity((q) => Math.max(1, q - 1))}>−</button>
                     <span>{quantity}</span>
@@ -508,7 +504,9 @@ export function ProductDetailPage({
                 </div>
 
                 <div className="estimate-total-box">
-                  <span className="estimate-label">Tạm tính ({calculatedArea}m² × {quantity} bộ):</span>
+                  <span className="estimate-label">
+                    {isSetUnit ? `Tạm tính (${quantity} ${product.unit || 'bộ'}):` : `Tạm tính (${calculatedArea}m² × ${quantity} bộ):`}
+                  </span>
                   <strong className="estimate-val">{formatProductPrice(estimatedTotal)}</strong>
                 </div>
               </div>
@@ -590,7 +588,7 @@ export function ProductDetailPage({
               className={`pdetail-tab-btn ${activeTab === 'desc' ? 'active' : ''}`}
               onClick={() => setActiveTab('desc')}
             >
-              Mô tả chi tiết & Cảm hứng
+              Mô tả sản phẩm
             </button>
             <button
               className={`pdetail-tab-btn ${activeTab === 'specs' ? 'active' : ''}`}
@@ -602,13 +600,13 @@ export function ProductDetailPage({
               className={`pdetail-tab-btn ${activeTab === 'care' ? 'active' : ''}`}
               onClick={() => setActiveTab('care')}
             >
-              Hướng dẫn chăm sóc & Bảo quản
+              Chính sách & Bảo quản
             </button>
             <button
               className={`pdetail-tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
               onClick={() => setActiveTab('reviews')}
             >
-              Đánh giá khách hàng ({displayReviewsCount})
+              Đánh giá ({displayReviewsCount})
             </button>
             <button
               className={`pdetail-tab-btn ${activeTab === 'measuring' ? 'active' : ''}`}
@@ -620,15 +618,137 @@ export function ProductDetailPage({
 
           <div className="pdetail-tab-body">
             {activeTab === 'desc' && (
-              <div className="tab-pane desc-pane">
-                <div className="desc-text-wrap">
-                  <h3>{product.name ? `Cảm hứng thiết kế & Không gian: ${product.name}` : 'Mô tả chi tiết sản phẩm'}</h3>
-                  <div className="desc-content-body" style={{ whiteSpace: 'pre-line', fontSize: '14.5px', lineHeight: '1.85', color: '#334155' }}>
-                    {product.fullDescription || product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.'}
-                  </div>
+              <div className="tab-pane desc-pane-after" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '32px',
+                alignItems: 'center',
+                padding: '16px 0'
+              }}>
+                <div className="desc-visual-col" style={{
+                  position: 'relative',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  height: '320px',
+                  backgroundColor: '#f1f5f9',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.06)'
+                }}>
+                  <img
+                    src={primaryImg || product.image || '/assets/product-linen.jpg'}
+                    alt={product.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsLightboxOpen(true)}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      bottom: '12px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '8px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}
+                    title="Phóng to ảnh chất liệu"
+                  >
+                    <Maximize2 size={16} color="#173352" />
+                  </button>
                 </div>
-                <div className="desc-showcase-img">
-                  <img src={primaryImg} alt={product.name} />
+
+                <div className="desc-details-col">
+                  <h3 style={{
+                    fontSize: '22px',
+                    fontWeight: 700,
+                    color: '#173352',
+                    marginBottom: '14px',
+                    letterSpacing: '-0.02em'
+                  }}>
+                    Chất liệu cao cấp, trải nghiệm vượt trội
+                  </h3>
+
+                  <p style={{
+                    fontSize: '14.5px',
+                    lineHeight: '1.8',
+                    color: '#475569',
+                    marginBottom: '14px'
+                  }}>
+                    Sản phẩm <strong>{product.name}</strong> được tuyển chọn kỹ lưỡng từ {product.material || 'chất liệu cao cấp'}, mang đến độ bền bỉ vượt trội và thẩm mỹ đỉnh cao cho không gian sống hiện đại.
+                  </p>
+
+                  {product.fullDescription && (
+                    <p style={{
+                      fontSize: '14px',
+                      lineHeight: '1.75',
+                      color: '#64748b',
+                      marginBottom: '18px'
+                    }}>
+                      {product.fullDescription}
+                    </p>
+                  )}
+
+                  {/* 3 feature badges */}
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '12px',
+                    marginTop: '18px',
+                    paddingTop: '18px',
+                    borderTop: '1px solid rgba(23, 51, 82, 0.08)'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      backgroundColor: '#FEF3E3',
+                      border: '1px solid rgba(23, 51, 82, 0.12)',
+                      padding: '8px 14px',
+                      borderRadius: '10px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      color: '#173352'
+                    }}>
+                      <Sparkles size={16} color="#c8a87d" />
+                      <span>Mềm mịn, thoáng khí</span>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      backgroundColor: '#FEF3E3',
+                      border: '1px solid rgba(23, 51, 82, 0.12)',
+                      padding: '8px 14px',
+                      borderRadius: '10px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      color: '#173352'
+                    }}>
+                      <ShieldCheck size={16} color="#c8a87d" />
+                      <span>Cản sáng tốt</span>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      backgroundColor: '#FEF3E3',
+                      border: '1px solid rgba(23, 51, 82, 0.12)',
+                      padding: '8px 14px',
+                      borderRadius: '10px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      color: '#173352'
+                    }}>
+                      <Check size={16} color="#c8a87d" />
+                      <span>Bền màu theo thời gian</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -995,31 +1115,76 @@ export function ProductDetailPage({
       </section>
 
       {/* RELATED PRODUCTS SECTION */}
-      <section className="pdetail-related-section">
+      <section className="pdetail-related-section" style={{ padding: '60px 0 40px', backgroundColor: '#faf9f6' }}>
         <div className="pdetail-container">
-          <div className="related-header">
+          <div className="related-header" style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            marginBottom: '32px'
+          }}>
             <div>
-              <span className="eyebrow">KHÁM PHÁ THÊM <span /></span>
-              <h2>Sản phẩm cùng phong cách</h2>
+              <h2 style={{
+                fontSize: '28px',
+                fontWeight: 700,
+                color: '#173352',
+                margin: '0 0 6px 0',
+                letterSpacing: '-0.02em'
+              }}>
+                Sản phẩm tương tự
+              </h2>
+              <p style={{
+                fontSize: '14px',
+                color: '#64748b',
+                margin: 0
+              }}>
+                Khám phá thêm những mẫu rèm phù hợp với không gian của bạn
+              </p>
             </div>
             <button
-              className="view-all-btn"
+              type="button"
+              style={{
+                backgroundColor: '#FEF3E3',
+                color: '#173352',
+                border: '1.5px solid #173352',
+                padding: '10px 22px',
+                borderRadius: '999px',
+                fontWeight: 700,
+                fontSize: '13.5px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
               onClick={() => navigateTo('products')}
             >
-              Xem tất cả sản phẩm
+              <span>Xem tất cả</span>
+              <ArrowRight size={14} />
             </button>
           </div>
 
-          <div className="related-grid">
-            {relatedProducts.map((rel) => (
+          <div className="related-grid" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+            gap: '20px'
+          }}>
+            {relatedProducts.slice(0, 4).map((rel) => (
               <article
                 key={rel.id}
                 className="product-card"
                 onClick={() => navigateTo('product-detail', rel.id)}
-                style={{ cursor: 'pointer' }}
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  border: '1px solid rgba(23, 51, 82, 0.08)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                }}
               >
-                <div className="product-image-wrap">
-                  <img src={rel.image} alt={rel.name} className="product-image" />
+                <div className="product-image-wrap" style={{ height: '220px', position: 'relative', overflow: 'hidden' }}>
+                  <img src={rel.image} alt={rel.name} className="product-image" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   {rel.badge && <span className="product-badge">{rel.badge}</span>}
                   <button
                     className={`favorite-button ${productFavorites.includes(rel.id) ? 'favorited' : ''}`}
@@ -1032,17 +1197,17 @@ export function ProductDetailPage({
                     <Heart size={16} />
                   </button>
                 </div>
-                <div className="product-info">
-                  <h3>{rel.name}</h3>
-                  <span className="product-code">{rel.code}</span>
-                  <div className="rating">
-                    <span className="stars">★★★★★</span>
-                    <span>{rel.rating} ({rel.reviews})</span>
+                <div className="product-info" style={{ padding: '16px' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#173352', margin: '0 0 4px 0' }}>{rel.name}</h3>
+                  <span className="product-code" style={{ fontSize: '11.5px', color: '#94a3b8' }}>{rel.code}</span>
+                  <div className="rating" style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '8px 0' }}>
+                    <span className="stars" style={{ color: '#e5a93b', fontSize: '12px' }}>★★★★★</span>
+                    <span style={{ fontSize: '11.5px', color: '#64748b' }}>{rel.rating} ({rel.reviews})</span>
                   </div>
-                  <div className="product-pricing-row">
+                  <div className="product-pricing-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
                     <div className="price-wrap">
-                      <strong className="price">{formatProductPrice(rel.price)}</strong>
-                      {rel.oldPrice && <small className="old-price">{formatProductPrice(rel.oldPrice)}</small>}
+                      <span style={{ fontSize: '11.5px', color: '#64748b', display: 'block' }}>Từ</span>
+                      <strong className="price" style={{ fontSize: '15px', color: '#173352' }}>{formatProductPrice(rel.price)}</strong>
                     </div>
                     <button
                       className="card-cart-btn"
@@ -1054,13 +1219,212 @@ export function ProductDetailPage({
                         setTimeout(() => setShowToast(false), 3000);
                       }}
                       aria-label="Thêm vào giỏ hàng"
+                      style={{
+                        backgroundColor: '#173352',
+                        color: '#FEF3E3',
+                        border: 'none',
+                        width: '34px',
+                        height: '34px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer'
+                      }}
                     >
-                      <ShoppingCart size={16} />
+                      <ShoppingCart size={15} />
                     </button>
                   </div>
                 </div>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CUSTOMER TESTIMONIALS SECTION */}
+      <section className="pdetail-testimonials-section" style={{ padding: '60px 0', backgroundColor: '#ffffff' }}>
+        <div className="pdetail-container">
+          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+            <h2 style={{
+              fontSize: '28px',
+              fontWeight: 700,
+              color: '#173352',
+              margin: '0 0 8px 0',
+              letterSpacing: '-0.02em'
+            }}>
+              Khách hàng nói gì về UniVeloria?
+            </h2>
+            <p style={{
+              fontSize: '14.5px',
+              color: '#64748b',
+              margin: 0
+            }}>
+              Cùng lắng nghe những chia sẻ chân thật từ khách hàng của chúng tôi
+            </p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '24px'
+          }}>
+            {/* Testimonial 1 */}
+            <div style={{
+              backgroundColor: '#faf8f5',
+              padding: '26px 22px',
+              borderRadius: '18px',
+              border: '1px solid rgba(23, 51, 82, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <div style={{ color: '#e5a93b', fontSize: '15px', marginBottom: '12px', letterSpacing: '2px' }}>★★★★★</div>
+                <p style={{
+                  fontSize: '14.5px',
+                  color: '#334155',
+                  lineHeight: '1.7',
+                  fontStyle: 'italic',
+                  margin: '0 0 16px 0'
+                }}>
+                  "Rèm rất đẹp, chất lượng tốt, lắp đặt nhanh chóng!"
+                </p>
+              </div>
+              <div style={{
+                fontSize: '13px',
+                fontWeight: 700,
+                color: '#173352',
+                paddingTop: '12px',
+                borderTop: '1px solid rgba(23, 51, 82, 0.08)'
+              }}>
+                Chị Mai Anh - Hà Nội
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div style={{
+              backgroundColor: '#faf8f5',
+              padding: '26px 22px',
+              borderRadius: '18px',
+              border: '1px solid rgba(23, 51, 82, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <div style={{ color: '#e5a93b', fontSize: '15px', marginBottom: '12px', letterSpacing: '2px' }}>★★★★★</div>
+                <p style={{
+                  fontSize: '14.5px',
+                  color: '#334155',
+                  lineHeight: '1.7',
+                  fontStyle: 'italic',
+                  margin: '0 0 16px 0'
+                }}>
+                  "Dịch vụ tư vấn tận tâm giúp mình chọn được mẫu ưng ý."
+                </p>
+              </div>
+              <div style={{
+                fontSize: '13px',
+                fontWeight: 700,
+                color: '#173352',
+                paddingTop: '12px',
+                borderTop: '1px solid rgba(23, 51, 82, 0.08)'
+              }}>
+                Anh Hoàng - Hải Phòng
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div style={{
+              backgroundColor: '#faf8f5',
+              padding: '26px 22px',
+              borderRadius: '18px',
+              border: '1px solid rgba(23, 51, 82, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <div style={{ color: '#e5a93b', fontSize: '15px', marginBottom: '12px', letterSpacing: '2px' }}>★★★★★</div>
+                <p style={{
+                  fontSize: '14.5px',
+                  color: '#334155',
+                  lineHeight: '1.7',
+                  fontStyle: 'italic',
+                  margin: '0 0 16px 0'
+                }}>
+                  "Không gian nhà mình trở nên sang trọng hơn hẳn!"
+                </p>
+              </div>
+              <div style={{
+                fontSize: '13px',
+                fontWeight: 700,
+                color: '#173352',
+                paddingTop: '12px',
+                borderTop: '1px solid rgba(23, 51, 82, 0.08)'
+              }}>
+                Chị Thu Trang - Hà Nội
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA BANNER */}
+      <section className="pdetail-cta-banner-section" style={{ padding: '20px 0 60px', backgroundColor: '#ffffff' }}>
+        <div className="pdetail-container">
+          <div style={{
+            backgroundColor: '#f6f3ed',
+            borderRadius: '24px',
+            padding: '40px 36px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '24px',
+            flexWrap: 'wrap',
+            border: '1px solid rgba(23, 51, 82, 0.08)'
+          }}>
+            <div>
+              <h3 style={{
+                fontSize: '22px',
+                fontWeight: 700,
+                color: '#173352',
+                margin: '0 0 6px 0'
+              }}>
+                Bạn đã sẵn sàng nâng tầm không gian của mình?
+              </h3>
+              <p style={{
+                fontSize: '14.5px',
+                color: '#64748b',
+                margin: 0
+              }}>
+                Khám phá ngay các mẫu rèm và trải nghiệm 3D độc quyền!
+              </p>
+            </div>
+
+            <button
+              type="button"
+              style={{
+                backgroundColor: '#173352',
+                color: '#FEF3E3',
+                border: 'none',
+                padding: '13px 28px',
+                borderRadius: '999px',
+                fontWeight: 700,
+                fontSize: '14px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(23, 51, 82, 0.25)',
+                transition: 'all 0.2s ease'
+              }}
+              onClick={() => navigateTo('studio')}
+            >
+              <span>Bắt đầu trải nghiệm</span>
+              <ArrowRight size={16} />
+            </button>
           </div>
         </div>
       </section>
@@ -1080,23 +1444,25 @@ export function ProductDetailPage({
               <X size={24} />
             </button>
             <img src={activeImage} alt={product.name} className="lightbox-img" />
-            <div className="lightbox-thumbs-bar">
-              <button
-                className={`lb-thumb ${activeImage === primaryImg ? 'active' : ''}`}
-                onClick={() => setActiveImage(primaryImg)}
-              >
-                <img src={primaryImg} alt="Ảnh chính" />
-              </button>
-              {subImgs.slice(0, 3).map((sub, i) => (
+            {subImgs && subImgs.length > 0 && (
+              <div className="lightbox-thumbs-bar">
                 <button
-                  key={i}
-                  className={`lb-thumb ${activeImage === sub ? 'active' : ''}`}
-                  onClick={() => setActiveImage(sub)}
+                  className={`lb-thumb ${activeImage === primaryImg ? 'active' : ''}`}
+                  onClick={() => setActiveImage(primaryImg)}
                 >
-                  <img src={sub} alt={`Ảnh phụ ${i + 1}`} />
+                  <img src={primaryImg} alt="Ảnh chính" />
                 </button>
-              ))}
-            </div>
+                {subImgs.slice(0, 3).map((sub, i) => (
+                  <button
+                    key={i}
+                    className={`lb-thumb ${activeImage === sub ? 'active' : ''}`}
+                    onClick={() => setActiveImage(sub)}
+                  >
+                    <img src={sub} alt={`Ảnh phụ ${i + 1}`} />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

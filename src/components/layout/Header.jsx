@@ -11,7 +11,8 @@ import {
   Gem,
   Crown,
   Menu,
-  X
+  X,
+  Search
 } from 'lucide-react';
 
 export function Header({ currentPage, navigateTo, themeClass = '' }) {
@@ -41,102 +42,104 @@ export function Header({ currentPage, navigateTo, themeClass = '' }) {
       <a
         href="#home"
         className="mini-brand"
-        aria-label="UNIVELORIA - Thấu hiểu không gian, nâng tầm tổ ấm"
+        aria-label="UniVeloria - Thấu hiểu không gian, nâng tầm tổ ấm"
         onClick={(e) => {
           e.preventDefault();
           navigateTo('home');
         }}
       >
-        <img src="/logo/logo.png" alt="UNIVELORIA Logo" className="brand-logo" />
+        <img src="/logo/logo.png" alt="UniVeloria Logo" className="brand-logo" />
         <span className="brand-text">
-          <span className="brand-name">
+          <span className="brand-name font-logo">
             <span className="brand-uni">Uni</span>
             <span className="brand-veloria">Veloria</span>
             <span className="reg">®</span>
           </span>
-          <small>Thấu hiểu không gian, nâng tầm tổ ấm</small>
+          <small className="font-slogan">Thấu hiểu không gian, nâng tầm tổ ấm</small>
         </span>
       </a>
 
-      <div className="topbar-actions">
-        {/* Navigation Menu List */}
-        <nav className="nav">
-          <button
-            className={currentPage === 'home' ? 'active-nav-btn' : ''}
-            onClick={() => navigateTo('home')}
-          >
-            Không Gian Sống
-          </button>
-          <button
-            className={currentPage === 'collections' ? 'active-nav-btn' : ''}
-            onClick={() => navigateTo('collections')}
-          >
-            Bộ Sưu Tập
-          </button>
-          <button
-            className={currentPage === 'products' ? 'active-nav-btn' : ''}
-            onClick={() => navigateTo('products')}
-          >
-            Sản Phẩm
-          </button>
-          <button
-            className={currentPage === 'studio' ? 'active-nav-btn' : ''}
-            onClick={() => navigateTo('studio')}
-          >
-            AI 3D Studio
-          </button>
-          <button
-            className={currentPage === 'about' ? 'active-nav-btn' : ''}
-            onClick={() => navigateTo('about')}
-          >
-            Giới Thiệu
-          </button>
-          <button
-            className={currentPage === 'contact' ? 'active-nav-btn' : ''}
-            onClick={() => navigateTo('contact')}
-          >
-            Liên Hệ
-          </button>
-        </nav>
+      {/* Center Floating Capsule Navigation */}
+      <nav className="nav nav-capsule font-menu-auth" aria-label="Menu điều hướng chính">
+        <button
+          type="button"
+          className={`nav-capsule-btn ${currentPage === 'home' ? 'active-nav-btn' : ''}`}
+          onClick={() => navigateTo('home')}
+        >
+          Trang Chủ
+        </button>
+        <button
+          type="button"
+          className={`nav-capsule-btn ${currentPage === 'collections' ? 'active-nav-btn' : ''}`}
+          onClick={() => navigateTo('collections')}
+        >
+          Bộ Sưu Tập
+        </button>
+        <button
+          type="button"
+          className={`nav-capsule-btn ${currentPage === 'products' ? 'active-nav-btn' : ''}`}
+          onClick={() => navigateTo('products')}
+        >
+          Sản Phẩm
+        </button>
+        <button
+          type="button"
+          className={`nav-capsule-btn ${currentPage === 'studio' ? 'active-nav-btn' : ''}`}
+          onClick={() => navigateTo('studio')}
+        >
+          AI 3D Studio
+        </button>
+        <button
+          type="button"
+          className={`nav-capsule-btn ${currentPage === 'about' ? 'active-nav-btn' : ''}`}
+          onClick={() => navigateTo('about')}
+        >
+          Giới Thiệu
+        </button>
+        <button
+          type="button"
+          className={`nav-capsule-btn ${currentPage === 'contact' ? 'active-nav-btn' : ''}`}
+          onClick={() => navigateTo('contact')}
+        >
+          Liên Hệ
+        </button>
+      </nav>
 
-        {/* Separator Divider */}
-        <div className="topbar-auth-divider" />
+      <div className="topbar-actions topbar-right-group">
+        {/* Search button (circular) */}
+        <button
+          type="button"
+          className="topbar-circle-btn topbar-search-btn"
+          onClick={() => navigateTo('products')}
+          title="Tìm kiếm sản phẩm rèm"
+          aria-label="Tìm kiếm sản phẩm rèm"
+        >
+          <Search size={17} />
+        </button>
 
         {/* Shopping Cart Trigger */}
         <button
           type="button"
-          className="topbar-cart-btn"
+          className="topbar-circle-btn topbar-cart-btn"
           onClick={openCart}
           title="Xem giỏ hàng may đo"
           aria-label="Giỏ hàng may đo"
         >
-          <ShoppingBag size={18} />
+          <ShoppingBag size={17} />
           {cartCount > 0 && (
             <span className="cart-badge-count">{cartCount}</span>
           )}
         </button>
 
         {/* SEPARATED AUTH SECTION */}
-        <div className="topbar-auth-section">
+        <div className="topbar-auth-section font-menu-auth">
           {!isAuthenticated ? (
             <button
-              className={`topbar-auth-btn ${currentPage === 'login' ? 'active-auth-btn' : ''}`}
+              className={`topbar-auth-btn font-menu-auth ${currentPage === 'login' ? 'active-auth-btn' : ''}`}
               onClick={() => navigateTo('login')}
               aria-label="Đăng nhập tài khoản"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
+              <User size={15} />
               <span>Đăng nhập</span>
             </button>
           ) : (
@@ -305,7 +308,7 @@ export function Header({ currentPage, navigateTo, themeClass = '' }) {
                 onClick={() => { setMobileMenuOpen(false); navigateTo('home'); }}
               >
                 <span className="nav-item-icon">🏠</span>
-                <span className="nav-item-text">Không Gian Sống</span>
+                <span className="nav-item-text">Trang Chủ</span>
                 <span className="nav-item-chevron">›</span>
               </button>
               <button

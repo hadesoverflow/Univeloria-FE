@@ -1,133 +1,112 @@
 import React from 'react';
-import { ArrowRight, ArrowLeft, Sun, House, ChevronDown, ShieldCheck, Box, Palette } from 'lucide-react';
+import {
+  ArrowRight,
+  Gem,
+  ShieldCheck,
+  Headphones,
+  Clock
+} from 'lucide-react';
 import { Header } from '../components/layout/Header';
+import { MusicPlayerButton } from '../components/audio/MusicPlayerButton';
 
-export function HomePage({
-  navigateTo,
-  scrollTo,
-  curtainOpen,
-  setCurtainOpen,
-  activeColor,
-  setActiveColor,
-  colors,
-  currentSlide,
-  setCurrentSlide,
-  slides,
-}) {
+export function HomePage({ navigateTo }) {
   return (
-        <div className="home-page-view">
-          <section className="hero" id="home">
-            <div className="sky-glow" />
-            <Header currentPage="home" navigateTo={navigateTo} />
+    <div className="home-page-view">
+      <section className="hero home-luxury-hero" id="home">
+        <Header currentPage="home" navigateTo={navigateTo} />
 
-            <div className="hero-art-wrap">
-              <img className="hero-art" src="/assets/hero-room.png" alt="Không gian cửa kính với rèm voan và rèm vải cao cấp" />
+        {/* Hero Content Left Column */}
+        <div className="hero-main-container">
+          <div className="hero-copy-block">
+            <h1 className="hero-headline-serif font-headline-serif">
+              <span className="hero-title-line">Cảm nhận sự khác biệt.</span>
+              <span className="hero-title-line">Kiến tạo không gian</span>
+            </h1>
+            <div className="hero-brand-script font-headline-script">
+              Cùng UniVeloria
             </div>
 
-            <div className="hero-panel">
-              <div className="hero-copy">
-                <p className="eyebrow">CURTAINS · SPACES · TECHNOLOGY</p>
-                <h1>Beyond<br/>the Window.</h1>
-                <p className="intro">Rèm cửa không chỉ che nắng,<br className="desktop-only"/> mà còn kiến tạo không gian sống của bạn.</p>
-                <div className="hero-actions">
-                  <button className="pill pill-dark" onClick={() => navigateTo('studio')}>
-                    <span>Trải nghiệm AI 3D</span>
-                    <ArrowRight size={17}/>
-                  </button>
-                  <button className="pill pill-light" onClick={() => navigateTo('collections')}>
-                    <span>Khám phá bộ sưu tập</span>
-                    <ArrowRight size={17}/>
-                  </button>
-                </div>
-              </div>
+            <p className="hero-description font-body-vietnam">
+              Rèm cửa cao cấp và những sản phẩm nội thất tinh tế,<br className="desktop-br" />
+              mang đến sự hài hòa và thoải mái cho tổ ấm của bạn.
+            </p>
 
-              <div className="preview-card">
-                <div className="preview-head">
-                  <span>AI 3D Preview</span>
-                  <button aria-label="Mở AI 3D Studio" onClick={() => navigateTo('studio')}>
-                    <ArrowRight size={15}/>
-                  </button>
-                </div>
-                <div className="preview-content">
-                  <div className={`preview-room tint-${activeColor}`}>
-                    <img src="/assets/window-scene.png" alt="Xem trước rèm trong căn phòng"/>
-                  </div>
-                  <div className="preview-swatch-column">
-                    <div className="swatches">
-                      {colors.map((c, i) => (
-                        <button
-                          key={c.name}
-                          title={c.name}
-                          aria-label={c.name}
-                          className={activeColor === i ? 'swatch selected' : 'swatch'}
-                          style={{ background: c.hex }}
-                          onClick={() => setActiveColor(i)}
-                        />
-                      ))}
-                    </div>
-                    <div className="fabric-samples">
-                      <img src="/assets/beige-drape.png" alt="Voan trắng" className="fabric-tint-light"/>
-                      <img src="/assets/beige-drape.png" alt="Vải be"/>
-                      <img src="/assets/beige-drape.png" alt="Vải nâu" className="fabric-tint-brown"/>
-                      <img src="/assets/beige-drape.png" alt="Vải xám đen" className="fabric-tint-dark"/>
-                    </div>
-                  </div>
-                </div>
-                <button className="preview-link" onClick={() => navigateTo('studio')}>
-                  <span>Thử phối màu</span>
-                  <ArrowRight size={14}/>
-                </button>
-              </div>
+            <div className="hero-cta-buttons font-body-vietnam">
+              <button
+                type="button"
+                className="btn-hero-primary"
+                onClick={() => navigateTo('studio')}
+                aria-label="Trải nghiệm AI 3D"
+              >
+                <span>Trải nghiệm AI 3D</span>
+                <span className="btn-arrow-circle">
+                  <ArrowRight size={15} />
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="btn-hero-secondary"
+                onClick={() => navigateTo('collections')}
+                aria-label="Khám phá bộ sưu tập"
+              >
+                <span>Khám phá bộ sưu tập</span>
+                <span className="btn-arrow-circle-outline">
+                  <ArrowRight size={15} />
+                </span>
+              </button>
             </div>
-
-            <div className="hero-bottom-strip">
-              <div className="hero-slide-tracker">
-                <div className="slide-counter">
-                  <strong>{`0${currentSlide + 1}`}</strong>
-                  <span>/ {slides.length < 10 ? `0${slides.length}` : slides.length}</span>
-                </div>
-                <div className="slide-progress-track">
-                  <div className="slide-progress-bar" style={{ width: `${((currentSlide + 1) / slides.length) * 100}%` }} />
-                </div>
-                <div className="slide-categories">
-                  {slides.map((s, i) => (
-                    <button
-                      key={s.id}
-                      className={currentSlide === i ? 'slide-category active' : 'slide-category'}
-                      onClick={() => {
-                        setCurrentSlide(i);
-                        if (s.id === 'home') {
-                          scrollTo('home');
-                        } else {
-                          navigateTo(s.id);
-                        }
-                      }}
-                    >
-                      {s.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="hero-nav-arrows">
-                <button
-                  className="nav-arrow nav-arrow-prev"
-                  onClick={() => setCurrentSlide((p) => (p - 1 + slides.length) % slides.length)}
-                  aria-label="Slide trước"
-                >
-                  <ArrowLeft size={18}/>
-                </button>
-                <button
-                  className="nav-arrow nav-arrow-next"
-                  onClick={() => setCurrentSlide((p) => (p + 1) % slides.length)}
-                  aria-label="Slide sau"
-                >
-                  <ArrowRight size={18}/>
-                </button>
-              </div>
-            </div>
-          </section>
+          </div>
         </div>
 
+        {/* Bottom Floating Features Capsule (Large & Centered) */}
+        <div className="hero-features-capsule-wrap">
+          <div className="hero-features-capsule font-feature-public">
+            <div className="feature-capsule-item">
+              <div className="feature-icon-box">
+                <Gem size={30} strokeWidth={1.8} />
+              </div>
+              <div className="feature-text-box">
+                <strong className="feature-item-title">Thiết kế tinh tế</strong>
+                <span className="feature-item-sub">Phù hợp mọi phong cách</span>
+              </div>
+            </div>
+
+            <div className="feature-capsule-item">
+              <div className="feature-icon-box">
+                <ShieldCheck size={30} strokeWidth={1.8} />
+              </div>
+              <div className="feature-text-box">
+                <strong className="feature-item-title">Chất lượng vượt trội</strong>
+                <span className="feature-item-sub">Bền đẹp theo thời gian</span>
+              </div>
+            </div>
+
+            <div className="feature-capsule-item">
+              <div className="feature-icon-box">
+                <Headphones size={30} strokeWidth={1.8} />
+              </div>
+              <div className="feature-text-box">
+                <strong className="feature-item-title">Tư vấn chuyên nghiệp</strong>
+                <span className="feature-item-sub">Tận tâm, tận tình</span>
+              </div>
+            </div>
+
+            <div className="feature-capsule-item">
+              <div className="feature-icon-box">
+                <Clock size={30} strokeWidth={1.8} />
+              </div>
+              <div className="feature-text-box">
+                <strong className="feature-item-title">Lắp đặt nhanh chóng</strong>
+                <span className="feature-item-sub">An tâm sử dụng</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Background Music Player at Bottom-Left */}
+      <MusicPlayerButton />
+    </div>
   );
 }
