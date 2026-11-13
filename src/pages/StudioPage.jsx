@@ -1209,37 +1209,24 @@ export function StudioPage({
 
                   {/* RIGHT COLUMN: SURVEY QUESTIONS & ACTION BUTTON */}
                   <div className="survey-form-right-col">
-                    {/* Question 1: Vị trí không gian */}
+                    {/* Question 1: Vị trí không gian (Chỉ trong nhà) */}
                     <div className="survey-question-group">
                       <label className="question-title">
                         <span className="q-num">1</span>
                         Vị trí không gian lắp đặt:
                       </label>
-                      <div className="question-options-row">
+                      <div className="question-options-single">
                         <button
                           type="button"
-                          className={'q-opt-btn ' + (surveyAnswers.location === 'indoor' ? 'selected' : '')}
-                          onClick={() => setSurveyAnswers(prev => ({ ...prev, location: 'indoor' }))}
+                          className="q-opt-btn selected"
+                          style={{ width: '100%', cursor: 'default' }}
                         >
                           <span className="opt-emoji">🏠</span>
                           <div className="opt-text">
                             <strong>Trong nhà</strong>
-                            <small>Phòng khách, ngủ, làm việc...</small>
+                            <small>Phòng khách, phòng ngủ, phòng làm việc, căn hộ & biệt thự</small>
                           </div>
-                          {surveyAnswers.location === 'indoor' && <Check size={16} className="opt-check" />}
-                        </button>
-
-                        <button
-                          type="button"
-                          className={'q-opt-btn ' + (surveyAnswers.location === 'outdoor' ? 'selected' : '')}
-                          onClick={() => setSurveyAnswers(prev => ({ ...prev, location: 'outdoor' }))}
-                        >
-                          <span className="opt-emoji">☀️</span>
-                          <div className="opt-text">
-                            <strong>Ngoài trời</strong>
-                            <small>Ban công, hiên, chòi villa...</small>
-                          </div>
-                          {surveyAnswers.location === 'outdoor' && <Check size={16} className="opt-check" />}
+                          <Check size={16} className="opt-check" />
                         </button>
                       </div>
                     </div>
@@ -1259,7 +1246,7 @@ export function StudioPage({
                           <span className="opt-emoji">🪟</span>
                           <div className="opt-text">
                             <strong>Cửa sổ</strong>
-                            <small>Cửa sổ đơn, 3 ô hoặc 4 ô</small>
+                            <small>Khung cửa sổ phòng</small>
                           </div>
                           {surveyAnswers.doorType === 'window' && <Check size={16} className="opt-check" />}
                         </button>
@@ -1279,60 +1266,10 @@ export function StudioPage({
                       </div>
                     </div>
 
-                    {/* Question 3: Cấu trúc số cửa (Chỉ khi chọn Cửa sổ) */}
-                    {surveyAnswers.doorType === 'window' && (
-                      <div className="survey-question-group">
-                        <label className="question-title">
-                          <span className="q-num">3</span>
-                          Cấu trúc khung cửa sổ:
-                        </label>
-                        <div className="question-options-grid-3">
-                          <button
-                            type="button"
-                            className={'q-opt-btn ' + (surveyAnswers.windowPanels === 'single' ? 'selected' : '')}
-                            onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: 'single' }))}
-                          >
-                            <span className="opt-emoji">🪟</span>
-                            <div className="opt-text">
-                              <strong>Cửa sổ đơn</strong>
-                              <small>1 khung cửa</small>
-                            </div>
-                            {surveyAnswers.windowPanels === 'single' && <Check size={15} className="opt-check" />}
-                          </button>
-
-                          <button
-                            type="button"
-                            className={'q-opt-btn ' + (surveyAnswers.windowPanels === '3' ? 'selected' : '')}
-                            onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: '3' }))}
-                          >
-                            <span className="opt-emoji">🪟🪟🪟</span>
-                            <div className="opt-text">
-                              <strong>3 cửa</strong>
-                              <small>Bộ 3 ô liền kề</small>
-                            </div>
-                            {surveyAnswers.windowPanels === '3' && <Check size={15} className="opt-check" />}
-                          </button>
-
-                          <button
-                            type="button"
-                            className={'q-opt-btn ' + (surveyAnswers.windowPanels === '4' ? 'selected' : '')}
-                            onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: '4' }))}
-                          >
-                            <span className="opt-emoji">🪟🪟🪟🪟</span>
-                            <div className="opt-text">
-                              <strong>4 cửa</strong>
-                              <small>Bộ 4 ô panorama</small>
-                            </div>
-                            {surveyAnswers.windowPanels === '4' && <Check size={15} className="opt-check" />}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Question: Gợi ý mức giá & Ngân sách mong muốn */}
+                    {/* Question 3: Gợi ý mức giá & Ngân sách mong muốn */}
                     <div className="survey-question-group">
                       <label className="question-title">
-                        <span className="q-num">{surveyAnswers.doorType === 'window' ? '4' : '3'}</span>
+                        <span className="q-num">3</span>
                         Gợi ý mức giá & Ngân sách dự kiến:
                       </label>
                       <div className="question-options-grid-budget">
@@ -1421,8 +1358,8 @@ export function StudioPage({
                       <span className="corner bottom-left" />
                       <span className="corner bottom-right" />
                       <div className="ar-box-tag">
-                        <span>DETECTION: {surveyAnswers.doorType === 'window' ? (surveyAnswers.windowPanels === '3' ? 'TRIPLE_WINDOW' : surveyAnswers.windowPanels === '4' ? 'QUAD_WINDOW' : 'SINGLE_WINDOW') : 'MAIN_DOOR'}</span>
-                        <span>ENV: {surveyAnswers.location.toUpperCase()}</span>
+                        <span>DETECTION: {surveyAnswers.doorType === 'window' ? 'WINDOW' : 'MAIN_DOOR'}</span>
+                        <span>ENV: INDOOR</span>
                       </div>
                     </div>
                   </div>

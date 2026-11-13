@@ -20406,6 +20406,10 @@ button:active:not(:disabled),
   flex-shrink: 0;
 }
 
+.question-options-single {
+  width: 100%;
+}
+
 .question-options-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
