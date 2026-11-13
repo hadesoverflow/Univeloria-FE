@@ -22178,6 +22178,10 @@ button:active:not(:disabled),
   .pet-sprite-frame {
     --pet-scale: 0.38 !important;
   }
+
+  .petdex-cat-img {
+    width: 78px !important;
+  }
 }
 
 
@@ -22285,6 +22289,27 @@ button:active:not(:disabled),
 
 .petdex-avatar-wrap.active-chat {
   transform: scale(1.05) !important;
+}
+
+.petdex-cat-img {
+  width: 90px !important;
+  height: auto !important;
+  display: block !important;
+  user-select: none !important;
+  pointer-events: none !important;
+  transition: transform 0.2s ease !important;
+}
+
+.petdex-avatar-wrap.facing-left .petdex-cat-img {
+  transform: scaleX(-1) !important;
+}
+
+.chatbot-header-cat {
+  width: 32px !important;
+  height: 32px !important;
+  object-fit: contain !important;
+  display: block !important;
+  border-radius: 50% !important;
 }
 
 /* Petdex Sprite Frame & Keyframes Animation */

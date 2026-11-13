@@ -1,19 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { X, Send } from 'lucide-react';
 
 export function FloatingPetdexChat({ navigateTo }) {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
-  const [spriteUrl, setSpriteUrl] = useState('https://assets.petdex.dev/pets/dundun-4ce1d541faef/sprite.webp');
-
-  // Verify external sprite URL or fall back to local bundled webp asset
-  useEffect(() => {
-    const img = new Image();
-    img.src = 'https://assets.petdex.dev/pets/dundun-4ce1d541faef/sprite.webp';
-    img.onerror = () => {
-      setSpriteUrl('/assets/dundun-sprite.webp');
-    };
-  }, []);
+  const [facingLeft, setFacingLeft] = useState(false);
 
   const [messages, setMessages] = useState([
     {
@@ -21,17 +12,6 @@ export function FloatingPetdexChat({ navigateTo }) {
       text: 'Xin chào! Tôi là Trợ lý AI của UniVeloria. Bạn cần hỗ trợ gì về rèm cửa hôm nay?'
     }
   ]);
-
-  // Animation state for Dundun:
-  // Row 0, 6 frames, 1100ms: Idle
-  // Row 1, 8 frames, 1060ms: Run Right
-  // Row 2, 8 frames, 1060ms: Run Left
-  const [animState, setAnimState] = useState({
-    row: 0,
-    frames: 6,
-    duration: '1100ms',
-    label: '墩墩 Idle animation'
-  });
 
   // Translation offset from default bottom-right origin
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -72,23 +52,11 @@ export function FloatingPetdexChat({ navigateTo }) {
       dragRef.current.hasMoved = true;
     }
 
-    // Directional Running Animations:
-    // Row 1, 8 frames, 1060ms -> Run Right
-    // Row 2, 8 frames, 1060ms -> Run Left
+    // Interactive orientation: tilt/face towards movement direction
     if (stepDx > 1.2) {
-      setAnimState((prev) => (prev.row === 1 ? prev : {
-        row: 1,
-        frames: 8,
-        duration: '1060ms',
-        label: '墩墩 Run Right animation'
-      }));
+      setFacingLeft(false);
     } else if (stepDx < -1.2) {
-      setAnimState((prev) => (prev.row === 2 ? prev : {
-        row: 2,
-        frames: 8,
-        duration: '1060ms',
-        label: '墩墩 Run Left animation'
-      }));
+      setFacingLeft(true);
     }
 
     setPos({
@@ -97,17 +65,9 @@ export function FloatingPetdexChat({ navigateTo }) {
     });
   };
 
-  const handlePointerUp = (e) => {
+  const handlePointerUp = () => {
     if (!isDragging) return;
     setIsDragging(false);
-
-    // Return to Idle when dragging ends
-    setAnimState({
-      row: 0,
-      frames: 6,
-      duration: '1100ms',
-      label: '墩墩 Idle animation'
-    });
 
     // If user clicked/tapped without dragging, toggle chat
     if (!dragRef.current.hasMoved) {
@@ -117,12 +77,6 @@ export function FloatingPetdexChat({ navigateTo }) {
 
   const handlePointerCancel = () => {
     setIsDragging(false);
-    setAnimState({
-      row: 0,
-      frames: 6,
-      duration: '1100ms',
-      label: '墩墩 Idle animation'
-    });
   };
 
   const handleToggleChat = () => {
@@ -166,25 +120,11 @@ export function FloatingPetdexChat({ navigateTo }) {
           <div className="chatbot-popup-header">
             <div className="chatbot-header-info">
               <div className="chatbot-avatar-circle">
-                <div
-                  className="pet-sprite-frame chatbot-pet-mini"
-                  style={{
-                    '--pet-scale': 0.17,
-                    width: '32px',
-                    height: '32px'
-                  }}
-                >
-                  <div
-                    className="pet-sprite"
-                    style={{
-                      '--sprite-url': `url("${spriteUrl}")`,
-                      '--sprite-row': 0,
-                      '--sprite-frames': 6,
-                      '--sprite-duration': '1100ms',
-                      '--sprite-sheet-width': '1536px'
-                    }}
-                  />
-                </div>
+                <img
+                  src="/assets/ChatBot.png"
+                  alt="Trợ lý AI UniVeloria"
+                  className="chatbot-header-cat"
+                />
                 <span className="chatbot-status-dot" />
               </div>
               <div>
@@ -285,27 +225,14 @@ export function FloatingPetdexChat({ navigateTo }) {
             <div className="bubble-tail" />
           </div>
 
-          {/* Petdex Mascot 3D/Sprite Animated (Idle, Run Right, Run Left) */}
-          <div className="petdex-avatar-wrap">
-            <div
-              className="pet-sprite-frame"
-              role="img"
-              aria-label={animState.label}
-              style={{
-                '--pet-scale': 0.44
-              }}
-            >
-              <div
-                className="pet-sprite"
-                style={{
-                  '--sprite-url': `url("${spriteUrl}")`,
-                  '--sprite-row': animState.row,
-                  '--sprite-frames': animState.frames,
-                  '--sprite-duration': animState.duration,
-                  '--sprite-sheet-width': '1536px'
-                }}
-              />
-            </div>
+          {/* 3D Cat Mascot (/assets/ChatBot.png) */}
+          <div className={`petdex-avatar-wrap ${facingLeft ? 'facing-left' : ''}`}>
+            <img
+              src="/assets/ChatBot.png"
+              alt="Trợ lý AI UniVeloria"
+              className="petdex-cat-img"
+              draggable={false}
+            />
             <span className="petdex-online-badge" />
           </div>
         </div>
@@ -313,4 +240,3 @@ export function FloatingPetdexChat({ navigateTo }) {
     </div>
   );
 }
-
