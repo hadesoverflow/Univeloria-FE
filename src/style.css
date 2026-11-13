@@ -24288,24 +24288,27 @@ button:active:not(:disabled),
 /* Partners Hero Banner */
 .partners-hero-banner {
   position: relative;
-  padding: 130px 24px 60px;
+  padding: 135px 24px 65px;
   text-align: center;
   overflow: hidden;
-  background: #173352;
+  background-color: #f7f1e7;
+  border-bottom: 1px solid rgba(200, 168, 125, 0.28);
 }
 
 .partners-hero-bg {
   position: absolute;
   inset: 0;
-  background: url('/assets/about-hero.jpg') center/cover no-repeat;
-  opacity: 0.28;
-  filter: blur(1.5px);
+  background: url('/assets/HomePage.png') center 38% / cover no-repeat;
+  opacity: 0.45;
+  filter: saturate(0.92);
 }
 
 .partners-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(23, 51, 82, 0.88) 0%, rgba(18, 28, 33, 0.96) 100%);
+  background: 
+    linear-gradient(180deg, rgba(252, 248, 242, 0.92) 0%, rgba(248, 243, 235, 0.86) 45%, #faf8f5 100%),
+    radial-gradient(ellipse at 50% 32%, rgba(255, 255, 255, 0.72) 0%, transparent 75%);
 }
 
 .partners-hero-content {
@@ -24322,8 +24325,8 @@ button:active:not(:disabled),
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(238, 77, 45, 0.16);
-  color: #ff6e4a;
+  background: #fff3ef;
+  color: #ee4d2d;
   border: 1px solid rgba(238, 77, 45, 0.35);
   border-radius: 999px;
   padding: 6px 16px;
@@ -24332,20 +24335,22 @@ button:active:not(:disabled),
   letter-spacing: 0.06em;
   text-transform: uppercase;
   margin-bottom: 14px;
+  box-shadow: 0 2px 10px rgba(238, 77, 45, 0.08);
 }
 
 .partners-hero-content h1 {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(30px, 4.2vw, 44px);
+  font-size: clamp(32px, 4.4vw, 46px);
   font-weight: 700;
-  color: #ffffff;
+  color: #173352;
   margin: 0 0 12px 0;
   line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .partners-hero-content p {
   font-size: 15px;
-  color: #d6e2ec;
+  color: #4a5d6e;
   line-height: 1.6;
   margin: 0 0 28px 0;
   max-width: 680px;
@@ -24355,13 +24360,19 @@ button:active:not(:disabled),
   position: relative;
   width: 100%;
   max-width: 540px;
-  background: rgba(255, 255, 255, 0.98);
-  border: 1.5px solid rgba(200, 168, 125, 0.5);
+  background: #ffffff;
+  border: 1.5px solid rgba(200, 168, 125, 0.45);
   border-radius: 999px;
   display: flex;
   align-items: center;
   padding: 8px 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 26px rgba(140, 96, 54, 0.1);
+  transition: all 0.25s ease;
+}
+
+.partners-search-bar:focus-within {
+  border-color: #8c6036;
+  box-shadow: 0 10px 32px rgba(140, 96, 54, 0.16);
 }
 
 .partners-search-bar .search-icon {
@@ -24377,6 +24388,10 @@ button:active:not(:disabled),
   background: transparent;
   font-size: 13.5px;
   color: #173352;
+}
+
+.partners-search-bar input::placeholder {
+  color: #8c9ba5;
 }
 
 .partners-search-bar .clear-search-btn {
