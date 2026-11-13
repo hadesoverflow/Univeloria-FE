@@ -277,14 +277,14 @@ export function ProductsPage({
                 <input
                   className="price-range"
                   type="range"
-                  min="500000"
+                  min="300000"
                   max="10000000"
-                  step="250000"
+                  step="50000"
                   value={maxProductPrice}
                   onChange={(e) => setMaxProductPrice(Number(e.target.value))}
                 />
                 <div className="price-range-labels">
-                  <span>500.000đ</span>
+                  <span>300.000đ</span>
                   <span>{new Intl.NumberFormat('vi-VN').format(maxProductPrice)}đ</span>
                 </div>
               </ProductFilterSection>
