@@ -23523,7 +23523,7 @@ button:active:not(:disabled),
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  ... [truncated for diff preview] gap: 3px !important;
+  gap: 3px !important;
   transition: all 0.15s ease !important;
   white-space: nowrap !important;
 }
