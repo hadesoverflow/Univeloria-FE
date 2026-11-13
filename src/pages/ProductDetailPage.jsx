@@ -543,10 +543,18 @@ export function ProductDetailPage({
               <div className="pdetail-single-secondary">
                 <button
                   className="pdetail-btn-studio-full"
-                  onClick={() => navigateTo('studio')}
+                  onClick={() => {
+                    let targetStudioId = 'sfold-luxury';
+                    if (product?.name?.includes('1198')) targetStudioId = 'elogi-1198-2';
+                    else if (product?.name?.includes('1206')) targetStudioId = 'elogi-1206-1';
+                    else if (product?.name?.includes('1230')) targetStudioId = 'elogi-1230-1';
+                    else if (product?.name?.includes('Xếp Ly') || product?.name?.includes('1 Lớp')) targetStudioId = 'single-pleat';
+                    else if (product?.name?.includes('S-Fold') || product?.name?.includes('2 Lớp')) targetStudioId = 'sfold-luxury';
+                    navigateTo('studio', targetStudioId);
+                  }}
                 >
                   <Sliders size={16} />
-                  <span>Thử mẫu rèm vào phòng thực tế bằng AI 3D Studio</span>
+                  <span>Xem chất vải & phối phòng thực tế dưới dạng 3D</span>
                 </button>
               </div>
 
@@ -1428,7 +1436,15 @@ export function ProductDetailPage({
                 boxShadow: '0 4px 14px rgba(23, 51, 82, 0.25)',
                 transition: 'all 0.2s ease'
               }}
-              onClick={() => navigateTo('studio')}
+              onClick={() => {
+                let targetStudioId = 'sfold-luxury';
+                if (product?.name?.includes('1198')) targetStudioId = 'elogi-1198-2';
+                else if (product?.name?.includes('1206')) targetStudioId = 'elogi-1206-1';
+                else if (product?.name?.includes('1230')) targetStudioId = 'elogi-1230-1';
+                else if (product?.name?.includes('Xếp Ly') || product?.name?.includes('1 Lớp')) targetStudioId = 'single-pleat';
+                else if (product?.name?.includes('S-Fold') || product?.name?.includes('2 Lớp')) targetStudioId = 'sfold-luxury';
+                navigateTo('studio', targetStudioId);
+              }}
             >
               <span>Bắt đầu trải nghiệm</span>
               <ArrowRight size={16} />

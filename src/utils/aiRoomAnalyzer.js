@@ -9,141 +9,83 @@ export function determineCurtainRecommendations({
   windowPanels = 'single',
   budget = 'all'
 } = {}) {
-  // Case 2: Cửa sổ đơn hoặc cửa chính NGOÀI TRỜI
-  if (location === 'outdoor') {
-    return {
-      ruleKey: 'outdoor',
-      caseTitle: 'Không gian Ngoài trời (Ban công / Hiên / Sân thượng)',
-      spaceTypeLabel: 'Ngoài trời',
-      doorTypeLabel: doorType === 'main' ? 'Cửa chính ngoài trời' : 'Cửa sổ ngoài trời',
-      recommendedTypeIds: ['pvc-tarpaulin'],
-      primaryTypeId: 'pvc-tarpaulin',
-      primaryColor: '#1a56b7',
-      style: 'Ngoài Trời & Chống Mưa Nắng',
-      wallTone: 'Không gian mở ban công / villa',
-      lightCondition: 'Thời tiết ngoài trời (Nắng gắt & Mưa bão)',
-      matchScore: 99,
-      aiReason: 'Với không gian ngoài trời hoặc ban công tiếp xúc trực tiếp với nắng, gió và mưa bão, AI đề xuất Rèm Bạt Nhựa PVC: sợi polyester 3 lớp siêu dai chống rách, phủ Nano chống bám bụi và chống thấm nước 100%.',
-      tags: ['Ngoài trời', 'Bạt nhựa PVC', 'Chống mưa nắng 100%'],
-      estimatedPriceRange: '650.000đ - 1.250.000đ / bộ'
-    };
-  }
-
-  // Case 3: Cửa sổ 3 CỬA (trong nhà)
-  if (doorType === 'window' && windowPanels === '3') {
-    return {
-      ruleKey: 'tripleWindow',
-      caseTitle: 'Cửa sổ 3 cánh (Bộ 3 ô cửa sổ liền kề)',
-      spaceTypeLabel: 'Trong nhà',
-      doorTypeLabel: 'Cửa sổ 3 cánh',
-      recommendedTypeIds: ['roller-triptych'],
-      primaryTypeId: 'roller-triptych',
-      primaryColor: '#ffffff',
-      style: 'Tranh Nghệ Thuật 3 Cánh',
-      wallTone: 'Không gian cửa sổ 3 ô liền kề',
-      lightCondition: 'Ánh sáng tự nhiên 3 hướng',
-      matchScore: 99,
-      aiReason: 'Với cấu trúc 3 ô cửa sổ liền kề, AI đề xuất Bộ 3 rèm cửa cuốn in tranh Botanical 3: họa tiết tranh nghệ thuật lá cây phối màu xanh ngọc bích & kem linen đối xứng hoàn mỹ, 3 trục cuốn nhôm riêng biệt linh hoạt.',
-      tags: ['Cửa sổ 3 cánh', 'Bộ 3 tranh Botanical 3', 'Trục cuốn độc lập'],
-      estimatedPriceRange: '1.850.000đ - 2.950.000đ / bộ 3 ô'
-    };
-  }
-
-  // Case 4: Cửa sổ 4 CỬA (trong nhà)
-  if (doorType === 'window' && windowPanels === '4') {
-    return {
-      ruleKey: 'quadWindow',
-      caseTitle: 'Cửa sổ 4 cánh (Bộ 4 ô cửa panorama)',
-      spaceTypeLabel: 'Trong nhà',
-      doorTypeLabel: 'Cửa sổ 4 cánh',
-      recommendedTypeIds: ['roller-quad'],
-      primaryTypeId: 'roller-quad',
-      primaryColor: '#ffffff',
-      style: 'Tranh Panorama Mùa Thu Vàng',
-      wallTone: 'Không gian vách kính 4 ô rộng',
-      lightCondition: 'Góc nhìn Panorama toàn cảnh',
-      matchScore: 99,
-      aiReason: 'Với cấu trúc 4 ô cửa sổ rộng, AI đề xuất Bộ 4 rèm cửa cuốn in tranh Panorama Mùa Thu Vàng: đại cảnh lá vàng rực rỡ ghép 4 tấm liền mạch, cản sáng 100% và tạo điểm nhấn sang trọng cho toàn bộ gian phòng.',
-      tags: ['Cửa sổ 4 cánh', 'Tranh Panorama Mùa Thu Vàng', 'Ghép 4 tấm liền mạch'],
-      estimatedPriceRange: '2.450.000đ - 3.850.000đ / bộ 4 ô'
-    };
-  }
-
-  // Case 5: CỬA CHÍNH (trong nhà)
+  // Case 1: Cửa chính / Cửa đi lớn (Phòng khách & Không gian lớn)
   if (doorType === 'main') {
-    const isEcon = budget === 'economy';
     return {
       ruleKey: 'mainDoorIndoor',
-      caseTitle: 'Cửa chính / Cửa đi trong nhà',
+      caseTitle: 'Cửa chính / Cửa ban công lớn phòng khách',
       spaceTypeLabel: 'Trong nhà',
       doorTypeLabel: 'Cửa chính / Cửa đi',
-      recommendedTypeIds: isEcon ? ['single-pleat', 'sfold-luxury', 'leaf-embroidery'] : ['leaf-embroidery', 'sfold-luxury', 'single-pleat'],
-      primaryTypeId: isEcon ? 'single-pleat' : 'leaf-embroidery',
-      primaryColor: isEcon ? '#9fa4a9' : '#7e7065',
-      style: 'Rèm Vải Khách Sạn 5 Sao & Biệt Thự',
+      recommendedTypeIds: ['sfold-luxury', 'elogi-1198-2', 'elogi-1206-1', 'single-pleat', 'elogi-1230-1'],
+      primaryTypeId: 'sfold-luxury',
+      primaryColor: '#d5cbbe',
+      style: 'Khách Sạn 5 Sao & Biệt Thự Cao Cấp',
       wallTone: 'Khu vực cửa chính phòng khách',
-      lightCondition: 'Đón tiếp ánh sáng không gian chính',
+      lightCondition: 'Đón ánh sáng tự nhiên toàn cảnh',
       matchScore: 99,
-      aiReason: 'Với khu vực cửa chính trong nhà, AI đề xuất các dòng rèm vải cao cấp: Rèm 2 lớp thêu lá quý phái, Rèm 2 lớp S-Fold chuẩn khách sạn 5 sao và Rèm 1 lớp xếp ly định hình, tạo sự bề thế và đón tiếp sang trọng.',
-      tags: ['Cửa chính trong nhà', 'Rèm vải 2 lớp', 'Xếp ly & S-Fold 5 sao'],
-      estimatedPriceRange: isEcon ? '1.650.000đ - 2.850.000đ / bộ' : '2.850.000đ - 5.650.000đ / bộ'
+      aiReason: 'Với khu vực cửa chính hoặc cửa ban công rộng, AI đề xuất Rèm Hai Lớp S-Fold Định Hình Cao Cấp: công nghệ dập sóng chữ S bồng bềnh chuẩn 5 sao, kết hợp lớp vải gấm dệt cản sáng 98% và lớp voan tuyết đón nắng nhẹ nhàng.',
+      tags: ['Cửa chính', 'Rèm Hai Lớp S-Fold', 'Chuẩn khách sạn 5 sao'],
+      estimatedPriceRange: '2.850.000đ - 3.200.000đ / bộ'
     };
   }
 
-  // Case 1: Cửa sổ ĐƠN trong nhà (mặc định)
-  if (budget === 'economy') {
-    return {
-      ruleKey: 'singleWindowIndoor',
-      caseTitle: 'Cửa sổ đơn trong nhà (Phân khúc Tiết kiệm)',
-      spaceTypeLabel: 'Trong nhà',
-      doorTypeLabel: 'Cửa sổ đơn',
-      recommendedTypeIds: ['roller-linen', 'roller-art', 'roller-crystal', 'roman-linen', 'honeycomb'],
-      primaryTypeId: 'roller-linen',
-      primaryColor: '#dfd5c4',
-      style: 'Tối Giản & Tiết Kiệm Chi Phí',
-      wallTone: 'Cửa sổ đơn phòng ngủ / làm việc',
-      lightCondition: 'Ánh sáng cửa sổ đơn',
-      matchScore: 99,
-      aiReason: 'Với ngân sách tiết kiệm, AI đề xuất dòng Rèm Cuốn Vải Dệt Linen & Rèm Cuốn Tranh nghệ thuật: giá thành hợp lý, cản sáng tốt, cuộn gọn gàng và bền bỉ.',
-      tags: ['Cửa sổ đơn', 'Rèm cuốn Linen', 'Tiết kiệm chi phí'],
-      estimatedPriceRange: '550.000đ - 950.000đ / bộ'
-    };
+  // Case 2: Phân khúc phong cách Nhật Bản / Tinh tế nhẹ nhàng
+  if (budget === 'japanese' || windowPanels === 'single') {
+    if (budget === 'economy') {
+      return {
+        ruleKey: 'elogi1230',
+        caseTitle: 'Cửa sổ trong nhà - Phong cách Nhật Bản Eco',
+        spaceTypeLabel: 'Trong nhà',
+        doorTypeLabel: 'Cửa sổ đơn',
+        recommendedTypeIds: ['elogi-1230-1', 'elogi-1206-1', 'single-pleat', 'elogi-1198-2', 'sfold-luxury'],
+        primaryTypeId: 'elogi-1230-1',
+        primaryColor: '#e3d8c8',
+        style: 'Phong cách Nhật Bản',
+        wallTone: 'Cửa sổ phòng ngủ / phòng làm việc',
+        lightCondition: 'Ánh sáng êm dịu',
+        matchScore: 98,
+        aiReason: 'Với nhu cầu rèm vải cao cấp tối ưu ngân sách, AI đề xuất Mẫu rèm vải Elogi - 1230 - 1: chất vải Eco-friendly mềm mịn, họa tiết dệt sắc nét và viền mép chuẩn xác.',
+        tags: ['Cửa sổ đơn', 'Elogi 1230-1', 'Vải Eco-friendly'],
+        estimatedPriceRange: '580.000đ / m² hoàn thiện'
+      };
+    }
+
+    if (budget === 'warmth') {
+      return {
+        ruleKey: 'elogi1206',
+        caseTitle: 'Cửa sổ trong nhà - Tông nâu be ấm áp',
+        spaceTypeLabel: 'Trong nhà',
+        doorTypeLabel: 'Cửa sổ đơn',
+        recommendedTypeIds: ['elogi-1206-1', 'elogi-1198-2', 'sfold-luxury', 'elogi-1230-1', 'single-pleat'],
+        primaryTypeId: 'elogi-1206-1',
+        primaryColor: '#b5aba1',
+        style: 'Phong cách Nhật Bản',
+        wallTone: 'Cửa sổ phòng ngủ / nghỉ dưỡng',
+        lightCondition: 'Lọc sáng dịu mắt',
+        matchScore: 99,
+        aiReason: 'Với không gian cần sự ấm cúng và thư giãn, AI đề xuất Mẫu rèm vải Elogi - 1206 - 1: tông nâu be trung tính, chất vải êm mịn tạo độ rũ tự nhiên và cản sáng tốt.',
+        tags: ['Cửa sổ', 'Elogi 1206-1', 'Tone nâu be thư giãn'],
+        estimatedPriceRange: '600.000đ / m² hoàn thiện'
+      };
+    }
   }
 
-  if (budget === 'luxury') {
-    return {
-      ruleKey: 'singleWindowIndoor',
-      caseTitle: 'Cửa sổ đơn trong nhà (Phân khúc Cao cấp)',
-      spaceTypeLabel: 'Trong nhà',
-      doorTypeLabel: 'Cửa sổ đơn',
-      recommendedTypeIds: ['honeycomb', 'roman-linen', 'roller-crystal', 'roller-linen', 'roller-art'],
-      primaryTypeId: 'honeycomb',
-      primaryColor: '#c8beaf',
-      style: 'Hiện Đại & Cách Nhiệt Cao Cấp',
-      wallTone: 'Cửa sổ đơn phòng ngủ / làm việc',
-      lightCondition: 'Ánh sáng cửa sổ đơn',
-      matchScore: 99,
-      aiReason: 'Với phân khúc cao cấp, AI đề xuất Rèm Tổ Ong cách nhiệt tráng bạc 100% hoặc Rèm Roman vải Linen đũi thô dệt nổi slub, mang lại vẻ đẹp thẩm mỹ thượng lưu và chống nóng tối ưu.',
-      tags: ['Cửa sổ đơn', 'Rèm Tổ Ong cao cấp', 'Rèm Roman Slub'],
-      estimatedPriceRange: '980.000đ - 1.850.000đ / bộ'
-    };
-  }
-
+  // Case 3: Mặc định chuẩn phong cách Nhật Bản tinh tế
   return {
-    ruleKey: 'singleWindowIndoor',
-    caseTitle: 'Cửa sổ đơn trong nhà',
+    ruleKey: 'elogi1198',
+    caseTitle: 'Cửa sổ trong nhà - Phong cách Nhật Bản tinh tế',
     spaceTypeLabel: 'Trong nhà',
-    doorTypeLabel: 'Cửa sổ đơn',
-    recommendedTypeIds: ['roman-linen', 'honeycomb', 'roller-linen', 'roller-crystal', 'roller-art'],
-    primaryTypeId: 'roman-linen',
-    primaryColor: '#dfd7c8',
-    style: 'Hiện Đại, Tối Giản & Nghệ Thuật',
-    wallTone: 'Cửa sổ đơn phòng ngủ / làm việc',
-    lightCondition: 'Ánh sáng cửa sổ đơn',
+    doorTypeLabel: 'Cửa sổ trong nhà',
+    recommendedTypeIds: ['elogi-1198-2', 'sfold-luxury', 'single-pleat', 'elogi-1206-1', 'elogi-1230-1'],
+    primaryTypeId: 'elogi-1198-2',
+    primaryColor: '#ebe6db',
+    style: 'Phong cách Nhật Bản',
+    wallTone: 'Không gian sống hiện đại & tối giản',
+    lightCondition: 'Ánh sáng tự nhiên êm dịu',
     matchScore: 99,
-    aiReason: 'Với ô cửa sổ đơn trong nhà, AI đề xuất 5 giải pháp rèm gọn gàng, cách nhiệt và thẩm mỹ cao: Rèm Roman xếp lớp, Rèm tổ ong cách nhiệt, Rèm cuốn vải dệt Linen, Rèm cuốn in tranh Hoa Pha Lê & Kim Cương, và Rèm cuốn Botanical.',
-    tags: ['Cửa sổ đơn', 'Rèm Roman & Tổ ong', 'Rèm cuốn & Tranh nghệ thuật'],
-    estimatedPriceRange: '850.000đ - 1.850.000đ / bộ'
+    aiReason: 'Với kiến trúc hiện đại tối giản, AI đề xuất Mẫu rèm vải Elogi - 1198 - 2: cấu trúc 3 lớp vải cao cấp dệt mịn vân chéo tinh tế, gam màu kem sáng sang trọng và dễ phối hợp nội thất.',
+    tags: ['Cửa sổ', 'Elogi 1198-2', 'Dệt chéo tinh tế'],
+    estimatedPriceRange: '680.000đ / m² hoàn thiện'
   };
 }
 

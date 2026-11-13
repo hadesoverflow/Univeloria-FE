@@ -47,55 +47,45 @@ import {
 } from 'lucide-react';
 
 const CURTAIN_COLOR_NAMES = {
-  // roman-linen
-  '#dfd7c8': 'Kem Linen tự nhiên',
-  '#c8bcae': 'Cát ấm mộc mạc',
-  '#a89f91': 'Be sẫm tân cổ điển',
-  '#f0ece3': 'Trắng ngà Slub',
-  '#7d7263': 'Xám tro Rustic',
-  // honeycomb
-  '#c8beaf': 'Be nhạt thanh lịch',
-  '#b5ab9e': 'Be ấm cách nhiệt',
-  '#ded8cf': 'Kem sáng Pastel',
-  '#8c8275': 'Nâu trầm Bắc Âu',
-  '#5c544b': 'Cà phê ấm áp',
-  // pvc-tarpaulin
-  '#1a56b7': 'Xanh dương sọc trắng',
-  '#1b5e3b': 'Xanh rêu ban công',
-  '#4b5563': 'Xám than hiện đại',
-  '#c25827': 'Cam đất nung',
-  '#10223e': 'Xanh Navy bảo vệ',
-  // roller-linen
-  '#dfd5c4': 'Kem mộc Linen',
-  '#f4f0e8': 'Trắng sứ tự nhiên',
-  '#c8c0b2': 'Cát xám thanh nhã',
-  '#9b8d7e': 'Nâu tây cản sáng',
-  '#9ca899': 'Xanh Sage dịu mát',
-  '#4a443e': 'Nâu đen tối giản',
-  // single-pleat
-  '#9fa4a9': 'Xám bạc thanh lịch',
-  '#767c82': 'Xám trung tính',
-  '#b4b9bf': 'Xám ngọc trai',
-  '#61666b': 'Xám than chì',
-  '#c5beb5': 'Be cát mềm mại',
-  '#6f7a85': 'Xanh xám hiện đại',
-  '#383b3e': 'Đen than huyền bí',
   // sfold-luxury
   '#d5cbbe': 'Kem cát S-Fold',
   '#e4ded5': 'Trắng ngà sang trọng',
   '#c2b4a3': 'Be vàng hoàng gia',
   '#a89986': 'Nâu be quý phái',
   '#877867': 'Nâu trầm ấm cúng',
-  // leaf-embroidery
-  '#7e7065': 'Nâu xám thêu lá',
-  '#8f8074': 'Be sẫm dệt thoi',
-  '#6b6057': 'Nâu tro cổ điển',
-  '#9e8e81': 'Xám ấm tinh tế',
-  '#544c45': 'Nâu hạt dẻ',
-  '#cfc4b8': 'Kem nhạt Slub',
-  '#a89a8c': 'Cát mộc Slub',
-  // art prints
-  '#ffffff': 'Trắng in tranh 3D'
+  '#ded8cf': 'Kem tuyết 5 sao',
+  '#4a443e': 'Gỗ mun quý tộc',
+  // single-pleat
+  '#9fa4a9': 'Xám bạc Melange',
+  '#767c82': 'Xám trung tính',
+  '#b4b9bf': 'Xám ngọc trai',
+  '#61666b': 'Xám than chì',
+  '#c5beb5': 'Be cát mềm mại',
+  '#6f7a85': 'Xanh xám hiện đại',
+  '#383b3e': 'Đen than huyền bí',
+  // elogi-1198-2
+  '#ebe6db': 'Lớp vải mặt (Kem sáng)',
+  '#9ea9b3': 'Lớp trung gian (Xám xanh pastel)',
+  '#cfc3b0': 'Lớp vải lót (Nâu be cát)',
+  '#84909a': 'Xám đá tự nhiên',
+  '#d7cdc0': 'Be yến mạch',
+  '#463f38': 'Nâu cà phê',
+  // elogi-1206-1
+  '#b5aba1': 'Lớp vải mặt (Xám be mocha)',
+  '#ddd3c3': 'Lớp trung gian (Vàng be linen)',
+  '#564a40': 'Lớp vải lót (Nâu sô-cô-la)',
+  '#8d7d70': 'Be đất nung',
+  '#c5b9aa': 'Kem hạnh nhân',
+  '#362d26': 'Nâu gỗ trầm',
+  // elogi-1230-1
+  '#e3d8c8': 'Chất liệu vải (Cát vàng kem)',
+  '#8d8c89': 'Bề mặt vải (Xám xi măng)',
+  '#9e8875': 'Màu sắc (Nâu socola sữa)',
+  '#d4c6b2': 'Be cát tự nhiên',
+  '#6f6e6b': 'Xám tro hiện đại',
+  '#3b322a': 'Nâu đất đậm',
+  // art prints / white
+  '#ffffff': 'Trắng tinh khôi'
 };
 
 function getCurtainColorName(hex) {
@@ -237,17 +227,10 @@ export function StudioPage({
 
     return list.filter((t) => {
       if (activeStudioFilter === 'Tất cả') return true;
-      if (activeStudioFilter === 'Rèm vải') return t.isRoman || t.id === 'single-pleat' || t.id === 'sfold-luxury' || t.id === 'leaf-embroidery';
-      if (activeStudioFilter === 'Rèm cầu vồng') return t.id === 'honeycomb' || t.isHoneycomb || t.id === 'roller-quad';
-      if (activeStudioFilter === 'Rèm cuốn') return t.isRoller || t.isRollerLinen || t.id?.includes('roller') || t.isPvc;
-      if (activeStudioFilter === 'Rèm Cuốn') return t.isRollerLinen || t.id === 'roller-linen';
-      if (activeStudioFilter === 'Rèm Roman') return t.isRoman;
-      if (activeStudioFilter === 'Rèm Tổ Ong') return t.id === 'honeycomb';
-      if (activeStudioFilter === 'Rèm Tranh') return t.isRoller && !t.isRollerLinen;
-      if (activeStudioFilter === 'Rèm Nhựa PVC') return t.isPvc;
-      if (activeStudioFilter === 'Rèm 1 Lớp') return t.id === 'single-pleat' || t.isHoneycomb;
-      if (activeStudioFilter === 'Khách sạn 5 Sao') return t.id === 'sfold-luxury' || t.id === 'leaf-embroidery';
-      return true;
+      if (activeStudioFilter === 'Phong cách Nhật Bản') return t.style === 'Phong cách Nhật Bản' || t.id.startsWith('elogi');
+      if (activeStudioFilter === 'Khách Sạn 5 Sao' || activeStudioFilter === 'Khách sạn 5 Sao') return t.id === 'sfold-luxury' || t.style?.includes('Khách Sạn');
+      if (activeStudioFilter === 'Tối giản & Hiện đại') return t.id === 'single-pleat' || t.style?.includes('Hiện đại') || t.style?.includes('Tối giản');
+      return t.style === activeStudioFilter;
     });
   }, [activeStudioFilter, aiDiagnosis]);
 
@@ -1084,39 +1067,33 @@ export function StudioPage({
             </div>
 
             <div className="panel3-card-list">
-              {[
-                { id: 'roman-linen', name: 'Rèm Vải Elysia', desc: 'Mềm mại, sang trọng', price: 'Từ 420.000đ/m²', thumb: '/assets/product-linen.jpg' },
-                { id: 'honeycomb', name: 'Rèm Cầu Vồng Duo Riviera', desc: 'Hiện đại, linh hoạt', price: 'Từ 380.000đ/m²', thumb: '/assets/curtains/curtain-honeycomb.jpg' },
-                { id: 'roller-linen', name: 'Rèm Cuốn Customize Mélange', desc: 'Tối ưu ánh sáng', price: 'Từ 290.000đ/m²', thumb: '/assets/curtains/curtain-roller-linen.jpg' },
-                { id: 'single-pleat', name: 'Rèm Cuốn Aria', desc: 'Tinh tế, tối giản', price: 'Từ 260.000đ/m²', thumb: '/assets/curtains/curtain-single-pleat.jpg' },
-              ].map((item) => {
+              {filteredCurtainTypes.map((item) => {
                 const isSelected = activeType === item.id;
-                const matchedType = curtainTypes.find(c => c.id === item.id);
                 return (
                   <div
                     key={item.id}
                     className={`panel3-card ${isSelected ? 'selected' : ''}`}
                     onClick={() => {
-                      if (matchedType) chooseType(matchedType);
+                      chooseType(item);
                       setCurtainOpenRatio(0.0);
                       setIsCurtainOpen(false);
                       setMobileActiveTab('preview');
                     }}
                   >
                     <div className="panel3-card-thumb">
-                      <img src={item.thumb} alt={item.name} onError={(e) => { e.target.src = '/assets/product-linen.jpg'; }} />
+                      <img src={item.thumb} alt={item.name} onError={(e) => { e.target.src = '/assets/curtains/curtain-single-pleat.jpg'; }} />
                     </div>
                     <div className="panel3-card-info">
                       <strong>{item.name}</strong>
                       <small>{item.desc}</small>
-                      <div className="panel3-card-price">{item.price}</div>
+                      <div className="panel3-card-price">{item.priceDisplay}</div>
                     </div>
                     <button
                       type="button"
                       className={`panel3-card-btn ${isSelected ? 'selected' : ''}`}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (matchedType) chooseType(matchedType);
+                        chooseType(item);
                         setCurtainOpenRatio(0.0);
                         setIsCurtainOpen(false);
                         setMobileActiveTab('preview');

@@ -136,8 +136,8 @@ export default function App() {
   const [hasUploaded, setHasUploaded] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analyzed, setAnalyzed] = useState(false);
-  const [activeType, setActiveType] = useState("roman-linen");
-  const [studioColor, setStudioColor] = useState(curtainTypes[0]?.colors[0] || "#dfd7c8");
+  const [activeType, setActiveType] = useState(curtainTypes[0]?.id || "sfold-luxury");
+  const [studioColor, setStudioColor] = useState(curtainTypes[0]?.colors[0] || "#d5cbbe");
   const [activeStudioFilter, setActiveStudioFilter] = useState("Tất cả");
   const [viewMode, setViewMode] = useState("3D");
   const [zoom, setZoom] = useState(1);
@@ -521,6 +521,16 @@ export default function App() {
     }
 
     const targetUrl = targetPage === 'home' ? '/' : `/${targetPage}`;
+
+    if (targetPage === 'studio') {
+      if (targetSection) {
+        const matched = curtainTypes.find(c => c.id === targetSection || c.name.toLowerCase().includes(String(targetSection).toLowerCase()));
+        if (matched) {
+          setActiveType(matched.id);
+          if (matched.colors?.[0]) setStudioColor(matched.colors[0]);
+        }
+      }
+    }
 
     if (currentPage === targetPage) {
       if (targetSection) {
