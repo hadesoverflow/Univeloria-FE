@@ -5,12 +5,15 @@ import {
   ExternalLink,
   Search,
   Sparkles,
-  ShoppingBag,
   ShieldCheck,
   CheckCircle2,
   Truck,
   HeartHandshake,
-  Star
+  Star,
+  Award,
+  BadgeCheck,
+  Building2,
+  ArrowRight
 } from 'lucide-react';
 
 export const ShopeeBagIcon = ({ size = 20, className = '' }) => (
@@ -31,71 +34,75 @@ export const PARTNERS_DATA = [
     id: 'bedding-m2t',
     category: 'Chăn, ga, gối, đệm',
     categoryIcon: '🛏️',
+    memberTier: 'Thành viên đối tác vàng',
     name: 'Chăn ga M2T Bedding',
-    subtitle: 'Bộ chăn ga gối Lụa Thái M2T Bedding mềm mịn mát',
-    description: 'Chất liệu lụa Thái cao cấp thoáng khí mát lạnh, gồm trọn bộ chăn hè chần bông vi tính, ga giường bọc chun và 2 vỏ gối nằm đồng bộ. Phù hợp hoàn hảo cho không gian phòng ngủ phong cách Bắc Âu & Minimalist.',
+    subtitle: 'Bộ chăn ga gối Lụa Thái M2T Bedding',
+    description: 'Chất liệu lụa Thái cao cấp thoáng mát, gồm chăn hè chần bông, ga giường và 2 vỏ gối nằm đồng bộ sang trọng.',
     url: 'https://shopee.vn/B%E1%BB%99-ch%C4%83n-ga-g%E1%BB%91i-L%E1%BB%A5a-Th%C3%A1i-M2T-bedding-m%E1%BB%81m-m%E1%BB%8Bn-m%C3%A1t-g%E1%BB%93m-ch%C4%83n-h%C3%A8-ch%E1%BA%A7n-b%C3%B4ng-ga-gi%C6%B0%E1%BB%9Dng-v%C3%A0-2-v%E1%BB%8F-g%E1%BB%91i-n%E1%BA%B1m-i.240825360.19831465954?extraParams=%7B%22display_model_id%22%3A163961267063%2C%22model_selection_logic%22%3A3%7D&image_ids=vn-11134207-81ztc-mqg3xp8ouwhu64',
     badge: 'Khuyên Dùng Cho Phòng Ngủ',
     rating: 4.9,
     reviews: '12.4k',
     image: '/assets/bedroom.jpg',
-    tags: ['Lụa Thái cao cấp', 'Chăn hè chần bông', 'Đủ kích thước m6/m8/2m', 'Bền màu & mềm mịn']
+    tags: ['Lụa Thái cao cấp', 'Chăn hè chần bông', 'Đủ size m6/m8/2m']
   },
   {
     id: 'lamp-rambotoy',
     category: 'Đèn chiếu sáng & Decor',
     categoryIcon: '💡',
-    name: 'Đèn Học & Cây Đứng RamboToy',
-    subtitle: 'Đèn cây đứng cao 170cm chiếu sáng phong cách Bắc Âu',
-    description: 'Đèn sàn dáng cao thân xếp lớp hiện đại, công tắc đạp chân thông minh, ánh sáng dịu mắt chống cận thị. Điểm nhấn hoàn hảo khi kết hợp cạnh rèm vải hai lớp phòng khách hoặc góc đọc sách phòng ngủ.',
+    memberTier: 'Thành viên đối tác vàng',
+    name: 'Đèn Cây RamboToy',
+    subtitle: 'Đèn cây đứng cao 170cm Bắc Âu',
+    description: 'Đèn sàn dáng cao thân kim loại xếp lớp hiện đại, công tắc đạp chân tiện lợi, ánh sáng dịu mắt chống cận thị.',
     url: 'https://shopee.vn/%C4%90%C3%A8n-c%C3%A2y-%C4%91%E1%BB%A9ng-cao-170cm-chi%E1%BA%BFu-s%C3%A1ng-phong-c%C3%A1ch-B%E1%BA%AFc-%C3%82u-%C4%91%C3%A8n-s%C3%A0n-d%C3%A1ng-cao-th%C3%A2n-x%E1%BA%BFp-l%E1%BB%9Bp-%C4%91%C3%A8n-ph%C3%B2ng-kh%C3%A1ch-ph%C3%B2ng-ng%E1%BB%A7-i.474590847.57750951153?extraParams=%7B%22display_model_id%22%3A365086021862%2C%22model_selection_logic%22%3A3%7D&image_ids=vn-11134207-820l4-mgrd17who1s97c',
     badge: 'Best Seller Phong Cách Bắc Âu',
     rating: 4.9,
     reviews: '8.6k',
     image: '/assets/living-room.jpg',
-    tags: ['Chiều cao 170cm', 'Thân kim loại xếp lớp', 'Bóng LED 3 chế độ màu', 'Tiết kiệm điện năng']
+    tags: ['Chiều cao 170cm', 'Kim loại xếp lớp', 'Bóng LED 3 màu']
   },
   {
     id: 'lamp-hobi',
     category: 'Đèn chiếu sáng & Decor',
     categoryIcon: '💡',
+    memberTier: 'Thành viên đối tác vàng',
     name: "HOBI's Decor",
-    subtitle: 'Thiết bị chiếu sáng & Đèn trang trí không gian 3D',
-    description: 'Gian hàng chuyên các dòng đèn decor phong cách nghệ thuật, đèn thả trần, đèn bàn tạo hiệu ứng thị giác lung linh, tôn vinh nét sang trọng của rèm và nội thất UniVeloria.',
+    subtitle: 'Đèn trang trí không gian 3D',
+    description: 'Hệ thống đèn decor nghệ thuật tạo hiệu ứng ánh sáng lung linh, tôn vinh nét thẩm mỹ của rèm cửa và nội thất.',
     url: 'https://shopee.vn/hobi_3d?uls_trackid=574b580100k1&utm_content=3Bt4MK4hqdkhyrPtdPKuyNHg1DtK',
     badge: 'Decor Nghệ Thuật 3D',
     rating: 4.8,
     reviews: '5.2k',
     image: '/assets/dining-room.jpg',
-    tags: ['Đèn decor 3D', 'Thiết kế tinh xảo', 'Dễ dàng lắp đặt', 'Ánh sáng êm dịu']
+    tags: ['Đèn decor 3D', 'Thiết kế tinh xảo', 'Dễ dàng lắp đặt']
   },
   {
     id: 'plant-leehozy',
     category: 'Cây cảnh & Không gian xanh',
     categoryIcon: '🌿',
+    memberTier: 'Thành viên đối tác vàng',
     name: 'LEEHOZY GARDEN',
-    subtitle: 'Cây cảnh nội thất, cây phong thủy xanh mát không gian',
-    description: 'Tuyển tập cây cảnh nội thất tuyển chọn, chậu cây decor tự dưỡng hiện đại giúp lọc sạch không khí, đem hơi thở thiên nhiên trong lành vào tổ ấm và tạo điểm nhấn sinh thái cạnh khung cửa sổ.',
+    subtitle: 'Cây cảnh nội thất phong thủy',
+    description: 'Cây cảnh chọn lọc thanh lọc không khí, chậu tự dưỡng thông minh mang hơi thở sinh thái xanh mát vào căn nhà.',
     url: 'https://shopee.vn/leehozy?uls_trackid=574b5a0401lv&utm_content=3Bt4MK4hqdaCmeD94wc2i9RHD6z3',
     badge: 'Xanh Mát Tổ Ấm',
     rating: 4.9,
     reviews: '15.1k',
     image: '/assets/category-outdoor.jpg',
-    tags: ['Cây phong thủy nội thất', 'Chậu tự dưỡng thông minh', 'Thanh lọc không khí', 'Dễ chăm sóc']
+    tags: ['Cây phong thủy', 'Chậu tự dưỡng', 'Thanh lọc khí']
   },
   {
     id: 'art-men-decor',
     category: 'Tranh treo tường nghệ thuật',
     categoryIcon: '🖼️',
     name: 'Tiệm tranh Men Decor',
-    subtitle: 'Tranh treo tường tráng gương & Canvas cao cấp hiện đại',
-    description: 'Hàng ngàn mẫu tranh treo tường tráng gương phủ pha lê và tranh canvas nghệ thuật phong cách Scandinavian, Abstract, Tropical. Phối màu tinh tế hài hòa cùng từng bộ rèm cửa UniVeloria.',
+    subtitle: 'Tranh tráng gương & Canvas hiện đại',
+    description: 'Tranh treo tường tráng gương pha lê và canvas cao cấp, phối màu tinh tế ăn khớp hoàn mỹ với từng màu rèm UniVeloria.',
     url: 'https://shopee.vn/tiemtranhmendecor?uls_trackid=574b5bvo00k1&utm_content=3Bt4MK4hqcr2uBDpeKxU943ypXks',
     badge: 'Nghệ Thuật Tráng Gương',
     rating: 4.9,
     reviews: '9.8k',
     image: '/assets/about-story.jpg',
-    tags: ['Tráng gương pha lê bóng mịn', 'Khung viền hợp kim titan', 'Độ bền trên 10 năm', 'Chống ẩm mốc']
+    tags: ['Tráng gương pha lê', 'Viền hợp kim titan', 'Độ bền 10+ năm']
   }
 ];
 
@@ -139,7 +146,7 @@ export function PartnersPage({ navigateTo }) {
           </div>
           <h1>Đơn Vị Liên Kết Cùng UniVeloria</h1>
           <p>
-            Khám phá các thương hiệu nội thất & phụ kiện decor uy tín được UniVeloria tin chọn.
+            Khám phá 5 đơn vị liên kết đối tác uy tín được UniVeloria tuyển chọn đồng hành.
             Dễ dàng mua sắm trực tiếp trên Shopee với giá ưu đãi và giao hàng toàn quốc!
           </p>
 
@@ -168,6 +175,82 @@ export function PartnersPage({ navigateTo }) {
       {/* Main Partners Section */}
       <section className="partners-main-section">
         <div className="partners-container">
+
+          {/* =========================================================================
+              KHUNG THÀNH VIÊN ĐỐI TÁC (PARTNER MEMBERSHIP NETWORK BOX)
+              ========================================================================= */}
+          <div className="partner-membership-box">
+            <div className="pm-header-row">
+              <div className="pm-title-block">
+                <span className="pm-gold-badge">
+                  <Award size={14} /> MẠNG LƯỚI THÀNH VIÊN ĐỐI TÁC CHIẾN LƯỢC
+                </span>
+                <h2>Khung Thành Viên Đối Tác UniVeloria</h2>
+                <p>
+                  Hệ sinh thái kết nối các thương hiệu nội thất, chiếu sáng & decor uy tín hàng đầu trên Shopee Mall
+                </p>
+              </div>
+
+              <div className="pm-stats-group">
+                <div className="pm-stat-item">
+                  <span className="stat-num">5</span>
+                  <span className="stat-lbl">Đơn vị liên kết</span>
+                </div>
+                <div className="pm-stat-item">
+                  <span className="stat-num">100%</span>
+                  <span className="stat-lbl">Shopee uy tín</span>
+                </div>
+                <div className="pm-stat-item">
+                  <span className="stat-num">4.9★</span>
+                  <span className="stat-lbl">Đánh giá khách hàng</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 4 Partner Membership Perks */}
+            <div className="pm-perks-grid">
+              <div className="pm-perk-card">
+                <div className="perk-icon-wrap">
+                  <BadgeCheck size={20} color="#8c6036" />
+                </div>
+                <div className="perk-info">
+                  <strong>Thẩm định chuẩn 5 sao</strong>
+                  <p>100% đối tác được kiểm chứng chất lượng và đánh giá trên 4.8★ tại Shopee.</p>
+                </div>
+              </div>
+
+              <div className="pm-perk-card">
+                <div className="perk-icon-wrap">
+                  <Sparkles size={20} color="#8c6036" />
+                </div>
+                <div className="perk-info">
+                  <strong>Đồng điệu thiết kế</strong>
+                  <p>Sản phẩm decor tương thích hoàn hảo với các dòng rèm cao cấp của UniVeloria.</p>
+                </div>
+              </div>
+
+              <div className="pm-perk-card">
+                <div className="perk-icon-wrap">
+                  <ShopeeBagIcon size={20} className="perk-shopee-color" />
+                </div>
+                <div className="perk-info">
+                  <strong>Ưu đãi thành viên Shopee</strong>
+                  <p>Khách hàng UniVeloria nhận mã voucher giảm giá độc quyền tại gian hàng đối tác.</p>
+                </div>
+              </div>
+
+              <div className="pm-perk-card">
+                <div className="perk-icon-wrap">
+                  <Building2 size={20} color="#8c6036" />
+                </div>
+                <div className="pm-perk-info">
+                  <strong>Mạng lưới hợp tác B2B</strong>
+                  <p>Mở rộng kết nối kinh doanh nội thất trọn gói cho biệt thự, căn hộ và văn phòng.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Category Filter Tabs */}
           <div className="partners-filter-tabs">
             {PARTNER_CATEGORIES.map((cat) => (
@@ -184,16 +267,25 @@ export function PartnersPage({ navigateTo }) {
 
           {/* Partner Count Summary */}
           <div className="partners-count-row">
-            <span>Hiển thị <strong>{filteredPartners.length}</strong> đơn vị liên kết đối tác</span>
+            <span>Hiển thị <strong>{filteredPartners.length}</strong> đơn vị thành viên đối tác cùng 1 hàng</span>
             <span className="shopee-mall-tag">
               <ShopeeBagIcon size={14} /> Gian hàng Shopee uy tín
             </span>
           </div>
 
-          {/* Partners Grid */}
-          <div className="partners-grid-cards">
+          {/* =========================================================================
+              5 ĐƠN VỊ CÙNG 1 HÀNG (5 CARDS IN A SINGLE HORIZONTAL ROW)
+              ========================================================================= */}
+          <div className="partners-grid-5-col">
             {filteredPartners.map((item) => (
               <article key={item.id} className="partner-card-detailed">
+                {/* Thành viên đối tác badge top strip */}
+                <div className="card-member-strip">
+                  <span className="strip-dot" />
+                  <span>{item.memberTier}</span>
+                  <BadgeCheck size={13} color="#2e7d32" />
+                </div>
+
                 {/* Visual Thumbnail Stage */}
                 <div className="partner-card-image-wrap">
                   <img src={item.image} alt={item.name} />
@@ -201,7 +293,7 @@ export function PartnersPage({ navigateTo }) {
                     {item.categoryIcon} {item.category}
                   </span>
                   <span className="partner-rating-badge">
-                    <Star size={13} fill="#e5a93b" color="#e5a93b" />
+                    <Star size={12} fill="#e5a93b" color="#e5a93b" />
                     <strong>{item.rating}</strong>
                     <small>({item.reviews})</small>
                   </span>
@@ -220,15 +312,15 @@ export function PartnersPage({ navigateTo }) {
                   <div className="partner-feature-tags">
                     {item.tags.map((tag, i) => (
                       <span key={i} className="p-tag-pill">
-                        <CheckCircle2 size={11} color="#8c6036" /> {tag}
+                        <CheckCircle2 size={10} color="#8c6036" /> {tag}
                       </span>
                     ))}
                   </div>
 
                   {/* Trust badges */}
                   <div className="partner-trust-strip">
-                    <span><Truck size={13} /> Giao hàng toàn quốc</span>
-                    <span><ShieldCheck size={13} /> Đảm bảo chính hãng</span>
+                    <span><Truck size={12} /> Giao toàn quốc</span>
+                    <span><ShieldCheck size={12} /> Chính hãng</span>
                   </div>
 
                   {/* BIG PROMINENT SHOPEE BUTTON */}
@@ -240,12 +332,12 @@ export function PartnersPage({ navigateTo }) {
                       className="shopee-primary-cta-btn"
                       title={`Mở gian hàng ${item.name} trên Shopee`}
                     >
-                      <ShopeeBagIcon size={22} />
+                      <ShopeeBagIcon size={19} />
                       <div className="btn-label-group">
-                        <span className="btn-main-label">Xem Sản Phẩm Trên Shopee</span>
-                        <small className="btn-sub-label">Mua trực tiếp qua Shopee Mall / Official</small>
+                        <span className="btn-main-label">Xem Trên Shopee</span>
+                        <small className="btn-sub-label">Mua qua Shopee Mall</small>
                       </div>
-                      <ExternalLink size={18} className="cta-arrow-icon" />
+                      <ExternalLink size={14} className="cta-arrow-icon" />
                     </a>
                   </div>
                 </div>
@@ -257,7 +349,7 @@ export function PartnersPage({ navigateTo }) {
           <div className="partners-value-banner">
             <div className="value-banner-item">
               <div className="val-icon-box">
-                <HeartHandshake size={24} color="#8c6036" />
+                <HeartHandshake size={22} color="#8c6036" />
               </div>
               <div className="val-text">
                 <strong>Đồng hành uy tín</strong>
@@ -267,7 +359,7 @@ export function PartnersPage({ navigateTo }) {
 
             <div className="value-banner-item">
               <div className="val-icon-box">
-                <ShopeeBagIcon size={24} className="val-shopee-icon" />
+                <ShopeeBagIcon size={22} className="val-shopee-icon" />
               </div>
               <div className="val-text">
                 <strong>Mua sắm an tâm trên Shopee</strong>
@@ -277,7 +369,7 @@ export function PartnersPage({ navigateTo }) {
 
             <div className="value-banner-item">
               <div className="val-icon-box">
-                <Sparkles size={24} color="#8c6036" />
+                <Sparkles size={22} color="#8c6036" />
               </div>
               <div className="val-text">
                 <strong>Tư vấn trọn gói không gian</strong>
