@@ -1170,232 +1170,238 @@ export function StudioPage({
             {/* Modal Body */}
             <div className="survey-modal-body">
               {!isScanning ? (
-                /* STEP 1: QUESTIONNAIRE FORM */
+                /* STEP 1: QUESTIONNAIRE FORM (LANDSCAPE RECTANGULAR LAYOUT) */
                 <div className="survey-form-content">
-                  <div className="survey-preview-thumb">
-                    <img src={pendingImage || roomImage} alt="Ảnh phòng khảo sát" />
-                    <span className="survey-photo-tag">Ảnh phòng của bạn</span>
-                  </div>
-
-                  {/* Question 1: Vị trí không gian */}
-                  <div className="survey-question-group">
-                    <label className="question-title">
-                      <span className="q-num">1</span>
-                      Vị trí không gian lắp đặt:
-                    </label>
-                    <div className="question-options-row">
-                      <button
-                        type="button"
-                        className={'q-opt-btn ' + (surveyAnswers.location === 'indoor' ? 'selected' : '')}
-                        onClick={() => setSurveyAnswers(prev => ({ ...prev, location: 'indoor' }))}
-                      >
-                        <span className="opt-emoji">🏠</span>
-                        <div className="opt-text">
-                          <strong>Trong nhà</strong>
-                          <small>Phòng khách, phòng ngủ, làm việc...</small>
-                        </div>
-                        {surveyAnswers.location === 'indoor' && <Check size={16} className="opt-check" />}
-                      </button>
-
-                      <button
-                        type="button"
-                        className={'q-opt-btn ' + (surveyAnswers.location === 'outdoor' ? 'selected' : '')}
-                        onClick={() => setSurveyAnswers(prev => ({ ...prev, location: 'outdoor' }))}
-                      >
-                        <span className="opt-emoji">☀️</span>
-                        <div className="opt-text">
-                          <strong>Ngoài trời</strong>
-                          <small>Ban công, hiên nhà, chòi villa...</small>
-                        </div>
-                        {surveyAnswers.location === 'outdoor' && <Check size={16} className="opt-check" />}
-                      </button>
+                  {/* LEFT COLUMN: ROOM PHOTO PREVIEW & DYNAMIC PRICE ESTIMATE */}
+                  <div className="survey-form-left-col">
+                    <div className="survey-preview-thumb">
+                      <img src={pendingImage || roomImage} alt="Ảnh phòng khảo sát" />
+                      <span className="survey-photo-tag">Ảnh phòng của bạn</span>
                     </div>
+
+                    {/* Dynamic Price Estimate Highlight Box */}
+                    {(() => {
+                      const priceInfo = getEstimatedPriceInfo(surveyAnswers);
+                      return (
+                        <div className="survey-price-estimate-card">
+                          <div className="estimate-header">
+                            <div className="estimate-label">
+                              <Tag size={14} color="#8b6b3e" />
+                              <span>MỨC GIÁ GỢI Ý DỰ KIẾN:</span>
+                            </div>
+                            <div className="estimate-price-value">
+                              <strong>{priceInfo.range}</strong>
+                              <small>/{priceInfo.unit}</small>
+                            </div>
+                          </div>
+                          <p className="estimate-note">
+                            ✨ {priceInfo.desc}
+                          </p>
+                          <div className="estimate-included-perks">
+                            <span>✓ Miễn phí khảo sát & may đo</span>
+                            <span>✓ Trọn bộ ray & phụ kiện</span>
+                            <span>✓ Bảo hành chính hãng 5 năm</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
 
-                  {/* Question 2: Loại cửa */}
-                  <div className="survey-question-group">
-                    <label className="question-title">
-                      <span className="q-num">2</span>
-                      Loại khung cửa:
-                    </label>
-                    <div className="question-options-row">
-                      <button
-                        type="button"
-                        className={'q-opt-btn ' + (surveyAnswers.doorType === 'window' ? 'selected' : '')}
-                        onClick={() => setSurveyAnswers(prev => ({ ...prev, doorType: 'window' }))}
-                      >
-                        <span className="opt-emoji">🪟</span>
-                        <div className="opt-text">
-                          <strong>Cửa sổ</strong>
-                          <small>Cửa sổ đơn, 3 cửa hoặc 4 cửa</small>
-                        </div>
-                        {surveyAnswers.doorType === 'window' && <Check size={16} className="opt-check" />}
-                      </button>
-
-                      <button
-                        type="button"
-                        className={'q-opt-btn ' + (surveyAnswers.doorType === 'main' ? 'selected' : '')}
-                        onClick={() => setSurveyAnswers(prev => ({ ...prev, doorType: 'main' }))}
-                      >
-                        <span className="opt-emoji">🚪</span>
-                        <div className="opt-text">
-                          <strong>Cửa chính / Cửa đi</strong>
-                          <small>Cửa ra vào, cửa đại sảnh, vách lớn</small>
-                        </div>
-                        {surveyAnswers.doorType === 'main' && <Check size={16} className="opt-check" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Question 3: Cấu trúc số cửa (Chỉ khi chọn Cửa sổ) */}
-                  {surveyAnswers.doorType === 'window' && (
+                  {/* RIGHT COLUMN: SURVEY QUESTIONS & ACTION BUTTON */}
+                  <div className="survey-form-right-col">
+                    {/* Question 1: Vị trí không gian */}
                     <div className="survey-question-group">
                       <label className="question-title">
-                        <span className="q-num">3</span>
-                        Cấu trúc khung cửa sổ:
+                        <span className="q-num">1</span>
+                        Vị trí không gian lắp đặt:
                       </label>
-                      <div className="question-options-grid-3">
+                      <div className="question-options-row">
                         <button
                           type="button"
-                          className={'q-opt-btn ' + (surveyAnswers.windowPanels === 'single' ? 'selected' : '')}
-                          onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: 'single' }))}
+                          className={'q-opt-btn ' + (surveyAnswers.location === 'indoor' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, location: 'indoor' }))}
+                        >
+                          <span className="opt-emoji">🏠</span>
+                          <div className="opt-text">
+                            <strong>Trong nhà</strong>
+                            <small>Phòng khách, ngủ, làm việc...</small>
+                          </div>
+                          {surveyAnswers.location === 'indoor' && <Check size={16} className="opt-check" />}
+                        </button>
+
+                        <button
+                          type="button"
+                          className={'q-opt-btn ' + (surveyAnswers.location === 'outdoor' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, location: 'outdoor' }))}
+                        >
+                          <span className="opt-emoji">☀️</span>
+                          <div className="opt-text">
+                            <strong>Ngoài trời</strong>
+                            <small>Ban công, hiên, chòi villa...</small>
+                          </div>
+                          {surveyAnswers.location === 'outdoor' && <Check size={16} className="opt-check" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Question 2: Loại cửa */}
+                    <div className="survey-question-group">
+                      <label className="question-title">
+                        <span className="q-num">2</span>
+                        Loại khung cửa:
+                      </label>
+                      <div className="question-options-row">
+                        <button
+                          type="button"
+                          className={'q-opt-btn ' + (surveyAnswers.doorType === 'window' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, doorType: 'window' }))}
                         >
                           <span className="opt-emoji">🪟</span>
                           <div className="opt-text">
-                            <strong>Cửa sổ đơn</strong>
-                            <small>1 khung cửa</small>
+                            <strong>Cửa sổ</strong>
+                            <small>Cửa sổ đơn, 3 ô hoặc 4 ô</small>
                           </div>
-                          {surveyAnswers.windowPanels === 'single' && <Check size={15} className="opt-check" />}
+                          {surveyAnswers.doorType === 'window' && <Check size={16} className="opt-check" />}
                         </button>
 
                         <button
                           type="button"
-                          className={'q-opt-btn ' + (surveyAnswers.windowPanels === '3' ? 'selected' : '')}
-                          onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: '3' }))}
+                          className={'q-opt-btn ' + (surveyAnswers.doorType === 'main' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, doorType: 'main' }))}
                         >
-                          <span className="opt-emoji">🪟🪟🪟</span>
+                          <span className="opt-emoji">🚪</span>
                           <div className="opt-text">
-                            <strong>3 cửa</strong>
-                            <small>Bộ 3 ô liền kề</small>
+                            <strong>Cửa chính / Cửa đi</strong>
+                            <small>Cửa ra vào, đại sảnh, vách lớn</small>
                           </div>
-                          {surveyAnswers.windowPanels === '3' && <Check size={15} className="opt-check" />}
+                          {surveyAnswers.doorType === 'main' && <Check size={16} className="opt-check" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Question 3: Cấu trúc số cửa (Chỉ khi chọn Cửa sổ) */}
+                    {surveyAnswers.doorType === 'window' && (
+                      <div className="survey-question-group">
+                        <label className="question-title">
+                          <span className="q-num">3</span>
+                          Cấu trúc khung cửa sổ:
+                        </label>
+                        <div className="question-options-grid-3">
+                          <button
+                            type="button"
+                            className={'q-opt-btn ' + (surveyAnswers.windowPanels === 'single' ? 'selected' : '')}
+                            onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: 'single' }))}
+                          >
+                            <span className="opt-emoji">🪟</span>
+                            <div className="opt-text">
+                              <strong>Cửa sổ đơn</strong>
+                              <small>1 khung cửa</small>
+                            </div>
+                            {surveyAnswers.windowPanels === 'single' && <Check size={15} className="opt-check" />}
+                          </button>
+
+                          <button
+                            type="button"
+                            className={'q-opt-btn ' + (surveyAnswers.windowPanels === '3' ? 'selected' : '')}
+                            onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: '3' }))}
+                          >
+                            <span className="opt-emoji">🪟🪟🪟</span>
+                            <div className="opt-text">
+                              <strong>3 cửa</strong>
+                              <small>Bộ 3 ô liền kề</small>
+                            </div>
+                            {surveyAnswers.windowPanels === '3' && <Check size={15} className="opt-check" />}
+                          </button>
+
+                          <button
+                            type="button"
+                            className={'q-opt-btn ' + (surveyAnswers.windowPanels === '4' ? 'selected' : '')}
+                            onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: '4' }))}
+                          >
+                            <span className="opt-emoji">🪟🪟🪟🪟</span>
+                            <div className="opt-text">
+                              <strong>4 cửa</strong>
+                              <small>Bộ 4 ô panorama</small>
+                            </div>
+                            {surveyAnswers.windowPanels === '4' && <Check size={15} className="opt-check" />}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Question: Gợi ý mức giá & Ngân sách mong muốn */}
+                    <div className="survey-question-group">
+                      <label className="question-title">
+                        <span className="q-num">{surveyAnswers.doorType === 'window' ? '4' : '3'}</span>
+                        Gợi ý mức giá & Ngân sách dự kiến:
+                      </label>
+                      <div className="question-options-grid-budget">
+                        <button
+                          type="button"
+                          className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'economy' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'economy' }))}
+                        >
+                          <span className="opt-emoji">🏷️</span>
+                          <div className="opt-text">
+                            <strong>Tiết kiệm</strong>
+                            <small>&lt; 1.5 triệu / bộ</small>
+                          </div>
+                          {surveyAnswers.budget === 'economy' && <Check size={14} className="opt-check" />}
                         </button>
 
                         <button
                           type="button"
-                          className={'q-opt-btn ' + (surveyAnswers.windowPanels === '4' ? 'selected' : '')}
-                          onClick={() => setSurveyAnswers(prev => ({ ...prev, windowPanels: '4' }))}
+                          className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'standard' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'standard' }))}
                         >
-                          <span className="opt-emoji">🪟🪟🪟🪟</span>
+                          <span className="opt-emoji">💎</span>
                           <div className="opt-text">
-                            <strong>4 cửa</strong>
-                            <small>Bộ 4 ô panorama</small>
+                            <strong>Tiêu chuẩn</strong>
+                            <small>1.5 - 3.5 triệu</small>
                           </div>
-                          {surveyAnswers.windowPanels === '4' && <Check size={15} className="opt-check" />}
+                          {surveyAnswers.budget === 'standard' && <Check size={14} className="opt-check" />}
+                        </button>
+
+                        <button
+                          type="button"
+                          className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'luxury' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'luxury' }))}
+                        >
+                          <span className="opt-emoji">👑</span>
+                          <div className="opt-text">
+                            <strong>Cao cấp</strong>
+                            <small>&gt; 3.5 triệu / bộ</small>
+                          </div>
+                          {surveyAnswers.budget === 'luxury' && <Check size={14} className="opt-check" />}
+                        </button>
+
+                        <button
+                          type="button"
+                          className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'all' ? 'selected' : '')}
+                          onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'all' }))}
+                        >
+                          <span className="opt-emoji">✨</span>
+                          <div className="opt-text">
+                            <strong>Tất cả mức giá</strong>
+                            <small>Xem toàn bộ</small>
+                          </div>
+                          {surveyAnswers.budget === 'all' && <Check size={14} className="opt-check" />}
                         </button>
                       </div>
                     </div>
-                  )}
 
-                  {/* Question: Gợi ý mức giá & Ngân sách mong muốn */}
-                  <div className="survey-question-group">
-                    <label className="question-title">
-                      <span className="q-num">{surveyAnswers.doorType === 'window' ? '4' : '3'}</span>
-                      Gợi ý mức giá & Ngân sách dự kiến:
-                    </label>
-                    <div className="question-options-grid-budget">
+                    {/* Confirm & Start AI Recognition Button */}
+                    <div className="survey-actions-bar">
                       <button
                         type="button"
-                        className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'economy' ? 'selected' : '')}
-                        onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'economy' }))}
+                        className="start-scan-btn"
+                        onClick={handleStartScan}
                       >
-                        <span className="opt-emoji">🏷️</span>
-                        <div className="opt-text">
-                          <strong>Tiết kiệm</strong>
-                          <small>&lt; 1.5 triệu / bộ</small>
-                        </div>
-                        {surveyAnswers.budget === 'economy' && <Check size={14} className="opt-check" />}
-                      </button>
-
-                      <button
-                        type="button"
-                        className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'standard' ? 'selected' : '')}
-                        onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'standard' }))}
-                      >
-                        <span className="opt-emoji">💎</span>
-                        <div className="opt-text">
-                          <strong>Tiêu chuẩn</strong>
-                          <small>1.5 - 3.5 triệu (Khuyên dùng)</small>
-                        </div>
-                        {surveyAnswers.budget === 'standard' && <Check size={14} className="opt-check" />}
-                      </button>
-
-                      <button
-                        type="button"
-                        className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'luxury' ? 'selected' : '')}
-                        onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'luxury' }))}
-                      >
-                        <span className="opt-emoji">👑</span>
-                        <div className="opt-text">
-                          <strong>Cao cấp</strong>
-                          <small>&gt; 3.5 triệu / bộ</small>
-                        </div>
-                        {surveyAnswers.budget === 'luxury' && <Check size={14} className="opt-check" />}
-                      </button>
-
-                      <button
-                        type="button"
-                        className={'q-opt-btn q-opt-budget ' + (surveyAnswers.budget === 'all' ? 'selected' : '')}
-                        onClick={() => setSurveyAnswers(prev => ({ ...prev, budget: 'all' }))}
-                      >
-                        <span className="opt-emoji">✨</span>
-                        <div className="opt-text">
-                          <strong>Tất cả mức giá</strong>
-                          <small>Xem toàn bộ phân khúc</small>
-                        </div>
-                        {surveyAnswers.budget === 'all' && <Check size={14} className="opt-check" />}
+                        <Zap size={18} />
+                        <span>Xem đề xuất rèm 3D phù hợp</span>
+                        <ArrowRight size={17} />
                       </button>
                     </div>
-                  </div>
-
-                  {/* Dynamic Price Estimate Highlight Box */}
-                  {(() => {
-                    const priceInfo = getEstimatedPriceInfo(surveyAnswers);
-                    return (
-                      <div className="survey-price-estimate-card">
-                        <div className="estimate-header">
-                          <div className="estimate-label">
-                            <Tag size={14} color="#8b6b3e" />
-                            <span>MỨC GIÁ GỢI Ý DỰ KIẾN:</span>
-                          </div>
-                          <div className="estimate-price-value">
-                            <strong>{priceInfo.range}</strong>
-                            <small>/{priceInfo.unit}</small>
-                          </div>
-                        </div>
-                        <p className="estimate-note">
-                          ✨ {priceInfo.desc}
-                        </p>
-                        <div className="estimate-included-perks">
-                          <span>✓ Miễn phí khảo sát & may đo</span>
-                          <span>✓ Kèm trọn bộ phụ kiện ray cao cấp</span>
-                          <span>✓ Bảo hành chính hãng 5 năm</span>
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Confirm & Start AI Recognition Button */}
-                  <div className="survey-actions-bar">
-                    <button
-                      type="button"
-                      className="start-scan-btn"
-                      onClick={handleStartScan}
-                    >
-                      <Zap size={18} />
-                      <span>Xem đề xuất rèm 3D phù hợp</span>
-                      <ArrowRight size={17} />
-                    </button>
                   </div>
                 </div>
               ) : (

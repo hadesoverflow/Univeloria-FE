@@ -20254,16 +20254,16 @@ button:active:not(:disabled),
 }
 
 .studio-survey-modal {
-  width: 100%;
-  max-width: 620px;
+  width: 95vw;
+  max-width: 980px;
   background: #ffffff;
   border: 1px solid rgba(200, 168, 125, 0.4);
-  border-radius: 22px;
+  border-radius: 20px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: 92vh;
+  max-height: 90vh;
   animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -20280,7 +20280,7 @@ button:active:not(:disabled),
 }
 
 .survey-modal-header {
-  padding: 18px 24px;
+  padding: 13px 22px;
   border-bottom: 1px solid rgba(220, 210, 195, 0.5);
   display: flex;
   align-items: center;
@@ -20296,7 +20296,7 @@ button:active:not(:disabled),
 
 .survey-modal-title h3 {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: 18px;
+  font-size: 16.5px;
   font-weight: 700;
   color: #121c21;
   margin: 0;
@@ -20305,8 +20305,8 @@ button:active:not(:disabled),
 .survey-close-btn {
   background: none;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -20321,20 +20321,43 @@ button:active:not(:disabled),
 }
 
 .survey-modal-body {
-  padding: 22px 24px 24px;
+  padding: 16px 22px 18px;
   overflow-y: auto;
-  max-height: calc(92vh - 70px);
+  max-height: calc(90vh - 58px);
 }
 
-/* Step 1: Questionnaire */
+/* Step 1: Questionnaire - Landscape 2-Column Grid */
+.survey-form-content {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.survey-form-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.survey-form-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-between;
+}
+
 .survey-preview-thumb {
   position: relative;
   width: 100%;
   height: 140px;
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   border: 1px solid rgba(200, 168, 125, 0.3);
+  background: #0d171d;
+  flex-shrink: 0;
 }
 
 .survey-preview-thumb img {
@@ -20349,79 +20372,84 @@ button:active:not(:disabled),
   left: 8px;
   background: rgba(18, 28, 33, 0.85);
   color: #ffffff;
-  padding: 4px 10px;
+  padding: 3px 9px;
   border-radius: 20px;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
   backdrop-filter: blur(8px);
 }
 
 .survey-question-group {
-  margin-bottom: 18px;
+  margin-bottom: 0;
 }
 
 .question-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13.5px;
+  gap: 7px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #1e293b;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .q-num {
-  width: 22px;
-  height: 22px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
   background: #c8a87d;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 11px;
   display: grid;
   place-items: center;
   font-weight: 800;
+  flex-shrink: 0;
 }
 
 .question-options-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 .question-options-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 .question-options-grid-budget {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 .q-opt-budget {
-  padding: 10px 12px;
+  padding: 7px 10px;
 }
 
 .q-opt-budget .opt-text strong {
-  font-size: 12.5px;
+  font-size: 11.5px;
 }
 
 .q-opt-budget .opt-text small {
   color: #8b6b3e;
   font-weight: 600;
-  font-size: 10px;
+  font-size: 9.5px;
 }
 
 /* Dynamic Price Estimate Highlight Box */
 .survey-price-estimate-card {
   background: linear-gradient(135deg, #fdfbf7 0%, #f7f0e4 100%);
   border: 1.5px solid rgba(200, 168, 125, 0.45);
-  border-radius: 16px;
-  padding: 14px 16px;
-  margin-top: 18px;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-top: 0;
   box-shadow: 0 4px 16px rgba(139, 107, 62, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 }
 
 .survey-price-estimate-card .estimate-header {
@@ -20429,17 +20457,17 @@ button:active:not(:disabled),
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 6px;
+  margin-bottom: 4px;
 }
 
 .survey-price-estimate-card .estimate-label {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11px;
+  gap: 5px;
+  font-size: 10.5px;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: #6d532f;
   text-transform: uppercase;
 }
@@ -20452,33 +20480,33 @@ button:active:not(:disabled),
 
 .survey-price-estimate-card .estimate-price-value strong {
   font-family: 'Manrope', sans-serif;
-  font-size: 18px;
+  font-size: 16.5px;
   font-weight: 800;
   color: #935817;
 }
 
 .survey-price-estimate-card .estimate-price-value small {
-  font-size: 11px;
+  font-size: 10.5px;
   color: #7d7063;
 }
 
 .survey-price-estimate-card .estimate-note {
-  font-size: 11.5px;
-  line-height: 1.45;
+  font-size: 11px;
+  line-height: 1.4;
   color: #55483b;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
 }
 
 .survey-price-estimate-card .estimate-included-perks {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 12px;
-  padding-top: 8px;
+  gap: 4px 10px;
+  padding-top: 7px;
   border-top: 1px dashed rgba(200, 168, 125, 0.35);
 }
 
 .survey-price-estimate-card .estimate-included-perks span {
-  font-size: 10.5px;
+  font-size: 9.5px;
   font-weight: 600;
   color: #2e7d32;
   display: inline-flex;
@@ -20503,11 +20531,11 @@ button:active:not(:disabled),
 .q-opt-btn {
   background: #fbf9f5;
   border: 1.5px solid rgba(200, 168, 125, 0.3);
-  border-radius: 14px;
-  padding: 12px 14px;
+  border-radius: 10px;
+  padding: 8px 11px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -20527,7 +20555,7 @@ button:active:not(:disabled),
 }
 
 .opt-emoji {
-  font-size: 20px;
+  font-size: 18px;
   flex-shrink: 0;
 }
 
@@ -20537,14 +20565,16 @@ button:active:not(:disabled),
 }
 
 .opt-text strong {
-  font-size: 13px;
+  font-size: 12px;
   color: #0f172a;
+  line-height: 1.25;
 }
 
 .opt-text small {
-  font-size: 11px;
+  font-size: 10px;
   color: #64748b;
-  margin-top: 2px;
+  margin-top: 1px;
+  line-height: 1.2;
 }
 
 .opt-check {
@@ -20554,43 +20584,71 @@ button:active:not(:disabled),
 }
 
 .survey-actions-bar {
-  margin-top: 24px;
+  margin-top: 4px;
 }
 
 .start-scan-btn {
   width: 100%;
-  min-height: 52px;
+  min-height: 44px;
   border: none;
-  border-radius: 14px;
+  border-radius: 11px;
   background: linear-gradient(135deg, #182226, #091216);
   color: #ffffff;
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 9px;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(10, 18, 22, 0.3);
+  box-shadow: 0 6px 18px rgba(10, 18, 22, 0.25);
   transition: all 0.2s ease;
 }
 
 .start-scan-btn:hover {
   background: linear-gradient(135deg, #8b6b3e, #6e4e24);
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(139, 107, 62, 0.35);
+  box-shadow: 0 8px 24px rgba(139, 107, 62, 0.35);
 }
 
-/* Step 2: High-tech AI Room Laser Scanner */
+/* Step 2: High-tech AI Room Laser Scanner - Landscape Layout */
+.survey-scanner-content {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 20px;
+  align-items: center;
+  padding: 6px 0;
+}
+
 .scanner-visual-stage {
   position: relative;
   width: 100%;
-  height: 240px;
-  border-radius: 16px;
+  height: 300px;
+  border-radius: 14px;
   overflow: hidden;
   background: #091114;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   border: 1px solid rgba(200, 168, 125, 0.4);
+}
+
+@media (max-width: 840px) {
+  .survey-form-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .survey-scanner-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .studio-survey-modal {
+    max-height: 94vh;
+  }
+
+  .scanner-visual-stage {
+    height: 220px;
+  }
 }
 
 .scanner-target-photo {
