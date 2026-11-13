@@ -152,66 +152,14 @@ export function Header({ currentPage, navigateTo, themeClass = '' }) {
           AI 3D Studio
         </button>
 
-        {/* ĐƠN VỊ LIÊN KẾT (SHOPEE PARTNERS DROPDOWN) */}
-        <div 
-          className="nav-dropdown-wrapper" 
-          ref={partnersRef}
-          onMouseEnter={() => setPartnersDropdownOpen(true)}
-          onMouseLeave={() => setPartnersDropdownOpen(false)}
+        {/* ĐƠN VỊ LIÊN KẾT (TRANG ĐỐI TÁC SHOPEE) */}
+        <button
+          type="button"
+          className={`nav-capsule-btn ${currentPage === 'partners' ? 'active-nav-btn' : ''}`}
+          onClick={() => navigateTo('partners')}
         >
-          <button
-            type="button"
-            className={`nav-capsule-btn nav-dropdown-trigger ${partnersDropdownOpen ? 'active-nav-btn' : ''}`}
-            onClick={() => setPartnersDropdownOpen(!partnersDropdownOpen)}
-            aria-expanded={partnersDropdownOpen}
-            aria-haspopup="true"
-          >
-            <span>Đơn Vị Liên Kết</span>
-            <ChevronDown size={13} className={`nav-chevron ${partnersDropdownOpen ? 'open' : ''}`} />
-          </button>
-
-          {partnersDropdownOpen && (
-            <div className="nav-partners-mega-menu font-menu-auth" onClick={(e) => e.stopPropagation()}>
-              <div className="partners-menu-header">
-                <div>
-                  <h4>Hệ Sinh Thái Nội Thất Liên Kết</h4>
-                  <p>Đối tác cung cấp chăn ga, đèn chiếu sáng, cây cảnh & tranh uy tín qua Shopee</p>
-                </div>
-                <span className="partners-pill">Shopee Partner</span>
-              </div>
-              <div className="partners-grid">
-                {AFFILIATE_PARTNERS.map((cat) => (
-                  <div key={cat.id} className="partner-cat-block">
-                    <div className="partner-cat-head">
-                      <span className="partner-cat-icon">{cat.icon}</span>
-                      <strong>{cat.category}</strong>
-                    </div>
-                    <div className="partner-links-group">
-                      {cat.partners.map((partner, idx) => (
-                        <a
-                          key={idx}
-                          href={partner.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="partner-link-card"
-                          title={`Mở gian hàng ${partner.name} trên Shopee`}
-                        >
-                          <div className="partner-info">
-                            <span className="partner-name">{partner.name}</span>
-                            <small className="partner-desc">{partner.desc}</small>
-                          </div>
-                          <span className="partner-shopee-pill">
-                            Shopee <ExternalLink size={10} />
-                          </span>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+          Đơn Vị Liên Kết
+        </button>
 
         <button
           type="button"
@@ -463,45 +411,15 @@ export function Header({ currentPage, navigateTo, themeClass = '' }) {
                 <span className="mobile-badge-3d">3D WebGL</span>
               </button>
 
-              {/* Mobile Partner Accordion */}
-              <div className="mobile-partner-accordion-wrapper">
-                <button
-                  type="button"
-                  className={`mobile-nav-item ${mobilePartnersOpen ? 'active' : ''}`}
-                  onClick={() => setMobilePartnersOpen(!mobilePartnersOpen)}
-                >
-                  <span className="nav-item-icon">🛍️</span>
-                  <span className="nav-item-text">Đơn Vị Liên Kết (Shopee)</span>
-                  <ChevronDown size={15} className={`nav-chevron ${mobilePartnersOpen ? 'open' : ''}`} />
-                </button>
-                {mobilePartnersOpen && (
-                  <div className="mobile-partner-submenu">
-                    {AFFILIATE_PARTNERS.map((cat) => (
-                      <div key={cat.id} className="mobile-partner-cat">
-                        <div className="mobile-cat-title">
-                          <span>{cat.icon}</span> {cat.category}
-                        </div>
-                        {cat.partners.map((p, idx) => (
-                          <a
-                            key={idx}
-                            href={p.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mobile-partner-link-row"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            <div className="mobile-p-text">
-                              <strong>{p.name}</strong>
-                              <small>{p.desc}</small>
-                            </div>
-                            <span className="shopee-badge">Shopee ↗</span>
-                          </a>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <button
+                type="button"
+                className={`mobile-nav-item ${currentPage === 'partners' ? 'active' : ''}`}
+                onClick={() => { setMobileMenuOpen(false); navigateTo('partners'); }}
+              >
+                <span className="nav-item-icon">🛍️</span>
+                <span className="nav-item-text">Đơn Vị Liên Kết</span>
+                <span className="nav-item-chevron">›</span>
+              </button>
 
               <button
                 type="button"

@@ -10,6 +10,7 @@ import { CollectionsPage } from './pages/CollectionsPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { StudioPage } from './pages/StudioPage';
+import { PartnersPage } from './pages/PartnersPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { LoginPage } from './pages/LoginPage';
@@ -87,7 +88,7 @@ function parseAppRoute() {
   }
 
   // 3. Other known pages
-  const knownPages = ['collections', 'products', 'studio', 'about', 'contact', 'login'];
+  const knownPages = ['collections', 'products', 'studio', 'partners', 'about', 'contact', 'login'];
   for (const p of knownPages) {
     if (pathname === `/${p}` || hash === `#${p}`) {
       return {
@@ -729,6 +730,10 @@ export default function App() {
         />
       )}
 
+      {currentPage === 'partners' && (
+        <PartnersPage navigateTo={navigateTo} />
+      )}
+
       {currentPage === 'about' && (
         <AboutPage navigateTo={navigateTo} />
       )}
@@ -772,7 +777,7 @@ export default function App() {
       )}
 
       {/* Floating Petdex AI Assistant on All Client Pages */}
-      {['home', 'collections', 'products', 'product-detail', 'studio', 'about', 'contact'].includes(currentPage) && (
+      {['home', 'collections', 'products', 'product-detail', 'studio', 'partners', 'about', 'contact'].includes(currentPage) && (
         <FloatingPetdexChat navigateTo={navigateTo} />
       )}
     </main>
