@@ -1163,7 +1163,7 @@ export function StudioPage({
           {/* Streamlined Bottom Control Bar matching Image 2 */}
           <div className="panel2-bottom-bar">
             <div className="panel2-ctrl-item">
-              <span>{isRainbowCurtain ? 'Mẫu rèm cầu vồng' : isRollerCurtain ? 'Mẫu rèm cuốn' : 'Mẫu vải'}</span>
+              <span>{isRainbowCurtain || isRollerCurtain ? 'Mẫu rèm' : 'Mẫu vải'}</span>
               <select
                 className="panel2-ctrl-select"
                 value={activeFabricId}
@@ -1176,13 +1176,13 @@ export function StudioPage({
                 }}
               >
                 {availableFabricSamples.map(f => (
-                  <option key={f.id} value={f.id}>{f.name}</option>
+                  <option key={f.id} value={f.id}>{f.shortName || f.name}</option>
                 ))}
               </select>
             </div>
 
             <div className="panel2-ctrl-item">
-              <span>Màu sắc ({currentFabric?.shortName || currentFabric?.name})</span>
+              <span>Màu sắc</span>
               <div className="panel2-swatches">
                 {(currentFabric?.colors || []).map((col, idx) => {
                   const code = currentFabric?.colorCodes?.[idx];
