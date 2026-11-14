@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Header } from '../components/layout/Header';
 import { UnifiedFooter } from '../components/layout/UnifiedFooter';
 import { StudioIcon } from '../components/ui/Icons';
-import { curtainTypes, fabricSamples, studioStyleFilters } from '../data/studioData';
+import { curtainTypes, fabricSamples, fabricCurtainSamples, rollerCurtainSamples, studioStyleFilters } from '../data/studioData';
 import { RoomCurtain3DViewer } from '../components/studio/RoomCurtain3DViewer';
 import { analyzeRoomPhoto, determineCurtainRecommendations } from '../utils/aiRoomAnalyzer';
 import { WindowMeasurementGuideModal } from '../components/ui/WindowMeasurementGuideModal';
@@ -85,6 +85,41 @@ const CURTAIN_COLOR_NAMES = {
   '#d4c6b2': 'Be cát tự nhiên',
   '#6f6e6b': 'Xám tro hiện đại',
   '#3b322a': 'Nâu đất đậm',
+  // Harmony 2 (CICI HOME)
+  '#c5cbcf': 'H 66 - Xám bạc ghi sáng',
+  '#586573': 'H 67 - Xanh xám slate đậm',
+  '#6e5a4d': 'H 69 - Nâu cà phê trầm',
+  '#ece8dc': 'H 610 - Kem sữa linen',
+  '#ded6cb': 'H 611 - Be yến mạch trung tính',
+  // Malange 1 (CICI HOME)
+  '#f4f6f8': 'MA 11 - Trắng tinh khôi',
+  '#ebe7d0': 'MA 12 - Vàng be champagne',
+  '#b2b7b9': 'MA 13 - Xám tro trung tính',
+  '#9bb7cc': 'MA 14 - Xanh pastel baby blue',
+  '#d6cbb8': 'MA 15 - Be cát ấm',
+  '#3d474d': 'MA 17 - Xám than chì',
+  // Moon (CICI HOME)
+  '#fdfdfd': 'M 81 - Trắng sứ mặt trăng',
+  '#9fb1be': 'M 82 - Xám xanh sương mù',
+  '#889299': 'M 86 - Xám xi măng hiện đại',
+  '#f2e7cd': 'M 87 - Kem vàng pastel',
+  '#b0c8d8': 'M 88 - Xanh da trời pastel',
+  '#b9bec2': 'M 89 - Xám bạc ánh kim',
+  '#8b786d': 'M 681 - Nâu be mocha',
+  // Silvia (CICI HOME)
+  '#dbe1e6': 'SV 04201 - Trắng xám sương',
+  '#eee9d7': 'SV 04202 - Kem vani dịu',
+  '#ded8c8': 'SV 04203 - Be sáng tự nhiên',
+  '#c8bdae': 'SV 04204 - Nâu be linen dệt xước',
+  '#cad1d7': 'SV 04205 - Xám bạc kim loại',
+  '#8e969a': 'SV 04206 - Xám đậm graphite',
+  // Sunny (CICI HOME)
+  '#ece6d5': 'S 91 - Kem bơ sáng nắng',
+  '#aab0b4': 'S 92 - Ghi xám mờ',
+  '#7f92a3': 'S 93 - Xanh denim cổ điển',
+  '#7f7863': 'S 94 - Nâu rêu olive',
+  '#58626b': 'S 95 - Xám khói đậm',
+  '#353c42': 'S 96 - Đen than chì',
   // art prints / white
   '#ffffff': 'Trắng tinh khôi'
 };
@@ -148,14 +183,52 @@ export function StudioPage({
   const [showAdjuster, setShowAdjuster] = useState(false);
   const [showMeasureGuide, setShowMeasureGuide] = useState(false);
   const [calibrationPrecision, setCalibrationPrecision] = useState('fine'); // 'fine' (2%) | 'medium' (5%) | 'coarse' (10%)
-  const [activeFabricId, setActiveFabricId] = useState('elogi-1198-2');
-  const currentFabric = fabricSamples.find(f => f.id === activeFabricId) || fabricSamples[0];
+  const isRollerCurtain = currentType?.isRoller || currentType?.category === 'Rèm cuốn';
+
+  const availableFabricSamples = useMemo(() => {
+    return isRollerCurtain ? rollerCurtainSamples : fabricCurtainSamples;
+  }, [isRollerCurtain]);
+
+  const [activeFabricId, setActiveFabricId] = useState(
+    isRollerCurtain ? (currentType?.defaultFabricId || 'roller-harmony-2') : 'elogi-1198-2'
+  );
+
+  const currentFabric = useMemo(() => {
+    return availableFabricSamples.find(f => f.id === activeFabricId) 
+      || fabricSamples.find(f => f.id === activeFabricId) 
+      || availableFabricSamples[0];
+  }, [availableFabricSamples, activeFabricId]);
+
+  // Synchronize fabric sample when curtain type changes
+  useEffect(() => {
+    if (isRollerCurtain) {
+      if (!activeFabricId.startsWith('roller-')) {
+        const nextId = currentType?.defaultFabricId || 'roller-harmony-2';
+        setActiveFabricId(nextId);
+        const f = rollerCurtainSamples.find(item => item.id === nextId);
+        if (f) setStudioColor(f.defaultColor);
+      }
+    } else {
+      if (activeFabricId.startsWith('roller-')) {
+        const nextId = currentType?.defaultFabricId || 'elogi-1198-2';
+        setActiveFabricId(nextId);
+        const f = fabricCurtainSamples.find(item => item.id === nextId);
+        if (f) setStudioColor(f.defaultColor);
+      }
+    }
+  }, [currentType?.id, isRollerCurtain]);
 
   useEffect(() => {
-    if (activeType && activeType.startsWith('elogi')) {
-      setActiveFabricId(activeType);
-      const f = fabricSamples.find(item => item.id === activeType);
-      if (f) setStudioColor(f.defaultColor);
+    if (activeType) {
+      if (activeType.startsWith('elogi')) {
+        setActiveFabricId(activeType);
+        const f = fabricSamples.find(item => item.id === activeType);
+        if (f) setStudioColor(f.defaultColor);
+      } else if (activeType.startsWith('roller-') && !curtainTypes.some(ct => ct.id === activeType)) {
+        setActiveFabricId(activeType);
+        const f = fabricSamples.find(item => item.id === activeType);
+        if (f) setStudioColor(f.defaultColor);
+      }
     }
   }, [activeType]);
 
@@ -990,37 +1063,42 @@ export function StudioPage({
           {/* Streamlined Bottom Control Bar matching Image 2 */}
           <div className="panel2-bottom-bar">
             <div className="panel2-ctrl-item">
-              <span>Mẫu vải</span>
+              <span>{isRollerCurtain ? 'Mẫu rèm cuốn' : 'Mẫu vải'}</span>
               <select
                 className="panel2-ctrl-select"
                 value={activeFabricId}
                 onChange={(e) => {
-                  const found = fabricSamples.find(f => f.id === e.target.value);
+                  const found = availableFabricSamples.find(f => f.id === e.target.value) || fabricSamples.find(f => f.id === e.target.value);
                   if (found) {
                     setActiveFabricId(found.id);
                     setStudioColor(found.defaultColor);
                   }
                 }}
               >
-                {fabricSamples.map(f => (
+                {availableFabricSamples.map(f => (
                   <option key={f.id} value={f.id}>{f.name}</option>
                 ))}
               </select>
             </div>
 
             <div className="panel2-ctrl-item">
-              <span>Màu sắc mẫu vải</span>
+              <span>Màu sắc ({currentFabric?.shortName || currentFabric?.name})</span>
               <div className="panel2-swatches">
-                {(currentFabric?.colors || []).map((col, idx) => (
-                  <button
-                    key={col + idx}
-                    type="button"
-                    className={`panel2-swatch-circle ${studioColor === col ? 'selected' : ''}`}
-                    style={{ backgroundColor: col }}
-                    onClick={() => setStudioColor(col)}
-                    title={getCurtainColorName(col)}
-                  />
-                ))}
+                {(currentFabric?.colors || []).map((col, idx) => {
+                  const code = currentFabric?.colorCodes?.[idx];
+                  const cName = currentFabric?.colorNames?.[idx];
+                  const label = code && cName ? `${code} - ${cName}` : getCurtainColorName(col);
+                  return (
+                    <button
+                      key={col + idx}
+                      type="button"
+                      className={`panel2-swatch-circle ${studioColor === col ? 'selected' : ''}`}
+                      style={{ backgroundColor: col }}
+                      onClick={() => setStudioColor(col)}
+                      title={label}
+                    />
+                  );
+                })}
               </div>
             </div>
           </div>

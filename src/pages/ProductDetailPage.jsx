@@ -548,6 +548,11 @@ export function ProductDetailPage({
                     if (product?.name?.includes('1198')) targetStudioId = 'elogi-1198-2';
                     else if (product?.name?.includes('1206')) targetStudioId = 'elogi-1206-1';
                     else if (product?.name?.includes('1230')) targetStudioId = 'elogi-1230-1';
+                    else if (product?.name?.includes('Harmony')) targetStudioId = 'roller-harmony-2';
+                    else if (product?.name?.includes('Malange')) targetStudioId = 'roller-malange-1';
+                    else if (product?.name?.includes('Moon')) targetStudioId = 'roller-moon';
+                    else if (product?.name?.includes('Silvia')) targetStudioId = 'roller-silvia';
+                    else if (product?.name?.includes('Sunny')) targetStudioId = 'roller-sunny';
                     else if (product?.name?.includes('Xếp Ly') || product?.name?.includes('1 Lớp')) targetStudioId = 'single-pleat';
                     else if (product?.name?.includes('S-Fold') || product?.name?.includes('2 Lớp')) targetStudioId = 'sfold-luxury';
                     else if (product?.name?.includes('OfficePro')) targetStudioId = 'roller-officepro';
@@ -1444,6 +1449,11 @@ export function ProductDetailPage({
                 if (product?.name?.includes('1198')) targetStudioId = 'elogi-1198-2';
                 else if (product?.name?.includes('1206')) targetStudioId = 'elogi-1206-1';
                 else if (product?.name?.includes('1230')) targetStudioId = 'elogi-1230-1';
+                else if (product?.name?.includes('Harmony')) targetStudioId = 'roller-harmony-2';
+                else if (product?.name?.includes('Malange')) targetStudioId = 'roller-malange-1';
+                else if (product?.name?.includes('Moon')) targetStudioId = 'roller-moon';
+                else if (product?.name?.includes('Silvia')) targetStudioId = 'roller-silvia';
+                else if (product?.name?.includes('Sunny')) targetStudioId = 'roller-sunny';
                 else if (product?.name?.includes('Xếp Ly') || product?.name?.includes('1 Lớp')) targetStudioId = 'single-pleat';
                 else if (product?.name?.includes('S-Fold') || product?.name?.includes('2 Lớp')) targetStudioId = 'sfold-luxury';
                 else if (product?.name?.includes('OfficePro')) targetStudioId = 'roller-officepro';

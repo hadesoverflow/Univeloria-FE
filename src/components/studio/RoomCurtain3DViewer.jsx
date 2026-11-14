@@ -474,6 +474,402 @@ function applyDrapeFabricMaterial(mesh, fabricId, colorHex) {
   mesh.material.needsUpdate = true;
 }
 
+/**
+ * Procedural Texture Generators for 5 distinct CICI HOME Roller Blind fabric collections
+ */
+
+// 1. Mẫu Rèm Cuốn Harmony 2: Dệt gân dọc viền mịn (Fine vertical corded / rib weave)
+function createHarmonyRibbedTexture(baseColorHex, isBump = false) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  if (isBump) {
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(0, 0, 512, 512);
+  } else {
+    ctx.fillStyle = baseColorHex;
+    ctx.fillRect(0, 0, 512, 512);
+  }
+
+  // Draw vertical ribbed cords (gân dọc định hình thẳng tắp)
+  const ribSpacing = 8;
+  const numRibs = 512 / ribSpacing;
+
+  for (let i = 0; i < numRibs; i++) {
+    const x = i * ribSpacing;
+
+    // Left ridge highlight
+    ctx.beginPath();
+    ctx.moveTo(x + 1, 0);
+    ctx.lineTo(x + 1, 512);
+    ctx.lineWidth = 2.2;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.55)' : 'rgba(255, 255, 255, 0.22)';
+    ctx.stroke();
+
+    // Center crown
+    ctx.beginPath();
+    ctx.moveTo(x + 3, 0);
+    ctx.lineTo(x + 3, 512);
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.28)' : 'rgba(255, 255, 255, 0.12)';
+    ctx.stroke();
+
+    // Right crevice shadow (rãnh đổ bóng tạo độ sâu 3D cho gân dọc)
+    ctx.beginPath();
+    ctx.moveTo(x + 5, 0);
+    ctx.lineTo(x + 5, 512);
+    ctx.lineWidth = 2.0;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.65)' : 'rgba(0, 0, 0, 0.25)';
+    ctx.stroke();
+  }
+
+  // Subtle horizontal weft binder threads
+  for (let y = 0; y < 512; y += 6) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.lineWidth = 0.8;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.08)';
+    ctx.stroke();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(22, 22);
+  return texture;
+}
+
+// 2. Mẫu Rèm Cuốn Malange 1: Dệt Melange hoa râm đan sợi vi hạt đa sắc (Heathered micro-weave)
+function createMelangeTexture(baseColorHex, isBump = false) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  if (isBump) {
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(0, 0, 512, 512);
+  } else {
+    ctx.fillStyle = baseColorHex;
+    ctx.fillRect(0, 0, 512, 512);
+  }
+
+  // Cross-weave base grid (warp & weft)
+  const spacing = 4;
+  for (let x = 0; x < 512; x += spacing) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 512);
+    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.10)';
+    ctx.stroke();
+  }
+  for (let y = 0; y < 512; y += spacing) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.22)' : 'rgba(0, 0, 0, 0.12)';
+    ctx.stroke();
+  }
+
+  // Spun heathered fiber slurs (sợi xước hoa râm đa sắc tố)
+  const imgData = ctx.getImageData(0, 0, 512, 512);
+  const data = imgData.data;
+
+  let seed = 1337;
+  function rnd() {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  }
+
+  for (let k = 0; k < 2400; k++) {
+    const rx = Math.floor(rnd() * 508);
+    const ry = Math.floor(rnd() * 508);
+    const isLight = rnd() > 0.45;
+    const isHoriz = rnd() > 0.5;
+    const len = 3 + Math.floor(rnd() * 4);
+    const val = isLight ? (40 + rnd() * 45) : (-40 - rnd() * 45);
+
+    for (let l = 0; l < len; l++) {
+      const px = isHoriz ? rx + l : rx;
+      const py = isHoriz ? ry : ry + l;
+      if (px < 512 && py < 512) {
+        const idx = (py * 512 + px) * 4;
+        if (isBump) {
+          data[idx] = Math.max(0, Math.min(255, data[idx] + val * 0.8));
+          data[idx + 1] = Math.max(0, Math.min(255, data[idx + 1] + val * 0.8));
+          data[idx + 2] = Math.max(0, Math.min(255, data[idx + 2] + val * 0.8));
+        } else {
+          data[idx] = Math.max(0, Math.min(255, data[idx] + val * 0.5));
+          data[idx + 1] = Math.max(0, Math.min(255, data[idx + 1] + val * 0.5));
+          data[idx + 2] = Math.max(0, Math.min(255, data[idx + 2] + val * 0.5));
+        }
+      }
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(18, 18);
+  return texture;
+}
+
+// 3. Mẫu Rèm Cuốn Moon: Bề mặt trơn mịn lì mờ cản sáng 100% (Smooth eggshell / matte blackout finish)
+function createMoonMatteTexture(baseColorHex, isBump = false) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  if (isBump) {
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(0, 0, 512, 512);
+  } else {
+    ctx.fillStyle = baseColorHex;
+    ctx.fillRect(0, 0, 512, 512);
+  }
+
+  // Soft micro-pore texture (vân trứng mịn lì mờ đều đặn)
+  const imgData = ctx.getImageData(0, 0, 512, 512);
+  const data = imgData.data;
+
+  let seed = 42;
+  function rnd() {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  }
+
+  for (let i = 0; i < data.length; i += 4) {
+    const n = (rnd() - 0.5) * 14;
+    if (isBump) {
+      const b = Math.max(0, Math.min(255, 128 + n * 1.2));
+      data[i] = b;
+      data[i + 1] = b;
+      data[i + 2] = b;
+    } else {
+      data[i] = Math.max(0, Math.min(255, data[i] + n * 0.35));
+      data[i + 1] = Math.max(0, Math.min(255, data[i] + n * 0.35));
+      data[i + 2] = Math.max(0, Math.min(255, data[i] + n * 0.35));
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(10, 10);
+  return texture;
+}
+
+// 4. Mẫu Rèm Cuốn Silvia: Vải dệt sợi mềm mại dày dặn (Soft woven linen texture)
+function createSilviaSoftTexture(baseColorHex, isBump = false) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  if (isBump) {
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(0, 0, 512, 512);
+  } else {
+    ctx.fillStyle = baseColorHex;
+    ctx.fillRect(0, 0, 512, 512);
+  }
+
+  // Soft organic textile weave (sợi đan mềm mại)
+  const threadSpacing = 6;
+  const numThreads = 512 / threadSpacing;
+
+  for (let i = 0; i < numThreads; i++) {
+    const x = i * threadSpacing;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 512);
+    ctx.lineWidth = 2.0;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.32)' : 'rgba(255, 255, 255, 0.16)';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 2, 0);
+    ctx.lineTo(x + 2, 512);
+    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.38)' : 'rgba(0, 0, 0, 0.14)';
+    ctx.stroke();
+  }
+
+  for (let j = 0; j < numThreads; j++) {
+    const y = j * threadSpacing;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.lineWidth = 2.0;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.30)' : 'rgba(255, 255, 255, 0.15)';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, y + 2);
+    ctx.lineTo(512, y + 2);
+    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.36)' : 'rgba(0, 0, 0, 0.14)';
+    ctx.stroke();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(16, 16);
+  return texture;
+}
+
+// 5. Mẫu Rèm Cuốn Sunny: Vải dệt thô sợi canvas đan khít dày dặn (Heavy canvas weave)
+function createSunnyCanvasTexture(baseColorHex, isBump = false) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  if (isBump) {
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(0, 0, 512, 512);
+  } else {
+    ctx.fillStyle = baseColorHex;
+    ctx.fillRect(0, 0, 512, 512);
+  }
+
+  // Heavy rugged canvas basketweave with deep crevices
+  const step = 9;
+  const numSteps = 512 / step;
+
+  for (let i = 0; i < numSteps; i++) {
+    const x = i * step;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 512);
+    ctx.lineWidth = 3.6;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.65)' : 'rgba(255, 255, 255, 0.26)';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 3.2, 0);
+    ctx.lineTo(x + 3.2, 512);
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.32)';
+    ctx.stroke();
+  }
+
+  for (let j = 0; j < numSteps; j++) {
+    const y = j * step;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.lineWidth = 3.6;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.60)' : 'rgba(255, 255, 255, 0.24)';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, y + 3.2);
+    ctx.lineTo(512, y + 3.2);
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.78)' : 'rgba(0, 0, 0, 0.34)';
+    ctx.stroke();
+  }
+
+  // Tactile knots & slub fibers
+  for (let k = 0; k < 60; k++) {
+    const kx = ((k * 157) % 500) + 6;
+    const ky = ((k * 223) % 500) + 6;
+    ctx.beginPath();
+    ctx.arc(kx, ky, 2.8, 0, Math.PI * 2);
+    ctx.fillStyle = isBump ? 'rgba(255, 255, 255, 0.75)' : 'rgba(255, 255, 255, 0.30)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(kx + 1.2, ky + 1.2, 1.4, 0, Math.PI * 2);
+    ctx.fillStyle = isBump ? 'rgba(0, 0, 0, 0.60)' : 'rgba(0, 0, 0, 0.22)';
+    ctx.fill();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(14, 14);
+  return texture;
+}
+
+function applyRollerFabricMaterial(mesh, fabricId, colorHex) {
+  if (!mesh) return;
+
+  let mapTex, bumpTex, roughness, metalness, bumpScale;
+
+  if (fabricId === 'roller-harmony-2' || fabricId === 'harmony-2') {
+    mapTex = createHarmonyRibbedTexture(colorHex, false);
+    bumpTex = createHarmonyRibbedTexture(colorHex, true);
+    roughness = 0.74;
+    metalness = 0.02;
+    bumpScale = 0.12;
+  } else if (fabricId === 'roller-malange-1' || fabricId === 'malange-1') {
+    mapTex = createMelangeTexture(colorHex, false);
+    bumpTex = createMelangeTexture(colorHex, true);
+    roughness = 0.82;
+    metalness = 0.01;
+    bumpScale = 0.09;
+  } else if (fabricId === 'roller-moon' || fabricId === 'moon') {
+    mapTex = createMoonMatteTexture(colorHex, false);
+    bumpTex = createMoonMatteTexture(colorHex, true);
+    roughness = 0.58;
+    metalness = 0.03;
+    bumpScale = 0.018;
+  } else if (fabricId === 'roller-silvia' || fabricId === 'silvia') {
+    mapTex = createSilviaSoftTexture(colorHex, false);
+    bumpTex = createSilviaSoftTexture(colorHex, true);
+    roughness = 0.80;
+    metalness = 0.02;
+    bumpScale = 0.08;
+  } else if (fabricId === 'roller-sunny' || fabricId === 'sunny') {
+    mapTex = createSunnyCanvasTexture(colorHex, false);
+    bumpTex = createSunnyCanvasTexture(colorHex, true);
+    roughness = 0.95;
+    metalness = 0.01;
+    bumpScale = 0.20;
+  } else {
+    // Default fallback to Harmony 2
+    mapTex = createHarmonyRibbedTexture(colorHex, false);
+    bumpTex = createHarmonyRibbedTexture(colorHex, true);
+    roughness = 0.74;
+    metalness = 0.02;
+    bumpScale = 0.12;
+  }
+
+  if (mesh.material?.map && mesh.material.map !== mapTex) {
+    mesh.material.map.dispose();
+  }
+  if (mesh.material?.bumpMap && mesh.material.bumpMap !== bumpTex) {
+    mesh.material.bumpMap.dispose();
+  }
+
+  mesh.material = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(colorHex),
+    map: mapTex,
+    bumpMap: bumpTex,
+    bumpScale: bumpScale,
+    roughness: roughness,
+    metalness: metalness,
+    side: THREE.DoubleSide
+  });
+  mesh.material.needsUpdate = true;
+}
+
 export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   roomImage,
   hasUploaded = false,
@@ -1158,46 +1554,13 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
                 applyDrapeFabricMaterial(child, activeFabricIdRef.current, studioColorRef.current);
               } else if (child.name === 'RollerFabricPanel') {
                 customRollerFabricRef.current = child;
-                const mat = new THREE.MeshStandardMaterial({
-                  color: new THREE.Color(studioColorRef.current),
-                  roughness: 0.85,
-                  metalness: 0.02,
-                  side: THREE.DoubleSide
-                });
-                child.material = mat;
-                const textureLoader = new THREE.TextureLoader();
-                const texUrl = curtainType.rollerLinenTextureUrl || curtainType.rollerTextureUrl || '/assets/curtains/roller-art-texture.jpg';
-                textureLoader.load(texUrl, (tex) => {
-                  tex.colorSpace = THREE.SRGBColorSpace;
-                  if (curtainType?.id === 'roller-linen') {
-                    tex.wrapS = THREE.RepeatWrapping;
-                    tex.wrapT = THREE.RepeatWrapping;
-                    tex.repeat.set(4, 3);
-                  }
-                  mat.map = tex;
-                  mat.needsUpdate = true;
-                });
+                applyRollerFabricMaterial(child, activeFabricIdRef.current, studioColorRef.current);
               } else if (child.name === 'RollerBottomBar') {
                 customRollerBottomBarRef.current = child;
               } else if (child.name === 'RollerTubeWrapMesh') {
-              customRollerWrapRef.current = child;
-              const mat = new THREE.MeshStandardMaterial({
-                color: new THREE.Color(studioColorRef.current),
-                roughness: 0.88,
-                metalness: 0.02,
-                side: THREE.DoubleSide
-              });
-              child.material = mat;
-              const textureLoader = new THREE.TextureLoader();
-              textureLoader.load('/assets/curtains/roller-linen-texture.jpg', (tex) => {
-                tex.colorSpace = THREE.SRGBColorSpace;
-                tex.wrapS = THREE.RepeatWrapping;
-                tex.wrapT = THREE.RepeatWrapping;
-                tex.repeat.set(4, 1);
-                mat.map = tex;
-                mat.needsUpdate = true;
-              });
-            } else if (child.name === 'RollerPullChain') {
+                customRollerWrapRef.current = child;
+                applyRollerFabricMaterial(child, activeFabricIdRef.current, studioColorRef.current);
+              } else if (child.name === 'RollerPullChain') {
               customRollerPullChainRef.current = child;
             } else if (child.name === 'RollerTopTube') {
                 customRollerTopTubeRef.current = child;
@@ -1326,8 +1689,12 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
           if (customRightDrapeRef.current) {
             applyDrapeFabricMaterial(customRightDrapeRef.current, activeFabricIdRef.current, studioColorRef.current);
           }
-          if (customRollerFabricRef.current?.material?.color) customRollerFabricRef.current.material.color.set(initTargetColor);
-          if (customRollerWrapRef.current?.material?.color) customRollerWrapRef.current.material.color.set(initTargetColor);
+          if (customRollerFabricRef.current) {
+            applyRollerFabricMaterial(customRollerFabricRef.current, activeFabricIdRef.current, studioColorRef.current);
+          }
+          if (customRollerWrapRef.current) {
+            applyRollerFabricMaterial(customRollerWrapRef.current, activeFabricIdRef.current, studioColorRef.current);
+          }
           customTriptychRef.current?.fabrics?.forEach((f) => { if (f?.material?.color) f.material.color.set(initTargetColor); });
           customHoneycombEdgesRef.current.forEach((e) => { if (e?.material?.color) e.material.color.set(initTargetColor); });
           if (customHoneycombFabricRef.current?.material?.color) customHoneycombFabricRef.current.material.color.set(initTargetColor);
@@ -1409,13 +1776,11 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       customPvcTopHemRef.current.material.color.set(targetColor);
       customPvcTopHemRef.current.material.needsUpdate = true;
     }
-    if (customRollerWrapRef.current?.material?.color) {
-      customRollerWrapRef.current.material.color.set(targetColor);
-      customRollerWrapRef.current.material.needsUpdate = true;
+    if (customRollerWrapRef.current) {
+      applyRollerFabricMaterial(customRollerWrapRef.current, activeFabricId, studioColor);
     }
-    if (customRollerFabricRef.current?.material?.color) {
-      customRollerFabricRef.current.material.color.set(targetColor);
-      customRollerFabricRef.current.material.needsUpdate = true;
+    if (customRollerFabricRef.current) {
+      applyRollerFabricMaterial(customRollerFabricRef.current, activeFabricId, studioColor);
     }
     if (customTriptychRef.current && customTriptychRef.current.fabrics.length > 0) {
       customTriptychRef.current.fabrics.forEach((f) => {

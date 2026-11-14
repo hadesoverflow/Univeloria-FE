@@ -531,7 +531,11 @@ export default function App() {
         } else {
           const matchedFabric = fabricSamples.find(f => f.id === targetSection || f.name.toLowerCase().includes(String(targetSection).toLowerCase()));
           if (matchedFabric) {
-            setActiveType(matchedFabric.id);
+            if (matchedFabric.category === 'Rèm cuốn' || matchedFabric.isRoller || matchedFabric.id.startsWith('roller-')) {
+              setActiveType('roller-officepro');
+            } else {
+              setActiveType('sfold-luxury');
+            }
             if (matchedFabric.defaultColor) setStudioColor(matchedFabric.defaultColor);
           }
         }
