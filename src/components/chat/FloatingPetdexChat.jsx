@@ -270,9 +270,11 @@ function normalizeText(str) {
 }
 
 // =============================================================================
-// AI ANALYSIS ENGINE: PHÂN TÍCH NGỮ CẢNH CÂU CHUYỆN & Ý ĐỊNH NGƯỜI DÙNG
-// AI trực tiếp thẩm định và trả lời đầy đủ 3 phần (Phù hợp, Tại sao chọn, Mặt tốt),
-// KHÔNG bắt người dùng chọn nút, KHÔNG đưa thanh rèm trừ khi được hỏi đích danh.
+// AI ANALYSIS ENGINE: ĐỐI THOẠI & TƯ VẤN CHUYÊN SÂU
+// - Tương tác tự nhiên qua chat chữ (hỏi ngược lại khi thiếu thông tin)
+// - KHÔNG dùng nút bấm bắt chọn
+// - KHÔNG nhắc đến thanh rèm trừ khi khách hỏi
+// - Đầy đủ 3 phần: Mức độ phù hợp, Tại sao chọn nó, Mặt tốt của nó
 // =============================================================================
 export function analyzeUserMessage(rawInput, context = {}, currentCurtainId = null) {
   const trimmed = (rawInput || '').trim();
@@ -315,7 +317,7 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenRod.name} (${chosenRod
 
     return {
       type: 'rod_consultation',
-      delayMs: 5200,
+      delayMs: 4500,
       curtain: chosenRod,
       text: rodText,
       updatedContext: { ...context, lastCurtainId: chosenRod.id }
@@ -366,7 +368,7 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
 
     return {
       type: 'alternative_curtain',
-      delayMs: 5200,
+      delayMs: 4800,
       curtain: chosenAlt,
       text: altText,
       updatedContext: {
@@ -377,55 +379,28 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
     };
   }
 
-  // 3. Phân loại Chào hỏi đơn thuần (Greeting only)
-  const greetingWords = ['chao', 'xin chao', 'hello', 'hi', 'alo', 'ad oi', 'shop oi', 'em oi', 'ban oi', 'cho hoi'];
-  const hasGreeting = greetingWords.some(w => norm.includes(w));
-  const hasRoomDetail = norm.includes('phong') || 
-                        norm.includes('rem') || 
-                        norm.includes('nang') || 
-                        norm.includes('tay') || 
-                        norm.includes('dong') || 
-                        norm.includes('nam') || 
-                        norm.includes('bac') || 
-                        norm.includes('go') || 
-                        norm.includes('can sang') || 
-                        norm.includes('cua') || 
-                        norm.includes('nha') || 
-                        norm.includes('kinh') || 
-                        norm.includes('can ho') || 
-                        norm.includes('chung cu');
-
-  if (hasGreeting && !hasRoomDetail && trimmed.split(/\s+/).length <= 7) {
-    return {
-      type: 'greeting',
-      delayMs: 1200,
-      curtain: null,
-      text: "Dạ UniVeloria xin chào bạn! Tôi là Chuyên gia Tư vấn Không gian Rèm AI ☁️✨\n\nBạn hãy chia sẻ về căn phòng của mình nhé (ví dụ: phòng ngủ hướng Tây nắng gắt, phòng khách biệt thự sang trọng, cửa sổ căn hộ đón gió mát, hay cần tư vấn hệ thanh rèm tự động...). Tôi sẽ trực tiếp phân tích đặc điểm không gian và tư vấn chính xác phương án rèm tối ưu nhất cho bạn!"
-    };
-  }
-
-  // 4. Cảm ơn / Tạm biệt (Thanks / Farewell)
+  // 3. Cảm ơn / Tạm biệt (Thanks / Farewell)
   const thanksWords = ['cam on', 'thank', 'tuyet voi', 'hay qua', 'ok shop', 'tam biet', 'bye'];
-  if (thanksWords.some(w => norm.includes(w)) && !hasRoomDetail) {
+  if (thanksWords.some(w => norm.includes(w)) && !norm.includes('phong') && !norm.includes('rem') && !norm.includes('nang')) {
     return {
       type: 'faq',
-      delayMs: 1200,
+      delayMs: 1000,
       curtain: null,
       text: "Dạ không có gì ạ! Rất vui được đồng hành tư vấn không gian cùng bạn. Bất cứ khi nào bạn cần phân tích hướng nắng, chất liệu vải hay trải nghiệm phối cảnh rèm 3D thực tế, tôi luôn sẵn sàng hỗ trợ nhé. Chúc bạn một ngày thật an yên và nhiều năng lượng tích cực! 🌿✨"
     };
   }
 
-  // 5. Hỏi giá / Báo giá / Cách tính giá (Price FAQ)
+  // 4. Báo giá / Cách tính giá (Price FAQ)
   if (norm.includes('gia') && (norm.includes('tinh') || norm.includes('bao nhieu') || norm.includes('bang gia') || norm.includes('met') || norm.includes('dat khong'))) {
     return {
       type: 'faq',
-      delayMs: 1500,
+      delayMs: 1200,
       curtain: null,
-      text: "Dạ giá rèm tại UniVeloria được niêm yết minh bạch và tính theo diện tích thực tế:\n• 🌟 Rèm Cuốn: Từ 380.000đ – 490.000đ / m² (Gọn gàng, hiện đại, cản sáng tốt)\n• 🌈 Rèm Cầu Vòng: Từ 1.150.000đ – 1.550.000đ / m² (Nan 2 lớp xoay lật điều chỉnh sáng linh hoạt)\n• 💎 Rèm Vải Cao Cấp: Từ 580.000đ – 680.000đ / m² (Sóng đổ bồng bềnh chuẩn 5 sao)\n• ⚡ Thanh Ray & Động Cơ Tự Động: Từ 2.850.000đ – 3.450.000đ / bộ (Động cơ thông minh siêu êm & ray trượt Teflon)\n\nBạn hãy chia sẻ về đặc điểm căn phòng của mình để tôi tư vấn phương án kỹ thuật chuẩn xác và cùng bạn trải nghiệm mô phỏng 3D nhé!"
+      text: "Dạ giá rèm tại UniVeloria được niêm yết minh bạch và tính theo diện tích thực tế:\n• 🌟 Rèm Cuốn: Từ 380.000đ – 490.000đ / m² (Gọn gàng, hiện đại, cản sáng tốt)\n• 🌈 Rèm Cầu Vòng: Từ 1.150.000đ – 1.550.000đ / m² (Nan 2 lớp xoay lật điều chỉnh sáng linh hoạt)\n• 💎 Rèm Vải Cao Cấp: Từ 580.000đ – 680.000đ / m² (Sóng đổ bồng bềnh chuẩn 5 sao)\n• ⚡ Thanh Ray & Động Cơ Tự Động: Từ 2.850.000đ – 3.450.000đ / bộ (Động cơ thông minh siêu êm & ray trượt Teflon)\n\nBạn hãy chia sẻ về căn phòng của mình để tôi tư vấn phương án kỹ thuật chuẩn xác và cùng bạn trải nghiệm mô phỏng 3D nhé!"
     };
   }
 
-  // 6. KHAI THÁC DỮ LIỆU TỪ LỜI NHẮN ĐỂ TRỰC TIẾP TƯ VẤN (KHÔNG BẮT CHỌN NÚT)
+  // 5. TRÍCH XUẤT THÔNG TIN TỪ LỜI NHẮN
   let extractedRoom = null;
   if (norm.includes('phong ngu') || norm.includes('ngu') || norm.includes('master') || norm.includes('em be') || norm.includes('vo chong')) {
     extractedRoom = { key: 'bedroom', label: 'Phòng ngủ' };
@@ -439,8 +414,19 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
     extractedRoom = { key: 'main_window', label: 'Cửa sổ chính căn phòng' };
   } else if (norm.includes('cua so') || norm.includes('khung cua') || norm.includes('o cua')) {
     extractedRoom = { key: 'window', label: 'Cửa sổ căn phòng' };
-  } else if (norm.includes('phong') || norm.includes('can phong')) {
-    extractedRoom = { key: 'general', label: 'Căn phòng' };
+  }
+
+  let extractedStyle = null;
+  if (norm.includes('sang trong') || norm.includes('dang cap') || norm.includes('5 sao') || norm.includes('quy toc') || norm.includes('chau au') || norm.includes('be the')) {
+    extractedStyle = { key: 'luxury', label: 'Sang trọng' };
+  } else if (norm.includes('don gian') || norm.includes('gon gang') || norm.includes('hien dai') || norm.includes('toi gian') || norm.includes('minimal')) {
+    extractedStyle = { key: 'simple', label: 'Đơn giản' };
+  } else if (norm.includes('toi uu') || norm.includes('can sang') || norm.includes('blackout') || norm.includes('chong nong') || norm.includes('cach nhiet') || norm.includes('toi hoan toan')) {
+    extractedStyle = { key: 'blackout', label: 'Tối ưu phòng' };
+  } else if (norm.includes('go') || norm.includes('van go') || norm.includes('nau') || norm.includes('am cung') || norm.includes('moc mac')) {
+    extractedStyle = { key: 'wood', label: 'Ấm cúng vân gỗ' };
+  } else if (norm.includes('japandi') || norm.includes('eco') || norm.includes('song xanh') || norm.includes('thien nhien')) {
+    extractedStyle = { key: 'japandi', label: 'Japandi mộc mạc' };
   }
 
   let extractedOrientation = null;
@@ -452,95 +438,144 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
     extractedOrientation = { key: 'south', label: 'Hướng Nam' };
   } else if (norm.includes('bac') || norm.includes('phia bac') || norm.includes('huong bac') || norm.includes('gio lanh') || norm.includes('mua dong') || norm.includes('thieu sang')) {
     extractedOrientation = { key: 'north', label: 'Hướng Bắc' };
+  } else if (norm.includes('khong biet') || norm.includes('khong ro') || norm.includes('sao cung duoc') || norm.includes('tuy') || norm.includes('mac dinh')) {
+    extractedOrientation = { key: 'general', label: 'Căn phòng' };
   }
 
-  let extractedStyle = null;
-  if (norm.includes('sang trong') || norm.includes('dang cap') || norm.includes('5 sao') || norm.includes('quy toc') || norm.includes('chau au') || norm.includes('be the')) {
-    extractedStyle = { key: 'luxury', label: 'Sang trọng' };
-  } else if (norm.includes('don gian') || norm.includes('gon gang') || norm.includes('hien dai') || norm.includes('toi gian') || norm.includes('minimal')) {
-    extractedStyle = { key: 'simple', label: 'Đơn giản' };
-  } else if (norm.includes('toi uu') || norm.includes('can sang') || norm.includes('blackout') || norm.includes('chong nong') || norm.includes('cach nhiet') || norm.includes('toi hoan toan')) {
-    extractedStyle = { key: 'blackout', label: 'Tối ưu cản sáng' };
-  } else if (norm.includes('go') || norm.includes('van go') || norm.includes('nau') || norm.includes('am cung') || norm.includes('moc mac')) {
-    extractedStyle = { key: 'wood', label: 'Ấm cúng vân gỗ' };
-  } else if (norm.includes('japandi') || norm.includes('eco') || norm.includes('song xanh') || norm.includes('thien nhien')) {
-    extractedStyle = { key: 'japandi', label: 'Japandi mộc mạc' };
-  } else if (norm.includes('loc sang') || norm.includes('ngam canh') || norm.includes('view') || norm.includes('ban cong')) {
-    extractedStyle = { key: 'view', label: 'Lọc sáng ngắm cảnh' };
-  }
-
-  // Kết hợp thông tin hiện tại với context trước đó (nếu có)
+  // Kết hợp thông tin mới với context đã tích lũy qua các lượt chat trước
   const activeRoom = extractedRoom || context.room;
-  const activeOrientation = extractedOrientation || context.orientation;
   const activeStyle = extractedStyle || context.style;
+  const activeOrientation = extractedOrientation || context.orientation;
 
-  // 7. TRỰC TIẾP CHẤM ĐIỂM & ĐƯA RA LỰA CHỌN TỐI ƯU NHẤT
+  // 6. KIỂM TRA LỜI NHẮN MỞ ĐẦU CHUNG CHUNG / CHÀO HỎI (VÍ DỤ "ALO", "TÔI MUỐN MUA RÈM", "TƯ VẤN RÈM")
+  const isGenericStarter = norm === 'alo' || 
+                            norm === 'chao' || 
+                            norm === 'xin chao' || 
+                            norm === 'hello' || 
+                            norm === 'hi' ||
+                            norm.includes('toi muon mua rem') || 
+                            norm.includes('muon mua rem') || 
+                            norm.includes('mua rem') || 
+                            norm.includes('tu van rem') || 
+                            norm.includes('can mua rem') || 
+                            norm.includes('can tu van');
+
+  if (isGenericStarter && !activeRoom && !activeStyle && !activeOrientation) {
+    return {
+      type: 'question',
+      delayMs: 900,
+      curtain: null,
+      text: "Dạ UniVeloria xin chào bạn! Tôi là Chuyên gia Tư vấn Không gian Rèm AI ☁️✨\n\nĐể chọn được bộ rèm ưng ý và chuẩn xác nhất, bạn đang muốn lắp rèm cho căn phòng nào (như phòng ngủ, phòng khách, phòng làm việc hay căn hộ...)? Hãy chia sẻ cho tôi biết nhé!",
+      updatedContext: context
+    };
+  }
+
+  // 7. ĐỐI THOẠI TƯƠNG TÁC (HỎI NGƯỢC LẠI KHI THIẾU THÔNG TIN ĐỂ TƯ VẤN CHUẨN)
+  // 7.1 Nếu chưa có thông tin về loại phòng
+  if (!activeRoom) {
+    return {
+      type: 'question',
+      delayMs: 900,
+      curtain: null,
+      text: "Bạn đang muốn lắp rèm cho căn phòng nào (như phòng ngủ, phòng khách, phòng làm việc hay căn hộ...)?",
+      updatedContext: {
+        ...context,
+        style: activeStyle,
+        orientation: activeOrientation
+      }
+    };
+  }
+
+  // 7.2 Nếu đã có phòng nhưng chưa có phong cách mong muốn
+  if (!activeStyle) {
+    return {
+      type: 'question',
+      delayMs: 900,
+      curtain: null,
+      text: "Bạn muốn cái rèm trông như thế nào: Đơn giản hay sang trọng hoặc tối ưu phòng?",
+      updatedContext: {
+        ...context,
+        room: activeRoom,
+        orientation: activeOrientation
+      }
+    };
+  }
+
+  // 7.3 Nếu đã có phòng và phong cách nhưng chưa có hướng cửa sổ
+  if (!activeOrientation) {
+    return {
+      type: 'question',
+      delayMs: 900,
+      curtain: null,
+      text: "Cửa sổ của bạn nằm ở hướng nào?",
+      updatedContext: {
+        ...context,
+        room: activeRoom,
+        style: activeStyle
+      }
+    };
+  }
+
+  // 8. ĐÃ ĐỦ DỮ LIỆU ĐỂ TƯ VẤN CHUYÊN GIA
+  // Chấm điểm chọn mẫu rèm tối ưu nhất từ 12 mẫu rèm chính thức (không đưa thanh rèm)
   const curtainPool = CURTAIN_PROFILES.filter(c => c.category !== 'Thanh rèm');
   const scored = curtainPool.map(item => {
     let score = 0;
 
     // Khớp hướng nắng & vi khí hậu
-    if (activeOrientation?.key === 'west') {
+    if (activeOrientation.key === 'west') {
       if (item.studioId === 'rainbow-dragon') score += 36;
       if (item.studioId === 'roller-moon') score += 32;
       if (item.studioId === 'rainbow-brioni') score += 22;
-    } else if (activeOrientation?.key === 'east') {
+    } else if (activeOrientation.key === 'east') {
       if (item.studioId === 'rainbow-rivere') score += 30;
       if (item.studioId === 'roller-sunny') score += 30;
       if (item.studioId === 'roller-harmony-2') score += 20;
-    } else if (activeOrientation?.key === 'south') {
+    } else if (activeOrientation.key === 'south') {
       if (item.studioId === 'elogi-1198-2') score += 28;
       if (item.studioId === 'elogi-1206-1') score += 26;
       if (item.studioId === 'roller-malange-1') score += 20;
-    } else if (activeOrientation?.key === 'north') {
+    } else if (activeOrientation.key === 'north') {
       if (item.studioId === 'elogi-1230-1') score += 30;
       if (item.studioId === 'rainbow-brioni') score += 22;
     }
 
     // Khớp phong cách & nhu cầu
-    if (activeStyle?.key === 'luxury') {
+    if (activeStyle.key === 'luxury') {
       if (item.studioId === 'elogi-1198-2') score += 28;
       if (item.studioId === 'rainbow-dragon') score += 24;
       if (item.studioId === 'rainbow-brioni') score += 24;
       if (item.studioId === 'roller-silvia') score += 22;
-    } else if (activeStyle?.key === 'simple') {
+    } else if (activeStyle.key === 'simple') {
       if (item.studioId === 'roller-harmony-2') score += 26;
       if (item.studioId === 'roller-malange-1') score += 24;
       if (item.studioId === 'rainbow-rivere') score += 20;
-    } else if (activeStyle?.key === 'blackout') {
+    } else if (activeStyle.key === 'blackout') {
       if (item.studioId === 'roller-moon') score += 32;
       if (item.studioId === 'rainbow-dragon') score += 30;
-    } else if (activeStyle?.key === 'wood') {
+    } else if (activeStyle.key === 'wood') {
       if (item.studioId === 'rainbow-brioni') score += 32;
       if (item.studioId === 'elogi-1206-1') score += 22;
-    } else if (activeStyle?.key === 'japandi') {
+    } else if (activeStyle.key === 'japandi') {
       if (item.studioId === 'elogi-1230-1') score += 32;
-    } else if (activeStyle?.key === 'view') {
-      if (item.studioId === 'roller-sunny') score += 32;
-      if (item.studioId === 'rainbow-rivere') score += 22;
     }
 
     // Khớp loại phòng
-    if (activeRoom?.key === 'bedroom') {
+    if (activeRoom.key === 'bedroom') {
       if (item.studioId === 'rainbow-dragon') score += 24;
       if (item.studioId === 'roller-moon') score += 24;
       if (item.studioId === 'elogi-1206-1') score += 20;
-    } else if (activeRoom?.key === 'living' || activeRoom?.key === 'main_window') {
+    } else if (activeRoom.key === 'living' || activeRoom.key === 'main_window') {
       if (item.studioId === 'elogi-1198-2') score += 28;
       if (item.studioId === 'rainbow-brioni') score += 24;
       if (item.studioId === 'roller-silvia') score += 20;
-    } else if (activeRoom?.key === 'study') {
+    } else if (activeRoom.key === 'study') {
       if (item.studioId === 'rainbow-infiniti') score += 30;
       if (item.studioId === 'roller-harmony-2') score += 24;
-    } else if (activeRoom?.key === 'apartment') {
+    } else if (activeRoom.key === 'apartment') {
       if (item.studioId === 'rainbow-rivere') score += 24;
       if (item.studioId === 'roller-malange-1') score += 22;
     }
-
-    // Khớp từ khóa chung
-    item.keywords.forEach(k => {
-      if (norm.includes(k)) score += 6;
-    });
 
     return { item, score };
   });
@@ -548,36 +583,28 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
   scored.sort((a, b) => b.score - a.score);
   const chosen = scored[0].item;
 
-  // Xây dựng tiêu đề chuyên gia
-  let roomTitle = 'CĂN PHÒNG';
-  if (activeRoom && activeOrientation) {
-    roomTitle = `${activeRoom.label.toUpperCase()} ${activeOrientation.label.toUpperCase()}`;
-  } else if (activeRoom) {
-    roomTitle = activeRoom.label.toUpperCase();
-  } else if (activeOrientation) {
-    roomTitle = `CĂN PHÒNG ${activeOrientation.label.toUpperCase()}`;
-  }
-  if (activeStyle) {
-    roomTitle += ` (${activeStyle.label.toUpperCase()})`;
-  }
+  const roomName = activeRoom.label;
+  const styleName = activeStyle.label;
+  const orientName = activeOrientation.label;
 
-  // 1. Luận điểm Mức độ phù hợp
+  // Câu phản hồi đồng cảm đúng theo mong muốn của user
+  const confirmText = `Tôi hiểu rồi bạn đợi tôi trong giây phút để tôi chọn cho bạn 1 cái rèm phù hợp với các yêu cầu ${styleName} thoải mái nhất cho bạn.`;
+
+  // Luận điểm 1: Mức độ phù hợp
   let fitReason = '';
-  if (activeOrientation?.key === 'west') {
-    fitReason = `10/10 - Rất hoàn hảo cho căn phòng hướng Tây chịu ánh nắng gay gắt và bức xạ nhiệt cao vào buổi chiều. Tấm rèm cản sáng đến ${chosen.badge.includes('Cản sáng') ? chosen.badge : 'tối ưu'} và hạ nhiệt tức thì, ngăn chặn hiện tượng om nhiệt và bảo vệ độ bền cho toàn bộ nội thất.`;
-  } else if (activeOrientation?.key === 'east') {
-    fitReason = `10/10 - Rất hoàn hảo cho không gian hướng Đông đón ánh nắng sớm ban mai. Tấm rèm lọc sáng êm dịu, chống chói mắt tuyệt đối nhưng vẫn giữ được nguồn sinh khí tươi sáng, thông thoáng cho cả căn phòng.`;
-  } else if (activeRoom?.key === 'bedroom') {
-    fitReason = `10/10 - Rất hoàn hảo cho không gian phòng ngủ. Sản phẩm giải quyết trọn vẹn bài toán cản sáng và cách âm tĩnh lặng, kiến tạo một không gian nghỉ ngơi thư thái, vỗ về giấc ngủ sâu cho gia chủ.`;
-  } else if (activeRoom?.key === 'living' || activeRoom?.key === 'main_window') {
-    fitReason = `10/10 - Rất hoàn hảo cho không gian phòng khách và hệ cửa sổ chính. Thiết kế bề thế, đẳng cấp tôn vinh thẩm mỹ kiến trúc, đồng thời điều tiết ánh sáng tự nhiên linh hoạt, mang lại phong thái sang trọng và thoáng đãng.`;
-  } else if (activeRoom?.key === 'study') {
-    fitReason = `10/10 - Rất hoàn hảo cho phòng làm việc và góc đọc sách. Khả năng chống lóa màn hình máy tính tuyệt đối, kiểu dáng gọn gàng hiện đại giúp tăng cường sự tập trung và khơi nguồn cảm hứng sáng tạo.`;
+  if (activeOrientation.key === 'west') {
+    fitReason = `10/10 - Cực kỳ hoàn hảo cho ${roomName} ${orientName} chịu bức xạ nhiệt gay gắt vào buổi chiều. Tấm rèm cản sáng đến ${chosen.badge.includes('Cản sáng') ? chosen.badge : 'tối ưu'} và hạ nhiệt phòng tức thì, mang lại không gian mát mẻ, yên tĩnh và thư thái.`;
+  } else if (activeOrientation.key === 'east') {
+    fitReason = `10/10 - Rất hoàn hảo cho ${roomName} ${orientName} đón ánh nắng sớm ban mai. Tấm rèm lọc sáng êm dịu, ngăn chói mắt tuyệt đối nhưng vẫn giữ trọn sự tươi sáng và thông thoáng tự nhiên.`;
+  } else if (activeRoom.key === 'bedroom') {
+    fitReason = `10/10 - Rất hoàn hảo cho không gian phòng ngủ với định hướng thiết kế ${styleName}. Sản phẩm giải quyết trọn vẹn bài toán cản sáng tuyệt đối và cách âm tĩnh lặng, kiến tạo không gian nghỉ ngơi thư thái, vỗ về giấc ngủ sâu cho gia chủ.`;
+  } else if (activeRoom.key === 'living' || activeRoom.key === 'main_window') {
+    fitReason = `10/10 - Rất hoàn hảo cho không gian ${roomName} với phong thái ${styleName}. Thiết kế bề thế tôn vinh vẻ đẹp kiến trúc, đồng thời điều tiết ánh sáng tự nhiên linh hoạt, mang lại vẻ sang trọng và thoáng đãng.`;
   } else {
-    fitReason = `10/10 - Rất hoàn hảo cho không gian sống của bạn. Tấm rèm cân bằng chuẩn mực giữa công năng che chắn ánh sáng, cách nhiệt hiệu quả và giá trị thẩm mỹ tinh tế cho căn phòng.`;
+    fitReason = `10/10 - Rất hoàn hảo cho ${roomName} với phong cách ${styleName}. Tấm rèm cân bằng chuẩn mực giữa công năng che chắn ánh sáng, cách nhiệt hiệu quả và giá trị thẩm mỹ tinh tế cho căn phòng.`;
   }
 
-  const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM TỐI ƯU CHO ${roomTitle}
+  const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM TỐI ƯU CHO ${roomName.toUpperCase()} ${orientName.toUpperCase()} (${styleName.toUpperCase()})
 
 1. Mức độ phù hợp:
 ${fitReason}
@@ -593,8 +620,9 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosen.name} (${chosen.badge
   return {
     type: 'final_consultation',
     delayMs: 5500,
+    confirmText,
+    finalText,
     curtain: chosen,
-    text: finalText,
     updatedContext: {
       ...context,
       room: activeRoom,
@@ -747,7 +775,8 @@ export function FloatingPetdexChat({ navigateTo }) {
     const lastBotCurtain = [...messages].reverse().find(m => m.curtain)?.curtain?.studioId || null;
     const result = analyzeUserMessage(query, currentCtx, lastBotCurtain);
 
-    if (result.type === 'greeting' || result.type === 'faq') {
+    if (result.type === 'question' || result.type === 'faq') {
+      // Đối thoại tương tác tự nhiên (hỏi lại thông tin)
       setIsTyping(false);
       const t = setTimeout(() => {
         setMessages((prev) => [
@@ -758,14 +787,52 @@ export function FloatingPetdexChat({ navigateTo }) {
             curtain: null
           }
         ]);
-      }, result.delayMs || 1000);
+        if (result.updatedContext) {
+          setConsultationContext(result.updatedContext);
+        }
+      }, result.delayMs || 900);
       timersRef.current = [t];
-    } else {
-      // Consultation (Curtains, Rods, or Alternatives)
-      // Run thinking state for 5-7s with 4 stages
+    } else if (result.type === 'final_consultation') {
+      // 1. Phản hồi xác nhận đối thoại: "Tôi hiểu rồi bạn đợi tôi trong giây phút..."
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: 'bot',
+          text: result.confirmText,
+          curtain: null
+        }
+      ]);
+
+      // 2. Chuyển sang trạng thái suy nghĩ chuyên sâu từ 5-7s
       setIsTyping(true);
       setThinkingStageIdx(0);
       const delayMs = result.delayMs || 5500;
+      const stepDuration = Math.floor(delayMs / 4);
+
+      const t1 = setTimeout(() => setThinkingStageIdx(1), stepDuration);
+      const t2 = setTimeout(() => setThinkingStageIdx(2), stepDuration * 2);
+      const t3 = setTimeout(() => setThinkingStageIdx(3), stepDuration * 3);
+      const tFinal = setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: 'bot',
+            text: result.finalText,
+            curtain: result.curtain
+          }
+        ]);
+        setIsTyping(false);
+        if (result.updatedContext) {
+          setConsultationContext(result.updatedContext);
+        }
+      }, delayMs);
+
+      timersRef.current = [t1, t2, t3, tFinal];
+    } else {
+      // Thanh rèm hoặc Đổi mẫu khác
+      setIsTyping(true);
+      setThinkingStageIdx(0);
+      const delayMs = result.delayMs || 4800;
       const stepDuration = Math.floor(delayMs / 4);
 
       const t1 = setTimeout(() => setThinkingStageIdx(1), stepDuration);
