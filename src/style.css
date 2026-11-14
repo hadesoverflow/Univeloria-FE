@@ -24062,28 +24062,33 @@ button:active:not(:disabled),
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  gap: 12px !important;
+  gap: 8px !important;
   background: #FAF9F6 !important;
   border: 1px solid rgba(23, 51, 82, 0.08) !important;
-  border-radius: 12px !important;
-  padding: 7px 14px !important;
+  border-radius: 999px !important;
+  padding: 5px 12px !important;
   margin-top: 8px !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
 }
 
 .studio-page .curtain-toggle-btn {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
+  gap: 5px !important;
   background: #173352 !important;
   color: #FEF3E3 !important;
   border: none !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
   font-weight: 700 !important;
-  padding: 6px 14px !important;
+  padding: 5px 11px !important;
   border-radius: 999px !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
   white-space: nowrap !important;
+  flex-shrink: 0 !important;
 }
 
 .studio-page .curtain-toggle-btn:hover {
@@ -24098,58 +24103,63 @@ button:active:not(:disabled),
 .studio-page .slider-track-wrap {
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
-  flex: 1 !important;
+  gap: 6px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
 }
 
 .studio-page .slider-track-wrap label {
-  font-size: 11.5px !important;
+  font-size: 11px !important;
   font-weight: 700 !important;
   color: #173352 !important;
   white-space: nowrap !important;
+  flex-shrink: 0 !important;
 }
 
 .studio-page .slider-track-wrap input[type="range"] {
-  flex: 1 !important;
+  flex: 1 1 auto !important;
+  min-width: 40px !important;
+  width: 100% !important;
   accent-color: #173352 !important;
   cursor: pointer !important;
 }
 
 .studio-page .slider-track-wrap .ratio-badge {
-  font-size: 11px !important;
+  font-size: 10.5px !important;
   font-weight: 700 !important;
   color: #173352 !important;
   background: #FFFFFF !important;
   border: 1px solid rgba(23, 51, 82, 0.15) !important;
-  padding: 2px 7px !important;
-  border-radius: 6px !important;
-  min-width: 32px !important;
+  padding: 2px 5px !important;
+  border-radius: 5px !important;
+  min-width: 28px !important;
   text-align: center !important;
+  flex-shrink: 0 !important;
 }
 
 /* Rainbow Zebra Blind Mode Switch (Lấy sáng / Che kín) */
 .studio-page .rainbow-mode-switch {
   display: flex !important;
   align-items: center !important;
-  gap: 4px !important;
+  gap: 2px !important;
   background: rgba(23, 51, 82, 0.06) !important;
-  padding: 3px !important;
+  padding: 2px !important;
   border-radius: 999px !important;
   border: 1px solid rgba(23, 51, 82, 0.08) !important;
-  margin-left: 6px !important;
+  margin-left: 0 !important;
   flex-shrink: 0 !important;
 }
 
 .studio-page .rainbow-mode-btn {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 5px !important;
-  padding: 5px 12px !important;
+  gap: 4px !important;
+  padding: 4px 8px !important;
   border-radius: 999px !important;
   border: none !important;
   background: transparent !important;
   color: #173352 !important;
-  font-size: 11.5px !important;
+  font-size: 10.5px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
   transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -24164,7 +24174,7 @@ button:active:not(:disabled),
 .studio-page .rainbow-mode-btn.active {
   background: #173352 !important;
   color: #FEF3E3 !important;
-  box-shadow: 0 2px 8px rgba(23, 51, 82, 0.25) !important;
+  box-shadow: 0 2px 6px rgba(23, 51, 82, 0.2) !important;
 }
 
 .studio-page .rainbow-mode-btn svg {
@@ -24172,10 +24182,12 @@ button:active:not(:disabled),
   stroke-width: 2.2 !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .studio-page .external-curtain-dock {
     flex-wrap: wrap !important;
-    gap: 8px !important;
+    gap: 6px !important;
+    border-radius: 14px !important;
+    padding: 6px 10px !important;
   }
   .studio-page .rainbow-mode-switch {
     width: 100% !important;
@@ -24185,8 +24197,8 @@ button:active:not(:disabled),
   .studio-page .rainbow-mode-btn {
     flex: 1 !important;
     justify-content: center !important;
-    font-size: 11px !important;
-    padding: 6px 8px !important;
+    font-size: 10.5px !important;
+    padding: 5px 6px !important;
   }
 }
 

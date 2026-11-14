@@ -279,6 +279,7 @@ export function StudioPage({
       clearTimeout(timer);
       window.removeEventListener('resize', resetStepperScroll);
       if (sliderRafRef.current) cancelAnimationFrame(sliderRafRef.current);
+      if (curtainAnimRafRef.current) cancelAnimationFrame(curtainAnimRafRef.current);
     };
   }, []);
 
@@ -396,12 +397,36 @@ export function StudioPage({
     });
   };
 
+  const curtainAnimRafRef = useRef(null);
   const handleToggleCurtainOpen = () => {
     const next = !isCurtainOpen;
     setIsCurtainOpen(next);
+    const startRatio = curtainOpenRatio;
     const targetRatio = next ? 1.0 : 0.0;
-    setCurtainOpenRatio(targetRatio);
-    viewer3dRef.current?.setCurtainOpenRatio?.(targetRatio);
+    const startTime = performance.now();
+    const duration = 950; // 950ms smooth rolling animation
+
+    if (curtainAnimRafRef.current) cancelAnimationFrame(curtainAnimRafRef.current);
+
+    const animateCurtain = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(1.0, elapsed / duration);
+      // Easing: easeInOutCubic
+      const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      const currentVal = startRatio + (targetRatio - startRatio) * ease;
+
+      setCurtainOpenRatio(currentVal);
+      viewer3dRef.current?.setCurtainOpenRatio?.(currentVal);
+
+      if (progress < 1.0) {
+        curtainAnimRafRef.current = requestAnimationFrame(animateCurtain);
+      } else {
+        setCurtainOpenRatio(targetRatio);
+        viewer3dRef.current?.setCurtainOpenRatio?.(targetRatio);
+      }
+    };
+
+    curtainAnimRafRef.current = requestAnimationFrame(animateCurtain);
   };
 
   // Gợi ý mức giá theo cấu trúc khung cửa & phân khúc khách chọn
@@ -1076,12 +1101,12 @@ export function StudioPage({
               title="Kéo mở hoặc đóng rèm"
               type="button"
             >
-              <Eye size={15} />
-              <span>{isCurtainOpen ? 'Đóng rèm 3D' : 'Kéo mở rèm 3D'}</span>
+              <Eye size={13} />
+              <span>{isCurtainOpen ? 'Đóng rèm' : 'Mở rèm'}</span>
             </button>
 
             <div className="slider-track-wrap">
-              <label>Độ mở rèm:</label>
+              <label>Độ mở:</label>
               <input
                 type="range"
                 min="0.0"
@@ -1107,7 +1132,7 @@ export function StudioPage({
                   }}
                   title="Chỉnh nan rèm trùng nhau để lấy sáng tự nhiên qua dải voan"
                 >
-                  <Sun size={13} />
+                  <Sun size={12} />
                   <span>Lấy sáng (Trùng nan)</span>
                 </button>
                 <button
@@ -1119,7 +1144,7 @@ export function StudioPage({
                   }}
                   title="Chỉnh nan rèm so le nhau để cản sáng 100% che kín riêng tư"
                 >
-                  <Moon size={13} />
+                  <Moon size={12} />
                   <span>Che kín (So le nan)</span>
                 </button>
               </div>

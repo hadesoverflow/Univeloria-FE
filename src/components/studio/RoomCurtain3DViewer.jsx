@@ -1156,6 +1156,10 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   const rainbowStripeModeRef = useRef(rainbowStripeMode);
   rainbowStripeModeRef.current = rainbowStripeMode;
   const currentRainbowShiftRef = useRef(rainbowStripeMode === 'blackout' ? 0.0625 : 0.0);
+  const dynamicRainbowSlideRef = useRef(0.0);
+  const currentUnrollProgressRef = useRef(1.0);
+  const isRainbowMovingRef = useRef(false);
+  const rainbowMoveTimerRef = useRef(null);
   const openRatioRef = useRef(openRatio);
   openRatioRef.current = openRatio;
   const studioColorRef = useRef(studioColor);
@@ -1456,6 +1460,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     setCurtainOpenRatio: applyCurtainOpenRatio,
     setRainbowStripeMode: (mode) => {
       rainbowStripeModeRef.current = mode;
+      isRainbowMovingRef.current = false;
       applyCurtainOpenRatio(openRatioRef.current || 0);
     },
     focusFabricDetail: () => {
@@ -1619,8 +1624,16 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     if (customRainbowFrontFabricRef.current) {
       if (genericAssemblyRef.current) genericAssemblyRef.current.visible = false;
       const unrollProgress = Math.max(0.015, 1.0 - ratio * 0.985);
+      currentUnrollProgressRef.current = unrollProgress;
       const fullFabricH = 2.50;
       const currentH = fullFabricH * unrollProgress;
+
+      // Flag motion to trigger dynamic double-roller zebra sliding in renderLoop
+      isRainbowMovingRef.current = true;
+      if (rainbowMoveTimerRef.current) clearTimeout(rainbowMoveTimerRef.current);
+      rainbowMoveTimerRef.current = setTimeout(() => {
+        isRainbowMovingRef.current = false;
+      }, 280);
 
       // 1. Position & scale geometry smoothly
       customRainbowFrontFabricRef.current.scale.y = unrollProgress;
@@ -1633,9 +1646,6 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       const frontMap = customRainbowFrontFabricRef.current.material?.map;
       if (frontMap) {
         frontMap.repeat.y = currentRepeatY;
-        // As fabric rolls into top tube, offset shifts upwards
-        frontMap.offset.y = (1.0 - unrollProgress) * 2.5;
-        frontMap.needsUpdate = true;
       }
 
       if (customRainbowBackFabricRef.current) {
@@ -1646,10 +1656,6 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
         const backMap = customRainbowBackFabricRef.current.material?.map;
         if (backMap) {
           backMap.repeat.y = currentRepeatY;
-          // Apply active shift relative to front map (Trùng nan lấy sáng vs So le nan cản sáng)
-          const activeShift = currentRainbowShiftRef.current;
-          backMap.offset.y = (frontMap ? frontMap.offset.y : (1.0 - unrollProgress) * 2.5) + activeShift;
-          backMap.needsUpdate = true;
         }
       }
 
@@ -2685,17 +2691,31 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
             b.position.z += (0.02 - b.position.z) * 0.1;
           });
         }
-        // Smoothly interpolate zebra blind mode shift (Lấy sáng <-> Che kín)
+        // Smoothly animate rainbow / zebra blind double-roller sliding mechanics
         if (customRainbowFrontFabricRef.current && customRainbowBackFabricRef.current) {
-          const targetShift = (rainbowStripeModeRef.current === 'blackout') ? 0.0625 : 0.0;
-          if (Math.abs(targetShift - currentRainbowShiftRef.current) > 0.0002) {
+          const frontMap = customRainbowFrontFabricRef.current.material?.map;
+          const backMap = customRainbowBackFabricRef.current.material?.map;
+          if (frontMap && backMap) {
+            const unroll = currentUnrollProgressRef.current;
+            const baseOffset = (1.0 - unroll) * 2.5;
+
+            // Target mode shift: 0.0625 (so le nan cản sáng 100%) | 0.0 (trùng nan lấy sáng)
+            const targetShift = (rainbowStripeModeRef.current === 'blackout') ? 0.0625 : 0.0;
             currentRainbowShiftRef.current += (targetShift - currentRainbowShiftRef.current) * 0.16;
-            const frontMap = customRainbowFrontFabricRef.current.material?.map;
-            const backMap = customRainbowBackFabricRef.current.material?.map;
-            if (frontMap && backMap) {
-              backMap.offset.y = frontMap.offset.y + currentRainbowShiftRef.current;
-              backMap.needsUpdate = true;
-            }
+
+            // In real zebra blinds: front layer rolls at double speed around the bottom bar.
+            // While moving: relative slide sweeps continuously through stripe cycles (shimmering zebra motion)
+            // When resting: smoothly settles to nearest aligned cycle so chosen mode (Trùng nan / So le) is 100% clean!
+            const fullContinuousSlide = (1.0 - unroll) * 5.0;
+            const restSlide = Math.round(fullContinuousSlide / 0.125) * 0.125;
+            const targetSlide = isRainbowMovingRef.current ? fullContinuousSlide : restSlide;
+            dynamicRainbowSlideRef.current += (targetSlide - dynamicRainbowSlideRef.current) * 0.20;
+
+            backMap.offset.y = baseOffset + currentRainbowShiftRef.current;
+            frontMap.offset.y = baseOffset + dynamicRainbowSlideRef.current;
+
+            frontMap.needsUpdate = true;
+            backMap.needsUpdate = true;
           }
         }
       }
