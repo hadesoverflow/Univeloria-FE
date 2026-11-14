@@ -231,7 +231,7 @@ export function StudioPage({
     isRainbowCurtain 
       ? (currentType?.defaultFabricId || 'rainbow-brioni')
       : isRollerCurtain 
-      ? (currentType?.defaultFabricId || 'roller-harmony-2') 
+      ? (currentType?.defaultFabricId || 'roller-sunny') 
       : 'elogi-1198-2'
   );
 
@@ -247,7 +247,7 @@ export function StudioPage({
     if (prevCurtainTypeIdRef.current !== currentType?.id) {
       prevCurtainTypeIdRef.current = currentType?.id;
       const nextId = currentType?.defaultFabricId || (
-        isRainbowCurtain ? 'rainbow-brioni' : isRollerCurtain ? 'roller-harmony-2' : 'elogi-1198-2'
+        isRainbowCurtain ? 'rainbow-brioni' : isRollerCurtain ? 'roller-sunny' : 'elogi-1198-2'
       );
       setActiveFabricId(nextId);
       const f = fabricSamples.find(item => item.id === nextId);
@@ -848,7 +848,7 @@ export function StudioPage({
               </strong>
               <p>Gợi ý loại rèm phù hợp với phong cách và nhu cầu của bạn</p>
             </div>
-            <img src="/assets/ai-mascot.png" alt="UniVeloria AI Mascot" className="mascot-img" />
+            <img src="/assets/ChatBot.png" alt="UniVeloria AI Mascot" className="mascot-img" />
           </div>
         </aside>
 
@@ -1163,7 +1163,7 @@ export function StudioPage({
           {/* Streamlined Bottom Control Bar matching Image 2 */}
           <div className="panel2-bottom-bar">
             <div className="panel2-ctrl-item">
-              <span>{isRainbowCurtain || isRollerCurtain ? 'Mẫu rèm' : 'Mẫu vải'}</span>
+              <span>Mẫu vải</span>
               <select
                 className="panel2-ctrl-select"
                 value={activeFabricId}
@@ -1280,40 +1280,42 @@ export function StudioPage({
               })}
             </div>
 
-            <div className="panel3-pagination">
-              <button
-                type="button"
-                className="panel3-page-btn nav-btn"
-                disabled={curtainPage === 1}
-                onClick={() => setCurtainPage((p) => Math.max(1, p - 1))}
-                title="Trang trước"
-              >
-                <ChevronLeft size={14} />
-              </button>
+            {totalCurtainPages > 1 && (
+              <div className="panel3-pagination">
+                <button
+                  type="button"
+                  className="panel3-page-btn nav-btn"
+                  disabled={curtainPage === 1}
+                  onClick={() => setCurtainPage((p) => Math.max(1, p - 1))}
+                  title="Trang trước"
+                >
+                  <ChevronLeft size={14} />
+                </button>
 
-              <div className="panel3-page-numbers">
-                {Array.from({ length: totalCurtainPages }, (_, i) => i + 1).map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    type="button"
-                    className={`panel3-page-btn num-btn ${curtainPage === pageNum ? 'active' : ''}`}
-                    onClick={() => setCurtainPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                ))}
+                <div className="panel3-page-numbers">
+                  {Array.from({ length: totalCurtainPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      className={`panel3-page-btn num-btn ${curtainPage === pageNum ? 'active' : ''}`}
+                      onClick={() => setCurtainPage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  className="panel3-page-btn nav-btn"
+                  disabled={curtainPage === totalCurtainPages}
+                  onClick={() => setCurtainPage((p) => Math.min(totalCurtainPages, p + 1))}
+                  title="Trang sau"
+                >
+                  <ChevronRight size={14} />
+                </button>
               </div>
-
-              <button
-                type="button"
-                className="panel3-page-btn nav-btn"
-                disabled={curtainPage === totalCurtainPages}
-                onClick={() => setCurtainPage((p) => Math.min(totalCurtainPages, p + 1))}
-                title="Trang sau"
-              >
-                <ChevronRight size={14} />
-              </button>
-            </div>
+            )}
           </div>
 
           <a

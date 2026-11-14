@@ -13,7 +13,7 @@ export const productsData = [
   // ==========================================
   {
     id: 1,
-    name: "Mẫu Rèm Cầu Vồng Brioni.E Blackout",
+    name: "Rèm Cầu Vồng",
     code: "UVL-CV-BR01",
     category: "Rèm cầu vồng",
     room: "Phòng khách / Biệt thự",
@@ -387,7 +387,7 @@ export const productsData = [
   },
   {
     id: 9,
-    name: "Mẫu Rèm Cuốn Sunny",
+    name: "Rèm Cuốn",
     code: "UVL-RC-SU01",
     brand: "CICI HOME",
     category: "Rèm cuốn",
@@ -437,7 +437,7 @@ export const productsData = [
   // ==========================================
   {
     id: 10,
-    name: "Mẫu rèm vải Elogi - 1198 - 2",
+    name: "Rèm Vải",
     code: "UVL-EL1198",
     category: "Rèm vải",
     room: "Phòng khách / Biệt thự",

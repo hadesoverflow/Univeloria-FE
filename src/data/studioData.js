@@ -11,8 +11,8 @@
 export const rainbowCurtainSamples = [
   {
     id: "rainbow-brioni",
-    name: "Mẫu Rèm Cầu Vồng Brioni.E Blackout",
-    shortName: "Brioni.E Blackout",
+    name: "Rèm Cầu Vồng",
+    shortName: "Rèm Cầu Vồng",
     category: "Rèm cầu vồng",
     isRainbow: true,
     defaultFabricId: "rainbow-brioni",
@@ -507,8 +507,8 @@ export const rollerCurtainSamples = [
   },
   {
     id: "roller-sunny",
-    name: "Mẫu Rèm Cuốn Sunny",
-    shortName: "Sunny",
+    name: "Rèm Cuốn",
+    shortName: "Rèm Cuốn",
     brand: "CICI HOME",
     category: "Rèm cuốn",
     isRoller: true,
@@ -574,8 +574,8 @@ export const rollerCurtainSamples = [
 export const fabricCurtainSamples = [
   {
     id: "elogi-1198-2",
-    name: "Mẫu rèm vải Elogi - 1198 - 2",
-    shortName: "Elogi - 1198 - 2",
+    name: "Rèm Vải",
+    shortName: "Rèm Vải",
     category: "Rèm vải",
     defaultFabricId: "elogi-1198-2",
     model3dUrl: "/models/curtains/curtain-elogi-1198-2.glb",
@@ -749,13 +749,16 @@ export const fabricCurtainSamples = [
 ];
 
 // =============================================================================
-// 4. DANH SÁCH TOÀN BỘ 12 MẪU RÈM (DÀNH CHO STUDIO 3D & DANH MỤC GỢI Ý)
+// 4. DANH SÁCH 3 DÒNG RÈM CHÍNH THỨC (GỢI Ý LOẠI RÈM)
+// - Rèm Cầu Vồng (Brioni.E Blackout)
+// - Rèm Cuốn (Sunny)
+// - Rèm Vải (Elogi - 1198 - 2)
 // =============================================================================
 export const curtainTypes = [
-  ...rainbowCurtainSamples,
-  ...rollerCurtainSamples,
-  ...fabricCurtainSamples
-];
+  rainbowCurtainSamples.find(c => c.id === 'rainbow-brioni'),
+  rollerCurtainSamples.find(c => c.id === 'roller-sunny'),
+  fabricCurtainSamples.find(c => c.id === 'elogi-1198-2')
+].filter(Boolean);
 
 // =============================================================================
 // 5. TỔNG HỢP TOÀN BỘ MẪU VẢI & MẪU RÈM (ALL SAMPLES)
