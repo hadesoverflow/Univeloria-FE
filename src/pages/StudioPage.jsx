@@ -148,7 +148,6 @@ export function StudioPage({
   const [showAdjuster, setShowAdjuster] = useState(false);
   const [showMeasureGuide, setShowMeasureGuide] = useState(false);
   const [calibrationPrecision, setCalibrationPrecision] = useState('fine'); // 'fine' (2%) | 'medium' (5%) | 'coarse' (10%)
-  const [curtainThickness, setCurtainThickness] = useState('Tiêu chuẩn');
   const [activeFabricId, setActiveFabricId] = useState('elogi-1198-2');
   const currentFabric = fabricSamples.find(f => f.id === activeFabricId) || fabricSamples[0];
 
@@ -953,55 +952,6 @@ export function StudioPage({
             </div>
           </div>
 
-          {/* CHI TIẾT TỪNG LỚP VẢI 3D (FABRIC LAYERS & WEAVE INSPECTOR) */}
-          {currentFabric?.fabricLayers && currentFabric.fabricLayers.length > 0 && (
-            <div className="fabric-layers-selector-bar">
-              <div className="fl-header">
-                <div className="fl-title">
-                  <Sparkles size={14} color="#8c6036" />
-                  <span>Chất liệu vải 3D: <strong>{currentFabric.name}</strong></span>
-                </div>
-                <button
-                  type="button"
-                  className="fl-macro-btn"
-                  onClick={() => viewer3dRef.current?.zoomIn(1.2)}
-                  title="Phóng to 3D xem rõ từng đường dệt vải"
-                >
-                  <Search size={12} />
-                  <span>Soi cận cảnh chất vải 3D</span>
-                </button>
-              </div>
-              <div className="fl-cards-grid">
-                {currentFabric.fabricLayers.map((layer) => {
-                  const isCurrentActive = studioColor?.toLowerCase() === layer.colorHex.toLowerCase();
-                  const isLight = isLightColor(layer.colorHex);
-                  return (
-                    <div
-                      key={layer.code}
-                      className={`fl-card ${isCurrentActive ? 'active' : ''}`}
-                      onClick={() => setStudioColor(layer.colorHex)}
-                      role="button"
-                      tabIndex={0}
-                    >
-                      <div className="fl-card-swatch-box" style={{ backgroundColor: layer.colorHex }}>
-                        {isCurrentActive && <Check size={13} color={isLight ? '#173352' : '#ffffff'} strokeWidth={3} />}
-                      </div>
-                      <div className="fl-card-content">
-                        <div className="fl-layer-tag">
-                          <span className="fl-num">Lớp {layer.layerNumber}</span>
-                          <span className="fl-layer-name">{layer.title}</span>
-                          <span className="fl-code">{layer.code}</span>
-                        </div>
-                        <strong className="fl-fabric-tone">{layer.name}</strong>
-                        <small className="fl-desc">{layer.desc}</small>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
           {/* KÉO XẾP LỚP DOCK: Curtain Open / Fold Action & Ratio Slider */}
           <div className="external-curtain-dock">
             <button
@@ -1066,20 +1016,6 @@ export function StudioPage({
                   />
                 ))}
               </div>
-            </div>
-
-            <div className="panel2-ctrl-item">
-              <span>Độ dày</span>
-              <select
-                className="panel2-ctrl-select"
-                value={curtainThickness}
-                onChange={(e) => setCurtainThickness(e.target.value)}
-              >
-                <option value="Chọn độ dày">Chọn độ dày</option>
-                <option value="Mỏng nhẹ">Mỏng nhẹ (Voan)</option>
-                <option value="Tiêu chuẩn">Tiêu chuẩn (2 lớp)</option>
-                <option value="Dày dặn">Dày dặn (Cản sáng)</option>
-              </select>
             </div>
           </div>
         </section>
