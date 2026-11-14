@@ -65,8 +65,8 @@ export function determineCurtainRecommendations({
       wallTone: 'Cửa sổ phòng ngủ / nghỉ dưỡng',
       lightCondition: 'Lọc sáng dịu mắt',
       matchScore: 99,
-      aiReason: 'Với không gian cần sự ấm cúng và thư giãn, AI đề xuất Rèm Hai Lớp S-Fold Định Hình kết hợp Mẫu rèm vải Elogi - 1206 - 1: tông nâu be trung tính, chất vải êm mịn tạo độ rũ tự nhiên và cản sáng tốt.',
-      tags: ['Cửa sổ', 'Rèm 2 Lớp S-Fold', 'Elogi 1206-1'],
+      aiReason: 'Với không gian cần sự ấm cúng và thư giãn, AI đề xuất Rèm Hai Lớp S-Fold Định Hình kết hợp Drape Celeste: tông nâu be trung tính, chất vải êm mịn tạo độ rũ tự nhiên và cản sáng tốt.',
+      tags: ['Cửa sổ', 'Rèm 2 Lớp S-Fold', 'Drape Celeste'],
       estimatedPriceRange: '2.850.000đ / bộ'
     };
   }
@@ -85,8 +85,8 @@ export function determineCurtainRecommendations({
     wallTone: 'Không gian sống hiện đại & tối giản',
     lightCondition: 'Ánh sáng tự nhiên êm dịu',
     matchScore: 99,
-    aiReason: 'Với kiến trúc hiện đại tối giản, AI đề xuất Rèm Hai Lớp S-Fold Định Hình kết hợp Mẫu rèm vải Elogi - 1198 - 2: cấu trúc 3 lớp vải cao cấp dệt mịn vân chéo tinh tế, gam màu kem sáng sang trọng và dễ phối hợp nội thất.',
-    tags: ['Cửa sổ', 'Rèm 2 Lớp S-Fold', 'Elogi 1198-2'],
+    aiReason: 'Với kiến trúc hiện đại tối giản, AI đề xuất Rèm Hai Lớp S-Fold Định Hình kết hợp Drape Elysia: cấu trúc 3 lớp vải cao cấp dệt mịn vân chéo tinh tế, gam màu kem sáng sang trọng và dễ phối hợp nội thất.',
+    tags: ['Cửa sổ', 'Rèm 2 Lớp S-Fold', 'Drape Elysia'],
     estimatedPriceRange: '2.850.000đ / bộ'
   };
 }

@@ -3,19 +3,19 @@ import { X, Send, Sparkles, ExternalLink, Dices } from 'lucide-react';
 
 // =============================================================================
 // HỒ SƠ 3 DÒNG RÈM CHÍNH THỨC + 2 MẪU THANH RÈM/ĐỘNG CƠ THÔNG MINH
-// 1. Rèm Cầu Vồng (Mẫu Brioni.E Blackout)
-// 2. Rèm Cuốn (Mẫu Sunny)
-// 3. Rèm Vải (Mẫu Elogi - 1198 - 2)
+// 1. Duo Onyx Blackout (Rèm Cầu Vồng)
+// 2. Shade Solis (Rèm Cuốn)
+// 3. Drape Elysia (Rèm Vải)
 // =============================================================================
 export const CURTAIN_PROFILES = [
   {
     id: 1,
     studioId: 'rainbow-brioni',
-    name: 'Rèm Cầu Vồng',
+    name: 'Duo Onyx Blackout',
     category: 'Rèm cầu vồng',
-    price: 1350000,
-    priceDisplay: 'Từ 1.350.000đ / m²',
-    image: '/product/Rèm/Rèm Cầu Vòng/Mẫu Rèm Cầu Vồng Brioni.E Blackout.png',
+    price: 740000,
+    priceDisplay: 'Từ 740.000đ / m²',
+    image: '/product/Rèm/Rèm Cầu Vòng/Duo Onyx Blackout.png',
     badge: 'Cản sáng 94%',
     story: 'Bề mặt vân dệt gỗ xước ngang tự nhiên Wood-grain mang đến sự trầm ấm, sang trọng và khả năng cản sáng đến 94%. Cơ chế nan 2 lớp so le xoay lật 180 độ điều chỉnh ánh sáng linh hoạt, vừa riêng tư vừa thoáng đãng.',
     whyChoose: 'Bề mặt dệt xước vân gỗ Wood-grain với độ dày sợi cao cấp giúp cản sáng 94% và hạ nhiệt tối ưu. Nếu căn phòng của bạn có nhiều nội thất gỗ, rèm cầu vồng tạo nên sự đồng điệu mộc mạc, tôn vinh đẳng cấp đồ gỗ và bảo vệ bề mặt nội thất không bị bạc màu do tia cực tím.',
@@ -24,16 +24,16 @@ export const CURTAIN_PROFILES = [
       'Khả năng cản sáng 94% và hạ nhiệt tối ưu, ngăn tia bức xạ cực tím làm bạc màu nội thất.',
       'Cơ chế nan 2 lớp so le xoay lật 180 độ điều chỉnh ánh sáng linh hoạt, giữ trọn sự riêng tư.'
     ],
-    keywords: ['cau vong', 'rainbow', 'van go', 'go', 'nau', 'am cung', 'sang trong', 'can sang', 'ngu', 'phong ngu', 'rieng tu', 'huong tay', 'nang chieu', 'nang gat']
+    keywords: ['cau vong', 'rainbow', 'duo', 'onyx', 'blackout', 'riviera', 'eclipse', 'orion', 'van go', 'go', 'nau', 'am cung', 'sang trong', 'can sang', 'ngu', 'phong ngu', 'rieng tu', 'huong tay', 'nang chieu', 'nang gat']
   },
   {
     id: 9,
     studioId: 'roller-sunny',
-    name: 'Rèm Cuốn',
+    name: 'Shade Solis',
     category: 'Rèm cuốn',
-    price: 390000,
-    priceDisplay: 'Từ 390.000đ / m²',
-    image: '/product/Rèm/Rèm Cuốn/Mẫu Rèm Cuốn Sunny.png',
+    price: 550000,
+    priceDisplay: 'Từ 550.000đ / m²',
+    image: '/product/Rèm/Rèm Cuốn/Shade Solis.png',
     badge: 'Lọc Sáng Tự Nhiên',
     story: 'Đón trọn ánh nắng ban mai với mắt lưới Micro Sunscreen lọc sáng dịu mát, cản 95% tia UV nhưng vẫn giữ trọn 100% tầm nhìn view khoáng đạt. Thiết kế cuộn gọn gàng tuyệt đối trong hộp máng, tiết kiệm diện tích tối ưu cho khung cửa sổ.',
     whyChoose: 'Mắt lưới Micro Sunscreen lọc sáng dịu mát, ngăn 95% tia UV độc hại nhưng vẫn giữ trọn 100% tầm nhìn ngắm cảnh thiên nhiên. Với thiết kế cuộn gọn ghẽ giải phóng hoàn toàn diện tích cửa sổ, rèm cuốn là giải pháp tối ưu cho phòng làm việc, căn hộ chung cư hoặc cửa sổ view đẹp cần sự gọn gàng, tinh tế.',
@@ -42,16 +42,16 @@ export const CURTAIN_PROFILES = [
       'Cuộn lên gọn gàng 100% trong hộp máng, tiết kiệm diện tích tối ưu cho khung cửa sổ nhỏ.',
       'Sợi thủy tinh phủ nhựa PVC chống chịu thời tiết, dễ lau chùi vệ sinh và độ bền bỉ cao.'
     ],
-    keywords: ['cuon', 'roller', 'sunny', 'loc sang', 'ngam canh', 'ban cong', 'view', 'gon gang', 'nho', 'dien tich nho', 'lam viec', 'van phong', 'chung cu', 'can ho', 'dong', 'huong dong', 'nang som']
+    keywords: ['cuon', 'roller', 'shade', 'solis', 'luna', 'aria', 'elara', 'melange', 'sunny', 'loc sang', 'ngam canh', 'ban cong', 'view', 'gon gang', 'nho', 'dien tich nho', 'lam viec', 'van phong', 'chung cu', 'can ho', 'dong', 'huong dong', 'nang som']
   },
   {
     id: 10,
     studioId: 'elogi-1198-2',
-    name: 'Rèm Vải',
+    name: 'Drape Elysia',
     category: 'Rèm vải',
-    price: 680000,
-    priceDisplay: 'Từ 680.000đ / m²',
-    image: '/product/Rèm/Rèm Vải/Mẫu rèm vải Elogi - 1198 - 2.png',
+    price: 780000,
+    priceDisplay: 'Từ 780.000đ / m²',
+    image: '/product/Rèm/Rèm Vải/Drape Elysia.png',
     badge: 'Chuẩn Khách Sạn 5 Sao',
     story: 'Chuẩn mực khách sạn 5 sao cho những khung cửa kính rộng lớn: Rèm vải sở hữu nếp gấp sóng rèm bồng bềnh lượn sóng đều đặn từ trần xuống sàn. Sợi gấm dệt thô cao cấp phong cách Nhật Bản cản sáng 95%, tôn vinh vẻ trang nhã, bề thế cho phòng khách biệt thự.',
     whyChoose: 'Kỹ thuật may sóng chữ S bồng bềnh từ trần xuống sàn chuẩn khách sạn 5 sao kết hợp sợi gấm dệt thô phong cách Nhật Bản cản sáng 95%. Với các khung cửa kính lớn ở phòng khách biệt thự hoặc phòng ngủ cần sự êm ái, chỉ có độ rủ mềm mại bề thế của Rèm Vải mới xứng tầm định hình đẳng cấp kiến trúc và tiêu âm tĩnh lặng.',
@@ -60,7 +60,7 @@ export const CURTAIN_PROFILES = [
       'Sợi gấm dệt thô cao cấp phong cách Nhật Bản cản sáng 95%, cách nhiệt và tiêu âm vượt trội.',
       'Định hình chuẩn mực kiến trúc cho phòng khách biệt thự và các khung cửa kính lớn.'
     ],
-    keywords: ['vai', 'rem vai', 'cua lon', 'phong khach', 'khach san', '5 sao', 'song rem', 'nhat ban', 'be the', 'trang nha', 'sang trong', 'phong ngu', 'nam', 'huong nam', 'bac', 'huong bac']
+    keywords: ['vai', 'rem vai', 'drape', 'elysia', 'celeste', 'aurelia', 'elogi', 'cua lon', 'phong khach', 'khach san', '5 sao', 'song rem', 'nhat ban', 'be the', 'trang nha', 'sang trong', 'phong ngu', 'nam', 'huong nam', 'bac', 'huong bac']
   },
   {
     id: 13,
@@ -307,12 +307,12 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
     // Nếu Bot đã từng chào hoặc đã hỏi về phòng rồi mà người dùng vẫn nhắn "Tôi muốn mua rèm":
     // Người dùng muốn được gợi ý ngay -> Chủ động tư vấn ngay Rèm Cầu Vồng bán chạy số 1!
     if (context.hasGreeted || context.askedRoom) {
-      const chosenDefault = CURTAIN_PROFILES.find(c => c.name === 'Rèm Cầu Vồng') || CURTAIN_PROFILES[0];
-      const confirmText = "Tôi hiểu rồi! Để bạn không mất thời gian, tôi xin phép thẩm định và chọn ngay cho bạn mẫu Rèm Cầu Vồng cao cấp đa năng, hoàn hảo cho cả phòng ngủ lẫn phòng khách. Bạn đợi tôi trong giây phút nhé!";
+      const chosenDefault = CURTAIN_PROFILES.find(c => c.category === 'Rèm cầu vồng') || CURTAIN_PROFILES[0];
+      const confirmText = `Tôi hiểu rồi! Để bạn không mất thời gian, tôi xin phép thẩm định và chọn ngay cho bạn mẫu ${chosenDefault.name} (Rèm Cầu Vồng) cao cấp đa năng, hoàn hảo cho cả phòng ngủ lẫn phòng khách. Bạn đợi tôi trong giây phút nhé!`;
       const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM TỐI ƯU TOÀN DIỆN CHO CĂN PHÒNG
 
 1. Mức độ phù hợp:
-10/10 - Rất hoàn hảo cho không gian căn phòng. Rèm Cầu Vồng sở hữu khả năng cản sáng 94%, cách nhiệt và cơ chế nan so le lấy sáng linh hoạt, đáp ứng hoàn hảo cho cả phòng ngủ cần sự tĩnh lặng lẫn phòng khách cần sự sang trọng, hiện đại.
+10/10 - Rất hoàn hảo cho không gian căn phòng. ${chosenDefault.name} sở hữu khả năng cản sáng 94%, cách nhiệt và cơ chế nan so le lấy sáng linh hoạt, đáp ứng hoàn hảo cho cả phòng ngủ cần sự tĩnh lặng lẫn phòng khách cần sự sang trọng, hiện đại.
 
 2. Tại sao chọn nó:
 ${chosenDefault.whyChoose}
@@ -407,57 +407,57 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenDefault.name} (${chose
     let score = 0;
 
     // Khớp loại rèm trực tiếp nếu user gọi tên
-    if (norm.includes('cau vong') && item.name === 'Rèm Cầu Vồng') score += 50;
-    if (norm.includes('cuon') && item.name === 'Rèm Cuốn') score += 50;
-    if (norm.includes('vai') && item.name === 'Rèm Vải') score += 50;
+    if ((norm.includes('cau vong') || norm.includes('rainbow') || norm.includes('duo') || norm.includes('onyx') || norm.includes('riviera') || norm.includes('eclipse') || norm.includes('orion')) && item.category === 'Rèm cầu vồng') score += 50;
+    if ((norm.includes('cuon') || norm.includes('roller') || norm.includes('shade') || norm.includes('solis') || norm.includes('luna') || norm.includes('aria') || norm.includes('elara') || norm.includes('melange')) && item.category === 'Rèm cuốn') score += 50;
+    if ((norm.includes('vai') || norm.includes('drape') || norm.includes('elysia') || norm.includes('celeste') || norm.includes('aurelia') || norm.includes('elogi')) && item.category === 'Rèm vải') score += 50;
 
     // Khớp hướng nắng & vi khí hậu
     if (activeOrientation.key === 'west') {
-      if (item.name === 'Rèm Cầu Vồng') score += 36;
-      if (item.name === 'Rèm Vải') score += 24;
-      if (item.name === 'Rèm Cuốn') score += 18;
+      if (item.category === 'Rèm cầu vồng') score += 36;
+      if (item.category === 'Rèm vải') score += 24;
+      if (item.category === 'Rèm cuốn') score += 18;
     } else if (activeOrientation.key === 'east') {
-      if (item.name === 'Rèm Cuốn') score += 36;
-      if (item.name === 'Rèm Cầu Vồng') score += 22;
-      if (item.name === 'Rèm Vải') score += 20;
+      if (item.category === 'Rèm cuốn') score += 36;
+      if (item.category === 'Rèm cầu vồng') score += 22;
+      if (item.category === 'Rèm vải') score += 20;
     } else if (activeOrientation.key === 'south' || activeOrientation.key === 'north') {
-      if (item.name === 'Rèm Vải') score += 36;
-      if (item.name === 'Rèm Cầu Vồng') score += 26;
-      if (item.name === 'Rèm Cuốn') score += 20;
+      if (item.category === 'Rèm vải') score += 36;
+      if (item.category === 'Rèm cầu vồng') score += 26;
+      if (item.category === 'Rèm cuốn') score += 20;
     }
 
     // Khớp phong cách & nhu cầu
     if (activeStyle.key === 'luxury') {
-      if (item.name === 'Rèm Vải') score += 36;
-      if (item.name === 'Rèm Cầu Vồng') score += 26;
-      if (item.name === 'Rèm Cuốn') score += 16;
+      if (item.category === 'Rèm vải') score += 36;
+      if (item.category === 'Rèm cầu vồng') score += 26;
+      if (item.category === 'Rèm cuốn') score += 16;
     } else if (activeStyle.key === 'simple') {
-      if (item.name === 'Rèm Cuốn') score += 36;
-      if (item.name === 'Rèm Cầu Vồng') score += 22;
-      if (item.name === 'Rèm Vải') score += 16;
+      if (item.category === 'Rèm cuốn') score += 36;
+      if (item.category === 'Rèm cầu vồng') score += 22;
+      if (item.category === 'Rèm vải') score += 16;
     } else if (activeStyle.key === 'blackout') {
-      if (item.name === 'Rèm Cầu Vồng') score += 36;
-      if (item.name === 'Rèm Vải') score += 30;
-      if (item.name === 'Rèm Cuốn') score += 18;
+      if (item.category === 'Rèm cầu vồng') score += 36;
+      if (item.category === 'Rèm vải') score += 30;
+      if (item.category === 'Rèm cuốn') score += 18;
     } else if (activeStyle.key === 'wood') {
-      if (item.name === 'Rèm Cầu Vồng') score += 40;
+      if (item.category === 'Rèm cầu vồng') score += 40;
     } else if (activeStyle.key === 'view') {
-      if (item.name === 'Rèm Cuốn') score += 40;
+      if (item.category === 'Rèm cuốn') score += 40;
     }
 
     // Khớp loại phòng
     if (activeRoom.key === 'bedroom') {
-      if (item.name === 'Rèm Cầu Vồng') score += 26;
-      if (item.name === 'Rèm Vải') score += 26;
-      if (item.name === 'Rèm Cuốn') score += 16;
+      if (item.category === 'Rèm cầu vồng') score += 26;
+      if (item.category === 'Rèm vải') score += 26;
+      if (item.category === 'Rèm cuốn') score += 16;
     } else if (activeRoom.key === 'living' || activeRoom.key === 'main_window') {
-      if (item.name === 'Rèm Vải') score += 32;
-      if (item.name === 'Rèm Cầu Vồng') score += 26;
-      if (item.name === 'Rèm Cuốn') score += 16;
+      if (item.category === 'Rèm vải') score += 32;
+      if (item.category === 'Rèm cầu vồng') score += 26;
+      if (item.category === 'Rèm cuốn') score += 16;
     } else if (activeRoom.key === 'study' || activeRoom.key === 'apartment') {
-      if (item.name === 'Rèm Cuốn') score += 32;
-      if (item.name === 'Rèm Cầu Vồng') score += 26;
-      if (item.name === 'Rèm Vải') score += 18;
+      if (item.category === 'Rèm cuốn') score += 32;
+      if (item.category === 'Rèm cầu vồng') score += 26;
+      if (item.category === 'Rèm vải') score += 18;
     }
 
     return { item, score };
@@ -474,9 +474,9 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenDefault.name} (${chose
 
   // Luận điểm 1: Mức độ phù hợp
   let fitReason = '';
-  if (chosen.name === 'Rèm Cầu Vồng') {
+  if (chosen.category === 'Rèm cầu vồng') {
     fitReason = `10/10 - Rất hoàn hảo cho ${roomName} ${orientName}. Tấm rèm sở hữu bề mặt vân dệt gỗ Wood-grain sang trọng, khả năng cản sáng 94% và cơ chế nan 2 lớp so le xoay lật 180 độ điều chỉnh ánh sáng linh hoạt, bảo vệ đồ nội thất và giữ trọn sự riêng tư.`;
-  } else if (chosen.name === 'Rèm Cuốn') {
+  } else if (chosen.category === 'Rèm cuốn') {
     fitReason = `10/10 - Rất hoàn hảo cho ${roomName} ${orientName}. Mắt lưới Micro Sunscreen lọc sáng dịu mát, ngăn 95% tia UV nhưng vẫn giữ trọn view ngắm cảnh khoáng đạt, thiết kế cuộn gọn ghẽ tối ưu 100% diện tích cửa sổ.`;
   } else {
     fitReason = `10/10 - Rất hoàn hảo cho ${roomName} ${orientName}. Kỹ thuật may sóng chữ S bồng bềnh từ trần xuống sàn chuẩn khách sạn 5 sao kết hợp sợi gấm Nhật Bản cản sáng 95%, cách âm tĩnh lặng và tôn vinh vẻ bề thế cho căn phòng.`;

@@ -17,16 +17,20 @@ import {
 } from 'lucide-react';
 
 export const ShopeeBagIcon = ({ size = 20, className = '' }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 32 32"
-    fill="currentColor"
+  <img
+    src="/assets/shopee.jpg"
+    alt="Shopee"
     className={className}
-    style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
-  >
-    <path d="M26.2 9.4h-3.9v-1.8C22.3 4.1 19.5 1.3 16 1.3S9.7 4.1 9.7 7.6v1.8H5.8c-1.3 0-2.3 1-2.3 2.3v17.5c0 1.3 1 2.3 2.3 2.3h20.4c1.3 0 2.3-1 2.3-2.3V11.7c0-1.3-1-2.3-2.3-2.3zM11.9 7.6c0-2.3 1.8-4.1 4.1-4.1s4.1 1.8 4.1 4.1v1.8h-8.2V7.6zm8.7 12.8c-.8 1.4-2.4 2.3-4.6 2.3-3.2 0-5.2-1.8-5.2-4.5 0-2.7 1.9-3.9 4-4.5l1.3-.4c1.2-.4 1.8-.8 1.8-1.5 0-.8-.7-1.4-1.9-1.4-1.2 0-1.9.6-2.1 1.7h-2.3c.2-2.1 1.7-3.6 4.4-3.6 2.5 0 4.2 1.4 4.2 3.5 0 2.1-1.4 3.4-3.6 4.1l-1.4.4c-1.4.4-2.1.9-2.1 1.8 0 .9.8 1.6 2.1 1.6 1.5 0 2.6-.7 3.1-1.7l2.3 1.7z" />
-  </svg>
+    style={{
+      width: size,
+      height: size,
+      objectFit: 'contain',
+      display: 'inline-block',
+      verticalAlign: 'middle',
+      borderRadius: '4px',
+      flexShrink: 0
+    }}
+  />
 );
 
 export const PARTNERS_DATA = [

@@ -69,9 +69,9 @@ export function CollectionsPage({
                 <article className="collection-card" key={item.id} style={{ "--delay": `${index * 80}ms` }}>
                   <div
                     className="card-image-link"
-                    onClick={() => navigateTo('studio')}
+                    onClick={() => navigateTo('products')}
                     style={{ cursor: 'pointer' }}
-                    aria-label={`Khám phá ${item.title}`}
+                    aria-label={`Khám phá sản phẩm ${item.title}`}
                   >
                     <img className="card-image" src={item.image} alt={item.title} />
                     <span className="card-index">0{collectionsData.findIndex((c) => c.id === item.id) + 1} / 04</span>
@@ -94,8 +94,8 @@ export function CollectionsPage({
                       <h2>{item.title}</h2>
                       <button
                         className="round-arrow"
-                        onClick={() => navigateTo('studio')}
-                        aria-label={`Xem ${item.title}`}
+                        onClick={() => navigateTo('products')}
+                        aria-label={`Xem sản phẩm ${item.title}`}
                       >
                         ↗
                       </button>
