@@ -22921,7 +22921,7 @@ button:active:not(:disabled),
 .chatbot-popup-body {
   padding: 14px !important;
   background: #faf8f5 !important;
-  max-height: 420px !important;
+  max-height: 480px !important;
   overflow-y: auto !important;
   display: flex !important;
   flex-direction: column !important;
