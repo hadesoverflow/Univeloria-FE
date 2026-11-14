@@ -270,10 +270,10 @@ function normalizeText(str) {
 }
 
 // =============================================================================
-// AI ANALYSIS ENGINE: ĐỐI THOẠI & TƯ VẤN CHUYÊN SÂU
-// - Tương tác tự nhiên qua chat chữ (hỏi ngược lại khi thiếu thông tin)
-// - KHÔNG dùng nút bấm bắt chọn
-// - KHÔNG nhắc đến thanh rèm trừ khi khách hỏi
+// AI ANALYSIS ENGINE: ĐỐI THOẠI TƯƠNG TÁC THÔNG MINH (CHỐNG LẶP & ĐA LƯỢT)
+// - Hỏi ngược lại tự nhiên qua tin nhắn chữ (không nút bấm)
+// - Khi người dùng lặp lại "Tôi muốn mua rèm", không lặp lại câu chào mà chủ động tư vấn ngay
+// - Không tự ý đưa thanh rèm trừ khi được hỏi
 // - Đầy đủ 3 phần: Mức độ phù hợp, Tại sao chọn nó, Mặt tốt của nó
 // =============================================================================
 export function analyzeUserMessage(rawInput, context = {}, currentCurtainId = null) {
@@ -281,7 +281,6 @@ export function analyzeUserMessage(rawInput, context = {}, currentCurtainId = nu
   const norm = normalizeText(trimmed);
 
   // 1. Phân tích nhu cầu về THANH RÈM / ĐỘNG CƠ TỰ ĐỘNG
-  // Chỉ kích hoạt khi khách hàng hỏi đích danh về thanh rèm / ray rèm / motor
   const isThanhRemQuery = norm.includes('thanh rem') || 
                           norm.includes('thanh treo') || 
                           norm.includes('ray rem') || 
@@ -447,39 +446,81 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
   const activeStyle = extractedStyle || context.style;
   const activeOrientation = extractedOrientation || context.orientation;
 
-  // 6. KIỂM TRA LỜI NHẮN MỞ ĐẦU CHUNG CHUNG / CHÀO HỎI (VÍ DỤ "ALO", "TÔI MUỐN MUA RÈM", "TƯ VẤN RÈM")
-  const isGenericStarter = norm === 'alo' || 
-                            norm === 'chao' || 
-                            norm === 'xin chao' || 
-                            norm === 'hello' || 
-                            norm === 'hi' ||
-                            norm.includes('toi muon mua rem') || 
-                            norm.includes('muon mua rem') || 
-                            norm.includes('mua rem') || 
-                            norm.includes('tu van rem') || 
-                            norm.includes('can mua rem') || 
-                            norm.includes('can tu van');
+  // 6. XỬ LÝ LỜI NHẮN CHÀO HỎI / MỞ ĐẦU CHUNG CHUNG
+  const greetingWords = ['alo', 'chao', 'xin chao', 'hello', 'hi', 'ad oi', 'shop oi', 'em oi', 'ban oi'];
+  const isGreetingOnly = greetingWords.includes(norm);
+  const isGenericIntent = norm.includes('mua rem') || norm.includes('tu van rem') || norm.includes('can mua') || norm.includes('can tu van') || norm === 'rem';
 
-  if (isGenericStarter && !activeRoom && !activeStyle && !activeOrientation) {
+  // 6.1 Nếu người dùng chỉ chào hỏi ("Hello", "Alo") ở lượt đầu
+  if (isGreetingOnly && !activeRoom && !activeStyle && !activeOrientation) {
     return {
       type: 'question',
-      delayMs: 900,
+      delayMs: 800,
       curtain: null,
       text: "Dạ UniVeloria xin chào bạn! Tôi là Chuyên gia Tư vấn Không gian Rèm AI ☁️✨\n\nĐể chọn được bộ rèm ưng ý và chuẩn xác nhất, bạn đang muốn lắp rèm cho căn phòng nào (như phòng ngủ, phòng khách, phòng làm việc hay căn hộ...)? Hãy chia sẻ cho tôi biết nhé!",
-      updatedContext: context
+      updatedContext: { ...context, hasGreeted: true, askedRoom: true }
     };
   }
 
-  // 7. ĐỐI THOẠI TƯƠNG TÁC (HỎI NGƯỢC LẠI KHI THIẾU THÔNG TIN ĐỂ TƯ VẤN CHUẨN)
+  // 6.2 Nếu người dùng nhắn chung chung "Tôi muốn mua rèm"
+  if (isGenericIntent && !extractedRoom && !extractedStyle && !extractedOrientation) {
+    // Nếu Bot đã từng chào hoặc đã hỏi về phòng rồi mà người dùng vẫn nhắn "Tôi muốn mua rèm":
+    // Người dùng muốn được gợi ý ngay một mẫu chuẩn mực chứ không muốn chọn nữa -> Chủ động tư vấn ngay!
+    if (context.hasGreeted || context.askedRoom) {
+      const chosenDefault = CURTAIN_PROFILES.find(c => c.studioId === 'rainbow-dragon') || CURTAIN_PROFILES[0];
+      const confirmText = "Tôi hiểu rồi! Để bạn không mất thời gian, tôi xin phép thẩm định và chọn ngay cho bạn mẫu rèm cản sáng cao cấp, đa năng và được yêu thích nhất tại UniVeloria hiện nay, hoàn hảo cho cả phòng ngủ lẫn phòng khách. Bạn đợi tôi trong giây phút nhé!";
+      const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM TỐI ƯU TOÀN DIỆN CHO CĂN PHÒNG
+
+1. Mức độ phù hợp:
+10/10 - Rất hoàn hảo cho không gian căn phòng. Tấm rèm sở hữu khả năng cản sáng 95%, cách nhiệt và triệt tiêu tiếng ồn vượt trội, đáp ứng hoàn hảo cho cả phòng ngủ cần sự tĩnh lặng lẫn phòng khách cần sự sang trọng, hiện đại.
+
+2. Tại sao chọn nó:
+${chosenDefault.whyChoose}
+
+3. Mặt tốt của nó:
+${chosenDefault.pros.map(p => `• ${p}`).join('\n')}
+
+Chuyên gia tư vấn UniVeloria khẳng định: ${chosenDefault.name} (${chosenDefault.badge}) là giải pháp chuẩn xác và tối ưu nhất cho căn phòng của bạn:`;
+
+      return {
+        type: 'final_consultation',
+        delayMs: 5000,
+        confirmText,
+        finalText,
+        curtain: chosenDefault,
+        updatedContext: {
+          ...context,
+          room: { key: 'bedroom', label: 'Phòng ngủ' },
+          style: { key: 'blackout', label: 'Tối ưu phòng' },
+          orientation: { key: 'west', label: 'Hướng Tây' },
+          lastCurtainId: chosenDefault.id,
+          recommendedCurtainIds: [...(context.recommendedCurtainIds || []), chosenDefault.id]
+        }
+      };
+    }
+
+    // Nếu chưa từng hỏi thì hỏi phòng một cách tự nhiên
+    return {
+      type: 'question',
+      delayMs: 800,
+      curtain: null,
+      text: "Dạ vâng! Để chọn được bộ rèm ưng ý và chuẩn xác nhất, bạn đang muốn lắp rèm cho căn phòng nào (như phòng ngủ, phòng khách, phòng làm việc hay căn hộ...)? Hãy chia sẻ cho tôi biết nhé!",
+      updatedContext: { ...context, hasGreeted: true, askedRoom: true }
+    };
+  }
+
+  // 7. ĐỐI THOẠI TƯƠNG TÁC (HỎI TIẾP KHI THIẾU THÔNG TIN)
   // 7.1 Nếu chưa có thông tin về loại phòng
   if (!activeRoom) {
     return {
       type: 'question',
-      delayMs: 900,
+      delayMs: 800,
       curtain: null,
       text: "Bạn đang muốn lắp rèm cho căn phòng nào (như phòng ngủ, phòng khách, phòng làm việc hay căn hộ...)?",
       updatedContext: {
         ...context,
+        hasGreeted: true,
+        askedRoom: true,
         style: activeStyle,
         orientation: activeOrientation
       }
@@ -490,12 +531,14 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
   if (!activeStyle) {
     return {
       type: 'question',
-      delayMs: 900,
+      delayMs: 800,
       curtain: null,
       text: "Bạn muốn cái rèm trông như thế nào: Đơn giản hay sang trọng hoặc tối ưu phòng?",
       updatedContext: {
         ...context,
+        hasGreeted: true,
         room: activeRoom,
+        askedStyle: true,
         orientation: activeOrientation
       }
     };
@@ -505,19 +548,20 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
   if (!activeOrientation) {
     return {
       type: 'question',
-      delayMs: 900,
+      delayMs: 800,
       curtain: null,
       text: "Cửa sổ của bạn nằm ở hướng nào?",
       updatedContext: {
         ...context,
+        hasGreeted: true,
         room: activeRoom,
-        style: activeStyle
+        style: activeStyle,
+        askedOrientation: true
       }
     };
   }
 
   // 8. ĐÃ ĐỦ DỮ LIỆU ĐỂ TƯ VẤN CHUYÊN GIA
-  // Chấm điểm chọn mẫu rèm tối ưu nhất từ 12 mẫu rèm chính thức (không đưa thanh rèm)
   const curtainPool = CURTAIN_PROFILES.filter(c => c.category !== 'Thanh rèm');
   const scored = curtainPool.map(item => {
     let score = 0;
@@ -587,7 +631,6 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
   const styleName = activeStyle.label;
   const orientName = activeOrientation.label;
 
-  // Câu phản hồi đồng cảm đúng theo mong muốn của user
   const confirmText = `Tôi hiểu rồi bạn đợi tôi trong giây phút để tôi chọn cho bạn 1 cái rèm phù hợp với các yêu cầu ${styleName} thoải mái nhất cho bạn.`;
 
   // Luận điểm 1: Mức độ phù hợp
@@ -647,7 +690,11 @@ export function FloatingPetdexChat({ navigateTo }) {
     style: null,
     orientation: null,
     lastCurtainId: null,
-    recommendedCurtainIds: []
+    recommendedCurtainIds: [],
+    hasGreeted: false,
+    askedRoom: false,
+    askedStyle: false,
+    askedOrientation: false
   });
   const contextRef = useRef(consultationContext);
   useEffect(() => {
@@ -776,7 +823,6 @@ export function FloatingPetdexChat({ navigateTo }) {
     const result = analyzeUserMessage(query, currentCtx, lastBotCurtain);
 
     if (result.type === 'question' || result.type === 'faq') {
-      // Đối thoại tương tác tự nhiên (hỏi lại thông tin)
       setIsTyping(false);
       const t = setTimeout(() => {
         setMessages((prev) => [
@@ -790,7 +836,7 @@ export function FloatingPetdexChat({ navigateTo }) {
         if (result.updatedContext) {
           setConsultationContext(result.updatedContext);
         }
-      }, result.delayMs || 900);
+      }, result.delayMs || 800);
       timersRef.current = [t];
     } else if (result.type === 'final_consultation') {
       // 1. Phản hồi xác nhận đối thoại: "Tôi hiểu rồi bạn đợi tôi trong giây phút..."
