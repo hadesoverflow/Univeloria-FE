@@ -834,23 +834,23 @@ export function ProductDetailPage({
                 <div className="care-card-grid">
                   <div className="care-card">
                     <span className="care-num">01</span>
-                    <strong>Hút bụi định kỳ</strong>
-                    <p>Sử dụng đầu hút chổi mềm nhẹ nhàng hút bụi bề mặt rèm mỗi tháng một lần để giữ màu vải luôn tươi sáng.</p>
+                    <strong>Hướng dẫn vệ sinh rèm</strong>
+                    <p>Sử dụng máy hút bụi đầu chổi mềm hoặc khăn khô để vệ sinh rèm định kỳ. Tránh dùng chất tẩy rửa mạnh gây ảnh hưởng đến màu sắc và chất liệu vải.</p>
                   </div>
                   <div className="care-card">
                     <span className="care-num">02</span>
-                    <strong>Chế độ giặt phù hợp</strong>
-                    <p>Có thể giặt khô chuyên dụng hoặc giặt máy chế độ nhẹ (Delicate) dưới 30°C với túi giặt bảo vệ.</p>
+                    <strong>Lưu ý khi giặt & bảo quản</strong>
+                    <p>Tùy theo chất liệu, khách hàng nên giặt tay, giặt khô hoặc sử dụng chế độ giặt nhẹ phù hợp. Hạn chế phơi dưới ánh nắng gắt để duy trì độ bền và màu sắc rèm.</p>
                   </div>
                   <div className="care-card">
                     <span className="care-num">03</span>
-                    <strong>Ủi & Giữ nếp sóng</strong>
-                    <p>Sử dụng bàn ủi hơi nước đứng ở nhiệt độ vừa phải để rèm vào nếp sóng suôn mượt tự nhiên.</p>
+                    <strong>Chính sách đổi trả</strong>
+                    <p>UniVeloria tiếp nhận yêu cầu đổi trả đối với sản phẩm bị lỗi sản xuất, giao sai mẫu mã hoặc thông số so với đơn hàng đã xác nhận. Các trường hợp được xem xét theo điều kiện đổi trả của thương hiệu.</p>
                   </div>
                   <div className="care-card">
                     <span className="care-num">04</span>
-                    <strong>Dịch vụ giặt rèm tận nhà</strong>
-                    <p>UniVeloria hỗ trợ dịch vụ tháo lắp và giặt ủi rèm chuyên nghiệp định kỳ cho quý khách hàng thân thiết.</p>
+                    <strong>Chính sách bảo hành</strong>
+                    <p>UniVeloria hỗ trợ tiếp nhận và kiểm tra các vấn đề liên quan đến lỗi kỹ thuật hoặc lỗi sản xuất trong thời gian bảo hành. Phạm vi và thời hạn bảo hành được áp dụng theo từng sản phẩm.</p>
                   </div>
                 </div>
               </div>
