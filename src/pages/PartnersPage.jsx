@@ -42,7 +42,7 @@ export const PARTNERS_DATA = [
     badge: 'Khuyên Dùng Cho Phòng Ngủ',
     rating: 4.9,
     reviews: '12.4k',
-    image: '/assets/bedroom.jpg',
+    image: '/affiliate/m2t-bedding.jpg',
     tags: ['Lụa Thái cao cấp', 'Chăn hè chần bông', 'Đủ size m6/m8/2m']
   },
   {
@@ -57,7 +57,7 @@ export const PARTNERS_DATA = [
     badge: 'Best Seller Phong Cách Bắc Âu',
     rating: 4.9,
     reviews: '8.6k',
-    image: '/assets/living-room.jpg',
+    image: '/affiliate/rambotoy-floor-lamp.jpg',
     tags: ['Chiều cao 170cm', 'Kim loại xếp lớp', 'Bóng LED 3 màu']
   },
   {
@@ -72,7 +72,7 @@ export const PARTNERS_DATA = [
     badge: 'Decor Nghệ Thuật 3D',
     rating: 4.8,
     reviews: '5.2k',
-    image: '/assets/dining-room.jpg',
+    image: '/affiliate/hobi-decor-light.jpg',
     tags: ['Đèn decor 3D', 'Thiết kế tinh xảo', 'Dễ dàng lắp đặt']
   },
   {
@@ -87,7 +87,7 @@ export const PARTNERS_DATA = [
     badge: 'Xanh Mát Tổ Ấm',
     rating: 4.9,
     reviews: '15.1k',
-    image: '/assets/category-outdoor.jpg',
+    image: '/affiliate/leehozy-plants.jpg',
     tags: ['Cây phong thủy', 'Chậu tự dưỡng', 'Thanh lọc khí']
   },
   {
@@ -101,7 +101,7 @@ export const PARTNERS_DATA = [
     badge: 'Nghệ Thuật Tráng Gương',
     rating: 4.9,
     reviews: '9.8k',
-    image: '/assets/about-story.jpg',
+    image: '/affiliate/men-decor-art.jpg',
     tags: ['Tráng gương pha lê', 'Viền hợp kim titan', 'Độ bền 10+ năm']
   }
 ];
