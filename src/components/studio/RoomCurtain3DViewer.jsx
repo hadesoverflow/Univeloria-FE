@@ -1714,6 +1714,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
 
       customLeftDrapeRef.current.visible = true;
       customRightDrapeRef.current.visible = true;
+      return;
     }
 
     // 2. For Procedural Curtain (fallback) - Instant matrix scale without geometry reallocation
@@ -2708,17 +2709,26 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
 
     // 10. Robust Resize Handling
     let resizeTimer = null;
+    let prevObsW = 0;
+    let prevObsH = 0;
     const resizeObserver = new ResizeObserver((entries) => {
       if (!entries || !entries.length) return;
       if (resizeTimer) cancelAnimationFrame(resizeTimer);
       resizeTimer = requestAnimationFrame(() => {
         const entry = entries[0];
-        const newW = entry.contentRect.width;
-        const newH = entry.contentRect.height;
+        const newW = Math.round(entry.contentRect.width);
+        const newH = Math.round(entry.contentRect.height);
         if (newW > 100 && newH > 100) {
-          camera.aspect = newW / newH;
-          camera.updateProjectionMatrix();
-          renderer.setSize(newW, newH, false);
+          // Avoid re-allocating WebGL buffer on subpixel or tiny <= 2px micro-shifts
+          if (Math.abs(newW - prevObsW) > 2 || Math.abs(newH - prevObsH) > 2) {
+            prevObsW = newW;
+            prevObsH = newH;
+            camera.aspect = newW / newH;
+            camera.updateProjectionMatrix();
+            renderer.setSize(newW, newH, false);
+            // Immediately render so the canvas buffer is never displayed blank/cleared
+            renderer.render(scene, camera);
+          }
         }
       });
     });

@@ -23794,7 +23794,7 @@ button:active:not(:disabled),
   flex: 1 1 0 !important;
   min-height: 0 !important;
   height: 100% !important;
-  background: #FFFFFF !important;
+  background: #171a21 !important;
   border: 1px solid rgba(23, 51, 82, 0.08) !important;
   border-radius: 14px !important;
 }
@@ -24066,9 +24066,12 @@ button:active:not(:disabled),
   background: #FAF9F6 !important;
   border: 1px solid rgba(23, 51, 82, 0.08) !important;
   border-radius: 999px !important;
-  padding: 5px 12px !important;
-  margin-top: 8px !important;
+  padding: 4px 12px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
   box-sizing: border-box !important;
+  margin-top: 8px !important;
   width: 100% !important;
   max-width: 100% !important;
   overflow: hidden !important;
@@ -24077,16 +24080,21 @@ button:active:not(:disabled),
 .studio-page .curtain-toggle-btn {
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: center !important;
   gap: 5px !important;
   background: #173352 !important;
   color: #FEF3E3 !important;
-  border: none !important;
+  border: 1px solid transparent !important;
   font-size: 11px !important;
   font-weight: 700 !important;
-  padding: 5px 11px !important;
+  padding: 4px 11px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  box-sizing: border-box !important;
   border-radius: 999px !important;
   cursor: pointer !important;
-  transition: all 0.2s ease !important;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
 }
@@ -24098,6 +24106,11 @@ button:active:not(:disabled),
 .studio-page .curtain-toggle-btn.active {
   background: #C8A87D !important;
   color: #173352 !important;
+  border: 1px solid #c8a87d !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  box-sizing: border-box !important;
 }
 
 .studio-page .slider-track-wrap {
