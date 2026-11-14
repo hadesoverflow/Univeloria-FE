@@ -951,35 +951,6 @@ export function StudioPage({
                 setActiveAtmosphere={setActiveAtmosphere}
                 onConsultClick={() => navigateTo('contact')}
               />
-
-              {/* Huy hiệu nhận diện cấu trúc chất vải 3D đang chọn + nút soi cận cảnh */}
-              <div className="stage-fabric-badge">
-                <div className="sfb-pill">
-                  <span className="sfb-dot" style={{ backgroundColor: studioColor }} />
-                  <span className="sfb-name">{currentFabric?.name || 'Mẫu vải'}</span>
-                  <span className="sfb-sep">·</span>
-                  <span className="sfb-trait">
-                    {activeFabricId === 'elogi-1198-2' && 'Vân dệt chéo Nhật Bản (Twill Weave 45°)'}
-                    {activeFabricId === 'elogi-1206-1' && 'Lụa nhung êm mịn & rũ mềm (Velvet Nap)'}
-                    {activeFabricId === 'elogi-1230-1' && 'Vải Eco hạt dệt sắc nét (Slub Linen Canvas)'}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  className="sfb-macro-btn"
-                  onClick={() => {
-                    if (viewer3dRef.current?.focusFabricDetail) {
-                      viewer3dRef.current.focusFabricDetail();
-                    } else {
-                      viewer3dRef.current?.zoomIn(1.5);
-                    }
-                  }}
-                  title="Phóng to 3D xem rõ từng thớ vải và đường dệt"
-                >
-                  <Search size={12} />
-                  <span>Soi cận cảnh thớ vải 3D</span>
-                </button>
-              </div>
             </div>
           </div>
 
