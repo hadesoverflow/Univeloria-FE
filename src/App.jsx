@@ -136,8 +136,8 @@ export default function App() {
   const [hasUploaded, setHasUploaded] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analyzed, setAnalyzed] = useState(false);
-  const [activeType, setActiveType] = useState(curtainTypes[0]?.id || "sfold-luxury");
-  const [studioColor, setStudioColor] = useState(curtainTypes[0]?.colors[0] || "#d5cbbe");
+  const [activeType, setActiveType] = useState(curtainTypes[0]?.id || "rainbow-brioni");
+  const [studioColor, setStudioColor] = useState(curtainTypes[0]?.colors[0] || "#4b382a");
   const [activeStudioFilter, setActiveStudioFilter] = useState("Tất cả");
   const [viewMode, setViewMode] = useState("3D");
   const [zoom, setZoom] = useState(1);
@@ -531,13 +531,7 @@ export default function App() {
         } else {
           const matchedFabric = fabricSamples.find(f => f.id === targetSection || f.name.toLowerCase().includes(String(targetSection).toLowerCase()));
           if (matchedFabric) {
-            if (matchedFabric.category === 'Rèm cuốn' || matchedFabric.isRoller || matchedFabric.id.startsWith('roller-')) {
-              setActiveType('roller-officepro');
-            } else if (matchedFabric.category === 'Rèm cầu vồng' || matchedFabric.isRainbow || matchedFabric.id.startsWith('rainbow-')) {
-              setActiveType('rainbow-modernstripe');
-            } else {
-              setActiveType('sfold-luxury');
-            }
+            setActiveType(matchedFabric.id);
             if (matchedFabric.defaultColor) setStudioColor(matchedFabric.defaultColor);
           }
         }

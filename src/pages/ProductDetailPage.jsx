@@ -544,7 +544,7 @@ export function ProductDetailPage({
                 <button
                   className="pdetail-btn-studio-full"
                   onClick={() => {
-                    let targetStudioId = 'sfold-luxury';
+                    let targetStudioId = 'rainbow-brioni';
                     if (product?.name?.includes('1198')) targetStudioId = 'elogi-1198-2';
                     else if (product?.name?.includes('1206')) targetStudioId = 'elogi-1206-1';
                     else if (product?.name?.includes('1230')) targetStudioId = 'elogi-1230-1';
@@ -553,21 +553,13 @@ export function ProductDetailPage({
                     else if (product?.name?.includes('Moon')) targetStudioId = 'roller-moon';
                     else if (product?.name?.includes('Silvia')) targetStudioId = 'roller-silvia';
                     else if (product?.name?.includes('Sunny')) targetStudioId = 'roller-sunny';
-                    else if (product?.name?.includes('Xếp Ly') || product?.name?.includes('1 Lớp')) targetStudioId = 'single-pleat';
-                    else if (product?.name?.includes('S-Fold') || product?.name?.includes('2 Lớp')) targetStudioId = 'sfold-luxury';
-                    else if (product?.name?.includes('OfficePro')) targetStudioId = 'roller-officepro';
-                    else if (product?.name?.includes('LivingLite')) targetStudioId = 'roller-livinglite';
-                    else if (product?.name?.includes('CoastalLite')) targetStudioId = 'roller-coastallite';
-                else if (product?.name?.includes('ModernStripe')) targetStudioId = 'rainbow-modernstripe';
-                else if (product?.name?.includes('NordicRay')) targetStudioId = 'rainbow-nordicray';
-                else if (product?.name?.includes('SunnyView')) targetStudioId = 'rainbow-sunnyview';
-                else if (product?.name?.includes('River.E') || product?.name?.includes('River')) targetStudioId = 'rainbow-rivere';
-                else if (product?.name?.includes('GoldenWeave')) targetStudioId = 'rainbow-goldenweave';
-                    else if (product?.name?.includes('ModernStripe')) targetStudioId = 'rainbow-modernstripe';
-                    else if (product?.name?.includes('NordicRay')) targetStudioId = 'rainbow-nordicray';
-                    else if (product?.name?.includes('SunnyView')) targetStudioId = 'rainbow-sunnyview';
-                    else if (product?.name?.includes('River.E') || product?.name?.includes('River')) targetStudioId = 'rainbow-rivere';
-                    else if (product?.name?.includes('GoldenWeave')) targetStudioId = 'rainbow-goldenweave';
+                    else if (product?.name?.includes('Brioni')) targetStudioId = 'rainbow-brioni';
+                    else if (product?.name?.includes('Infiniti')) targetStudioId = 'rainbow-infiniti';
+                    else if (product?.name?.includes('River')) targetStudioId = 'rainbow-rivere';
+                    else if (product?.name?.includes('Dragon')) targetStudioId = 'rainbow-dragon';
+                    else if (product?.category === 'Rèm vải') targetStudioId = 'elogi-1198-2';
+                    else if (product?.category === 'Rèm cuốn') targetStudioId = 'roller-harmony-2';
+                    else if (product?.category === 'Rèm cầu vồng') targetStudioId = 'rainbow-brioni';
                     navigateTo('studio', targetStudioId);
                   }}
                 >
@@ -1455,7 +1447,7 @@ export function ProductDetailPage({
                 transition: 'all 0.2s ease'
               }}
               onClick={() => {
-                let targetStudioId = 'sfold-luxury';
+                let targetStudioId = 'rainbow-brioni';
                 if (product?.name?.includes('1198')) targetStudioId = 'elogi-1198-2';
                 else if (product?.name?.includes('1206')) targetStudioId = 'elogi-1206-1';
                 else if (product?.name?.includes('1230')) targetStudioId = 'elogi-1230-1';
@@ -1464,16 +1456,13 @@ export function ProductDetailPage({
                 else if (product?.name?.includes('Moon')) targetStudioId = 'roller-moon';
                 else if (product?.name?.includes('Silvia')) targetStudioId = 'roller-silvia';
                 else if (product?.name?.includes('Sunny')) targetStudioId = 'roller-sunny';
-                else if (product?.name?.includes('Xếp Ly') || product?.name?.includes('1 Lớp')) targetStudioId = 'single-pleat';
-                else if (product?.name?.includes('S-Fold') || product?.name?.includes('2 Lớp')) targetStudioId = 'sfold-luxury';
-                else if (product?.name?.includes('OfficePro')) targetStudioId = 'roller-officepro';
-                else if (product?.name?.includes('LivingLite')) targetStudioId = 'roller-livinglite';
-                else if (product?.name?.includes('CoastalLite')) targetStudioId = 'roller-coastallite';
-                else if (product?.name?.includes('ModernStripe')) targetStudioId = 'rainbow-modernstripe';
-                else if (product?.name?.includes('NordicRay')) targetStudioId = 'rainbow-nordicray';
-                else if (product?.name?.includes('SunnyView')) targetStudioId = 'rainbow-sunnyview';
-                else if (product?.name?.includes('River.E') || product?.name?.includes('River')) targetStudioId = 'rainbow-rivere';
-                else if (product?.name?.includes('GoldenWeave')) targetStudioId = 'rainbow-goldenweave';
+                else if (product?.name?.includes('Brioni')) targetStudioId = 'rainbow-brioni';
+                else if (product?.name?.includes('Infiniti')) targetStudioId = 'rainbow-infiniti';
+                else if (product?.name?.includes('River')) targetStudioId = 'rainbow-rivere';
+                else if (product?.name?.includes('Dragon')) targetStudioId = 'rainbow-dragon';
+                else if (product?.category === 'Rèm vải') targetStudioId = 'elogi-1198-2';
+                else if (product?.category === 'Rèm cuốn') targetStudioId = 'roller-harmony-2';
+                else if (product?.category === 'Rèm cầu vồng') targetStudioId = 'rainbow-brioni';
                 navigateTo('studio', targetStudioId);
               }}
             >

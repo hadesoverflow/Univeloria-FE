@@ -354,16 +354,16 @@ export function StudioPage({
 
     return list.filter((t) => {
       if (activeStudioFilter === 'Tất cả') return true;
-      if (activeStudioFilter === 'Rèm vải' || activeStudioFilter === 'Khách Sạn 5 Sao' || activeStudioFilter === '2 Lớp S-Fold' || activeStudioFilter === '1 Lớp Xếp Ly') {
-        return t.category === 'Rèm vải' || t.id === 'sfold-luxury' || t.id === 'single-pleat';
+      if (activeStudioFilter === 'Rèm vải') {
+        return t.category === 'Rèm vải';
       }
       if (activeStudioFilter === 'Rèm cuốn') {
-        return t.isRoller || t.category === 'Rèm cuốn' || t.id.startsWith('roller-');
+        return t.category === 'Rèm cuốn' || t.isRoller;
       }
       if (activeStudioFilter === 'Rèm cầu vồng') {
-        return t.isRainbow || t.category === 'Rèm cầu vồng' || t.id.startsWith('rainbow-');
+        return t.category === 'Rèm cầu vồng' || t.isRainbow;
       }
-      return t.style === activeStudioFilter || t.category === activeStudioFilter;
+      return t.category === activeStudioFilter;
     });
   }, [activeStudioFilter, aiDiagnosis]);
 
@@ -1172,6 +1172,10 @@ export function StudioPage({
                   if (found) {
                     setActiveFabricId(found.id);
                     setStudioColor(found.defaultColor);
+                    const matchingType = curtainTypes.find(ct => ct.id === found.id);
+                    if (matchingType) {
+                      chooseType(matchingType);
+                    }
                   }
                 }}
               >
