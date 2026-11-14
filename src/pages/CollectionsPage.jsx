@@ -27,19 +27,14 @@ export function CollectionsPage({
 
             <div className="hero-copy">
               <div className="eyebrow"><span>BỘ SƯU TẬP</span><i /></div>
-              <h1>Rèm Cửa Cao Cấp<br /><em>Cho Mọi Không Gian</em></h1>
+              <h1 className="collections-hero-title">
+                <span className="title-row">Rèm Cửa Cao Cấp</span>
+                <span className="title-row title-row-em">Cho Mọi Không Gian</span>
+              </h1>
               <p>
                 Khám phá bộ sưu tập rèm cao cấp, được thiết kế<br className="desktop-break" />
                 dành riêng cho từng không gian sống.
               </p>
-              <div className="collections-banner-actions">
-                <a className="pill-button dark-button" href="#collection-grid">
-                  Khám phá tất cả <span className="arrow">↗</span>
-                </a>
-                <button className="pill-button light-button" onClick={() => navigateTo('home')}>
-                  <span>← Về Không Gian Sống</span>
-                </button>
-              </div>
             </div>
 
             <div className="hero-note">

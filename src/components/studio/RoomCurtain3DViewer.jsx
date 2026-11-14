@@ -2640,14 +2640,6 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
           <small>Tạo phòng kiến trúc · Mô phỏng ánh sáng vật lý</small>
         </div>
       )}
-
-      {/* Floating 3D Minimalist Badge (Clean, unobstructed canvas) */}
-      <div className="stage-3d-badge">
-        <span className="live-dot" />
-        <span>
-          3D STUDIO · {ATMOSPHERE_MODES[activeAtmosphere]?.name.toUpperCase()} · TƯƠNG TÁC CHUẨN VẬT LÝ
-        </span>
-      </div>
     </div>
   );
 });

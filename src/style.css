@@ -2048,7 +2048,7 @@ a:focus-visible {
   z-index: 2;
   left: clamp(28px, 4.6vw, 82px);
   top: clamp(125px, 10.5vw, 175px);
-  max-width: 480px;
+  max-width: 820px !important;
 }
 
 .collections-hero .eyebrow {
@@ -2059,7 +2059,7 @@ a:focus-visible {
   font-size: 10px;
   letter-spacing: 0.24em;
   font-weight: 700;
-  color: #071318;
+  color: #173352;
 }
 
 .collections-hero .eyebrow i {
@@ -2069,16 +2069,32 @@ a:focus-visible {
   display: inline-block;
 }
 
-.collections-hero h1 {
-  margin: 0;
-  font: 700 clamp(38px, 4.2vw, 68px)/0.98 "Manrope", sans-serif;
-  letter-spacing: -0.065em;
-  color: #071318;
+.collections-hero h1,
+.collections-hero-title {
+  margin: 0 !important;
+  font-family: 'Lora', Georgia, serif !important;
+  font-size: clamp(34px, 4.2vw, 62px) !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
+  color: #173352 !important;
+}
+
+.collections-hero-title .title-row {
+  display: block !important;
+  white-space: nowrap !important;
+}
+
+.collections-hero-title .title-row-em {
+  font-weight: 700 !important;
+  color: #173352 !important;
+  font-style: normal !important;
 }
 
 .collections-hero h1 em {
-  font-style: normal;
-  font-weight: 600;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  color: #173352 !important;
 }
 
 .collections-hero p {
@@ -2541,7 +2557,7 @@ a:focus-visible {
     left: 20px;
     right: 20px;
     top: 100px;
-    max-width: 420px;
+    max-width: 92% !important;
   }
 
   .collections-hero .eyebrow {
@@ -2549,8 +2565,10 @@ a:focus-visible {
     font-size: 9px;
   }
 
-  .collections-hero h1 {
-    font-size: clamp(34px, 10vw, 50px);
+  .collections-hero h1,
+  .collections-hero-title {
+    font-size: clamp(26px, 7.5vw, 46px) !important;
+    line-height: 1.18 !important;
   }
 
   .collections-hero p {
@@ -5016,13 +5034,13 @@ a:focus-visible {
 }
 
 .about-page-view .hero-copy h1 {
-  font-family: "Playfair Display", Georgia, serif;
-  font-weight: 500;
-  letter-spacing: -0.045em;
-  font-size: clamp(43px, 4.1vw, 65px);
-  line-height: 0.98;
-  margin: 18px 0 15px;
-  color: #0a1113;
+  font-family: 'Lora', Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.015em !important;
+  font-size: clamp(38px, 4.1vw, 62px) !important;
+  line-height: 1.15 !important;
+  margin: 18px 0 15px !important;
+  color: #173352 !important;
 }
 
 .about-page-view .hero-copy p {
@@ -5642,13 +5660,13 @@ a:focus-visible {
 }
 
 .contact-page-view .hero-copy h1 {
-  font-family: "Playfair Display", Georgia, serif;
-  font-weight: 500;
-  letter-spacing: -0.045em;
-  font-size: clamp(38px, 3.7vw, 53px);
-  line-height: 0.99;
-  margin: 14px 0 13px;
-  color: #081214;
+  font-family: 'Lora', Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.015em !important;
+  font-size: clamp(36px, 3.7vw, 53px) !important;
+  line-height: 1.15 !important;
+  margin: 14px 0 13px !important;
+  color: #173352 !important;
 }
 
 .contact-page-view .hero-copy p {
@@ -5699,9 +5717,13 @@ a:focus-visible {
 }
 
 .contact-page-view .contact-intro h2 {
-  font-size: clamp(31px, 3vw, 43px);
-  line-height: 1.02;
-  margin: 13px 0 13px;
+  font-family: 'Lora', Georgia, serif !important;
+  font-weight: 700 !important;
+  color: #173352 !important;
+  letter-spacing: -0.015em !important;
+  font-size: clamp(31px, 3vw, 44px) !important;
+  line-height: 1.18 !important;
+  margin: 13px 0 13px !important;
 }
 
 .contact-page-view .contact-intro>p {
