@@ -16,9 +16,10 @@ export function determineCurtainRecommendations({
       caseTitle: 'Cửa chính / Cửa ban công lớn phòng khách',
       spaceTypeLabel: 'Trong nhà',
       doorTypeLabel: 'Cửa chính / Cửa đi',
-      recommendedTypeIds: ['sfold-luxury', 'elogi-1198-2', 'elogi-1206-1', 'single-pleat', 'elogi-1230-1'],
+      recommendedTypeIds: ['sfold-luxury', 'single-pleat'],
       primaryTypeId: 'sfold-luxury',
-      primaryColor: '#d5cbbe',
+      primaryFabricId: 'elogi-1198-2',
+      primaryColor: '#ebe6db',
       style: 'Khách Sạn 5 Sao & Biệt Thự Cao Cấp',
       wallTone: 'Khu vực cửa chính phòng khách',
       lightCondition: 'Đón ánh sáng tự nhiên toàn cảnh',
@@ -29,63 +30,64 @@ export function determineCurtainRecommendations({
     };
   }
 
-  // Case 2: Phân khúc phong cách Nhật Bản / Tinh tế nhẹ nhàng
-  if (budget === 'japanese' || windowPanels === 'single') {
-    if (budget === 'economy') {
-      return {
-        ruleKey: 'elogi1230',
-        caseTitle: 'Cửa sổ trong nhà - Phong cách Nhật Bản Eco',
-        spaceTypeLabel: 'Trong nhà',
-        doorTypeLabel: 'Cửa sổ đơn',
-        recommendedTypeIds: ['elogi-1230-1', 'elogi-1206-1', 'single-pleat', 'elogi-1198-2', 'sfold-luxury'],
-        primaryTypeId: 'elogi-1230-1',
-        primaryColor: '#e3d8c8',
-        style: 'Phong cách Nhật Bản',
-        wallTone: 'Cửa sổ phòng ngủ / phòng làm việc',
-        lightCondition: 'Ánh sáng êm dịu',
-        matchScore: 98,
-        aiReason: 'Với nhu cầu rèm vải cao cấp tối ưu ngân sách, AI đề xuất Mẫu rèm vải Elogi - 1230 - 1: chất vải Eco-friendly mềm mịn, họa tiết dệt sắc nét và viền mép chuẩn xác.',
-        tags: ['Cửa sổ đơn', 'Elogi 1230-1', 'Vải Eco-friendly'],
-        estimatedPriceRange: '580.000đ / m² hoàn thiện'
-      };
-    }
-
-    if (budget === 'warmth') {
-      return {
-        ruleKey: 'elogi1206',
-        caseTitle: 'Cửa sổ trong nhà - Tông nâu be ấm áp',
-        spaceTypeLabel: 'Trong nhà',
-        doorTypeLabel: 'Cửa sổ đơn',
-        recommendedTypeIds: ['elogi-1206-1', 'elogi-1198-2', 'sfold-luxury', 'elogi-1230-1', 'single-pleat'],
-        primaryTypeId: 'elogi-1206-1',
-        primaryColor: '#b5aba1',
-        style: 'Phong cách Nhật Bản',
-        wallTone: 'Cửa sổ phòng ngủ / nghỉ dưỡng',
-        lightCondition: 'Lọc sáng dịu mắt',
-        matchScore: 99,
-        aiReason: 'Với không gian cần sự ấm cúng và thư giãn, AI đề xuất Mẫu rèm vải Elogi - 1206 - 1: tông nâu be trung tính, chất vải êm mịn tạo độ rũ tự nhiên và cản sáng tốt.',
-        tags: ['Cửa sổ', 'Elogi 1206-1', 'Tone nâu be thư giãn'],
-        estimatedPriceRange: '600.000đ / m² hoàn thiện'
-      };
-    }
+  // Case 2: Phân khúc cửa sổ
+  if (budget === 'economy') {
+    return {
+      ruleKey: 'singlePleatEco',
+      caseTitle: 'Cửa sổ trong nhà - Rèm Vải 1 Lớp Xếp Ly Định Hình',
+      spaceTypeLabel: 'Trong nhà',
+      doorTypeLabel: 'Cửa sổ đơn',
+      recommendedTypeIds: ['single-pleat', 'sfold-luxury'],
+      primaryTypeId: 'single-pleat',
+      primaryFabricId: 'elogi-1230-1',
+      primaryColor: '#e3d8c8',
+      style: 'Tối giản & Hiện đại',
+      wallTone: 'Cửa sổ phòng ngủ / phòng làm việc',
+      lightCondition: 'Ánh sáng êm dịu',
+      matchScore: 98,
+      aiReason: 'Với nhu cầu rèm vải cao cấp tối ưu ngân sách, AI đề xuất Rèm Vải 1 Lớp Xếp Ly Định Hình: may xếp ly đôi gọn gàng, kết hợp mẫu vải Elogi - 1230 - 1 mềm mịn, thân thiện môi trường và cản sáng tốt.',
+      tags: ['Cửa sổ đơn', 'Rèm 1 Lớp Xếp Ly', 'Elogi 1230-1'],
+      estimatedPriceRange: '1.650.000đ / bộ'
+    };
   }
 
-  // Case 3: Mặc định chuẩn phong cách Nhật Bản tinh tế
+  if (budget === 'warmth') {
+    return {
+      ruleKey: 'sfoldWarmth',
+      caseTitle: 'Cửa sổ trong nhà - Rèm Hai Lớp S-Fold Ấm Áp',
+      spaceTypeLabel: 'Trong nhà',
+      doorTypeLabel: 'Cửa sổ đơn',
+      recommendedTypeIds: ['sfold-luxury', 'single-pleat'],
+      primaryTypeId: 'sfold-luxury',
+      primaryFabricId: 'elogi-1206-1',
+      primaryColor: '#b5aba1',
+      style: 'Khách Sạn 5 Sao & Ấm Cúng',
+      wallTone: 'Cửa sổ phòng ngủ / nghỉ dưỡng',
+      lightCondition: 'Lọc sáng dịu mắt',
+      matchScore: 99,
+      aiReason: 'Với không gian cần sự ấm cúng và thư giãn, AI đề xuất Rèm Hai Lớp S-Fold Định Hình kết hợp Mẫu rèm vải Elogi - 1206 - 1: tông nâu be trung tính, chất vải êm mịn tạo độ rũ tự nhiên và cản sáng tốt.',
+      tags: ['Cửa sổ', 'Rèm 2 Lớp S-Fold', 'Elogi 1206-1'],
+      estimatedPriceRange: '2.850.000đ / bộ'
+    };
+  }
+
+  // Case 3: Mặc định chuẩn rèm 2 lớp S-Fold phong cách Nhật Bản tinh tế
   return {
-    ruleKey: 'elogi1198',
-    caseTitle: 'Cửa sổ trong nhà - Phong cách Nhật Bản tinh tế',
+    ruleKey: 'sfoldElogi1198',
+    caseTitle: 'Cửa sổ trong nhà - Rèm Hai Lớp S-Fold Phong Cách Nhật Bản',
     spaceTypeLabel: 'Trong nhà',
     doorTypeLabel: 'Cửa sổ trong nhà',
-    recommendedTypeIds: ['elogi-1198-2', 'sfold-luxury', 'single-pleat', 'elogi-1206-1', 'elogi-1230-1'],
-    primaryTypeId: 'elogi-1198-2',
+    recommendedTypeIds: ['sfold-luxury', 'single-pleat'],
+    primaryTypeId: 'sfold-luxury',
+    primaryFabricId: 'elogi-1198-2',
     primaryColor: '#ebe6db',
-    style: 'Phong cách Nhật Bản',
+    style: 'Khách Sạn 5 Sao & Tinh Tế',
     wallTone: 'Không gian sống hiện đại & tối giản',
     lightCondition: 'Ánh sáng tự nhiên êm dịu',
     matchScore: 99,
-    aiReason: 'Với kiến trúc hiện đại tối giản, AI đề xuất Mẫu rèm vải Elogi - 1198 - 2: cấu trúc 3 lớp vải cao cấp dệt mịn vân chéo tinh tế, gam màu kem sáng sang trọng và dễ phối hợp nội thất.',
-    tags: ['Cửa sổ', 'Elogi 1198-2', 'Dệt chéo tinh tế'],
-    estimatedPriceRange: '680.000đ / m² hoàn thiện'
+    aiReason: 'Với kiến trúc hiện đại tối giản, AI đề xuất Rèm Hai Lớp S-Fold Định Hình kết hợp Mẫu rèm vải Elogi - 1198 - 2: cấu trúc 3 lớp vải cao cấp dệt mịn vân chéo tinh tế, gam màu kem sáng sang trọng và dễ phối hợp nội thất.',
+    tags: ['Cửa sổ', 'Rèm 2 Lớp S-Fold', 'Elogi 1198-2'],
+    estimatedPriceRange: '2.850.000đ / bộ'
   };
 }
 

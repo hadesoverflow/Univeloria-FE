@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { curtainTypes } from './data/studioData';
+import { curtainTypes, fabricSamples } from './data/studioData';
 import { collectionsData } from './data/collectionsData';
 import { productsData } from './data/productsData';
 
@@ -528,6 +528,12 @@ export default function App() {
         if (matched) {
           setActiveType(matched.id);
           if (matched.colors?.[0]) setStudioColor(matched.colors[0]);
+        } else {
+          const matchedFabric = fabricSamples.find(f => f.id === targetSection || f.name.toLowerCase().includes(String(targetSection).toLowerCase()));
+          if (matchedFabric) {
+            setActiveType(matchedFabric.id);
+            if (matchedFabric.defaultColor) setStudioColor(matchedFabric.defaultColor);
+          }
         }
       }
     }

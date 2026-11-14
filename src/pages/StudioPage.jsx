@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Header } from '../components/layout/Header';
 import { UnifiedFooter } from '../components/layout/UnifiedFooter';
 import { StudioIcon } from '../components/ui/Icons';
-import { curtainTypes, studioStyleFilters } from '../data/studioData';
+import { curtainTypes, fabricSamples, studioStyleFilters } from '../data/studioData';
 import { RoomCurtain3DViewer } from '../components/studio/RoomCurtain3DViewer';
 import { analyzeRoomPhoto, determineCurtainRecommendations } from '../utils/aiRoomAnalyzer';
 import { WindowMeasurementGuideModal } from '../components/ui/WindowMeasurementGuideModal';
@@ -148,6 +148,16 @@ export function StudioPage({
   const [showMeasureGuide, setShowMeasureGuide] = useState(false);
   const [calibrationPrecision, setCalibrationPrecision] = useState('fine'); // 'fine' (2%) | 'medium' (5%) | 'coarse' (10%)
   const [curtainThickness, setCurtainThickness] = useState('Tiêu chuẩn');
+  const [activeFabricId, setActiveFabricId] = useState('elogi-1198-2');
+  const currentFabric = fabricSamples.find(f => f.id === activeFabricId) || fabricSamples[0];
+
+  useEffect(() => {
+    if (activeType && activeType.startsWith('elogi')) {
+      setActiveFabricId(activeType);
+      const f = fabricSamples.find(item => item.id === activeType);
+      if (f) setStudioColor(f.defaultColor);
+    }
+  }, [activeType]);
 
   useEffect(() => {
     // Ensure stepper starts scrolled fully to the left so Step 1 icon is never clipped on mobile (iPhone 14/15/16/17)
@@ -228,9 +238,8 @@ export function StudioPage({
 
     return list.filter((t) => {
       if (activeStudioFilter === 'Tất cả') return true;
-      if (activeStudioFilter === 'Phong cách Nhật Bản') return t.style === 'Phong cách Nhật Bản' || t.id.startsWith('elogi');
-      if (activeStudioFilter === 'Khách Sạn 5 Sao' || activeStudioFilter === 'Khách sạn 5 Sao') return t.id === 'sfold-luxury' || t.style?.includes('Khách Sạn');
-      if (activeStudioFilter === 'Tối giản & Hiện đại') return t.id === 'single-pleat' || t.style?.includes('Hiện đại') || t.style?.includes('Tối giản');
+      if (activeStudioFilter === '2 Lớp S-Fold' || activeStudioFilter === 'Khách Sạn 5 Sao') return t.id === 'sfold-luxury';
+      if (activeStudioFilter === '1 Lớp Xếp Ly' || activeStudioFilter === 'Tối giản & Hiện đại') return t.id === 'single-pleat';
       return t.style === activeStudioFilter;
     });
   }, [activeStudioFilter, aiDiagnosis]);
@@ -415,9 +424,12 @@ export function StudioPage({
     const primaryType = curtainTypes.find((t) => t.id === diagnosis.primaryTypeId);
     if (primaryType) {
       chooseType(primaryType);
-      if (diagnosis.primaryColor) {
-        setStudioColor(diagnosis.primaryColor);
-      }
+    }
+    if (diagnosis.primaryFabricId) {
+      setActiveFabricId(diagnosis.primaryFabricId);
+    }
+    if (diagnosis.primaryColor) {
+      setStudioColor(diagnosis.primaryColor);
     }
   };
 
@@ -522,7 +534,7 @@ export function StudioPage({
           onClick={() => setMobileActiveTab('curtains')}
         >
           <Layers size={16} />
-          <span>Mẫu rèm ({curtainTypes?.length || 11})</span>
+          <span>Loại rèm ({curtainTypes?.length || 2})</span>
         </button>
         <button
           type="button"
@@ -941,12 +953,12 @@ export function StudioPage({
           </div>
 
           {/* CHI TIẾT TỪNG LỚP VẢI 3D (FABRIC LAYERS & WEAVE INSPECTOR) */}
-          {currentType?.fabricLayers && currentType.fabricLayers.length > 0 && (
+          {currentFabric?.fabricLayers && currentFabric.fabricLayers.length > 0 && (
             <div className="fabric-layers-selector-bar">
               <div className="fl-header">
                 <div className="fl-title">
                   <Sparkles size={14} color="#8c6036" />
-                  <span>Chất liệu vải 3D: <strong>{currentType.name}</strong></span>
+                  <span>Chất liệu vải 3D: <strong>{currentFabric.name}</strong></span>
                 </div>
                 <button
                   type="button"
@@ -959,9 +971,9 @@ export function StudioPage({
                 </button>
               </div>
               <div className="fl-cards-grid">
-                {currentType.fabricLayers.map((layer) => {
+                {currentFabric.fabricLayers.map((layer) => {
                   const isCurrentActive = studioColor?.toLowerCase() === layer.colorHex.toLowerCase();
-                  const isLight = layer.colorHex === '#ebe6db' || layer.colorHex === '#e3d8c8' || layer.colorHex === '#ddd3c3' || layer.colorHex === '#ded8cf' || layer.colorHex === '#e4ded5';
+                  const isLight = isLightColor(layer.colorHex);
                   return (
                     <div
                       key={layer.code}
@@ -1021,29 +1033,28 @@ export function StudioPage({
           {/* Streamlined Bottom Control Bar matching Image 2 */}
           <div className="panel2-bottom-bar">
             <div className="panel2-ctrl-item">
-              <span>Loại rèm</span>
+              <span>Mẫu vải</span>
               <select
                 className="panel2-ctrl-select"
-                value={activeType}
+                value={activeFabricId}
                 onChange={(e) => {
-                  const found = curtainTypes.find(c => c.id === e.target.value);
+                  const found = fabricSamples.find(f => f.id === e.target.value);
                   if (found) {
-                    chooseType(found);
-                    setCurtainOpenRatio(0.0);
-                    setIsCurtainOpen(false);
+                    setActiveFabricId(found.id);
+                    setStudioColor(found.defaultColor);
                   }
                 }}
               >
-                {curtainTypes.map(c => (
-                  <option key={c.id} value={c.id}>{c.name.split(' ').slice(0, 3).join(' ')}</option>
+                {fabricSamples.map(f => (
+                  <option key={f.id} value={f.id}>{f.name}</option>
                 ))}
               </select>
             </div>
 
             <div className="panel2-ctrl-item">
-              <span>Màu sắc</span>
+              <span>Màu sắc mẫu vải</span>
               <div className="panel2-swatches">
-                {(currentType?.colors?.slice(0, 5) || ['#dfd7c8', '#10223e', '#e9d8c2', '#c5a27d', '#e07a5f']).map((col, idx) => (
+                {(currentFabric?.colors || []).map((col, idx) => (
                   <button
                     key={col + idx}
                     type="button"
@@ -1078,7 +1089,7 @@ export function StudioPage({
             <div className="panel3-header">
               <h2>
                 <Star size={16} fill="#E2A96A" color="#E2A96A" />
-                <span>Gợi ý rèm phù hợp</span>
+                <span>Gợi ý loại rèm</span>
               </h2>
               <button
                 type="button"
