@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Sparkles, ExternalLink, Dices } from 'lucide-react';
 
 // =============================================================================
-// HỒ SƠ 12 MẪU RÈM CHÍNH HÃNG KÈM CÂU CHUYỆN KHÔNG GIAN
-// (Chỉ gồm Rèm Cầu Vòng, Rèm Cuốn, Rèm Vải - Loại trừ Thanh Rèm theo yêu cầu)
+// HỒ SƠ 14 SẢN PHẨM CHÍNH HÃNG KÈM LUẬN ĐIỂM TƯ VẤN CHUYÊN GIA
+// (Gồm 12 mẫu rèm chính thức + 2 mẫu thanh rèm/động cơ thông minh)
 // =============================================================================
 export const CURTAIN_PROFILES = [
   {
@@ -15,7 +15,8 @@ export const CURTAIN_PROFILES = [
     priceDisplay: 'Từ 1.350.000đ / m²',
     image: '/product/Rèm/Rèm Cầu Vòng/Mẫu Rèm Cầu Vồng Brioni.E Blackout.png',
     badge: 'Cản sáng 94%',
-    story: 'Với bề mặt vân dệt gỗ xước ngang tự nhiên Wood-grain, Brioni.E mang đến sự trầm ấm, sang trọng và khả năng cản sáng đến 94%. Tấm rèm này sinh ra để đồng điệu với nội thất gỗ, phòng khách biệt thự hoặc phòng ngủ cần chiều sâu mộc mạc và sự riêng tư yên bình.',
+    story: 'Bề mặt vân dệt gỗ xước ngang tự nhiên Wood-grain mang đến sự trầm ấm, sang trọng và khả năng cản sáng đến 94%. Tấm rèm sinh ra để đồng điệu với nội thất gỗ, phòng khách biệt thự hoặc phòng ngủ cần chiều sâu mộc mạc và sự riêng tư yên bình.',
+    whyChoose: 'Bề mặt dệt xước vân gỗ Wood-grain với độ dày sợi cao cấp giúp cản sáng 94% và hạ nhiệt tối ưu. Nếu căn phòng của bạn có nhiều nội thất gỗ, các loại rèm trơn thông thường sẽ làm không gian bị đơn điệu, trong khi Brioni.E tạo nên sự đồng điệu mộc mạc, tôn vinh đẳng cấp đồ gỗ và bảo vệ bề mặt gỗ không bị bạc màu do tia cực tím.',
     keywords: ['phong khach', 'biet thu', 'go', 'van go', 'nau', 'am cung', 'sang trong', 'can sang', 'ngu', 'rieng tu', 'tram am']
   },
   {
@@ -28,6 +29,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Cầu Vòng/Mẫu Rèm Cầu Vồng Infiniti.E Blackout.png',
     badge: 'Dual-Border độc bản',
     story: 'Điểm nhấn chữ ký của Infiniti.E là đường nẹp viền sáng kép Dual-Border độc quyền chạy dọc từng nan rèm. Thiết kế này tạo nên nét vẽ kiến trúc sắc sảo, cản sáng 90%, cực kỳ phù hợp cho phòng làm việc hiện đại hoặc phòng ngủ của gia chủ yêu thích sự chỉn chu và khác biệt.',
+    whyChoose: 'Đường nẹp viền sáng kép Dual-Border độc quyền tạo nên nét vẽ kiến trúc sắc nét, cản sáng 90% chống lóa màn hình máy tính tuyệt đối. Góc làm việc hay văn phòng hiện đại cần sự chỉn chu, dứt khoát; rèm thông thường dễ tạo cảm giác buồn tẻ, còn Infiniti.E mang lại phong thái kỷ luật, hiện đại và tập trung tối đa.',
     keywords: ['lam viec', 'van phong', 'vien sang', 'nep vien', 'hien dai', 'tinh te', 'kien truc', 'chi tiet', 'doc la', 'doc quyen']
   },
   {
@@ -40,6 +42,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Cầu Vòng/Mẫu Rèm Cầu Vồng River.E.png',
     badge: '10 Sắc Thái Màu',
     story: 'Như dòng sông êm đềm mang sinh khí và sự tươi mới, River.E sở hữu bảng 10 mã màu phong phú từ pastel dịu mát đến trung tính thanh lịch. Chất vải dệt canvas bền bỉ chống bám bụi và lọc sáng dịu nhẹ, là sự lựa chọn số một cho căn hộ trẻ trung và gia đình hiện đại.',
+    whyChoose: 'Sở hữu hệ 10 mã màu phong phú cùng cơ chế nan so le lấy sáng êm dịu. Với các căn hộ chung cư hoặc phòng gia đình trẻ, bạn không muốn một tấm rèm nặng nề che kín mít cả ngày; River.E cho phép bạn vừa cản chói lúc nắng sớm, vừa xoay nan đón gió và ánh sáng tự nhiên dịu nhẹ vào phòng mà vẫn giữ được sự riêng tư.',
     keywords: ['chung cu', 'tre trung', 'mau sac', 'nhieu mau', 'xanh', 'be', 'pastel', 'linh hoat', 'gia tot', 'tiet kiem', 'gia dinh']
   },
   {
@@ -51,7 +54,8 @@ export const CURTAIN_PROFILES = [
     priceDisplay: 'Từ 1.450.000đ / m²',
     image: '/product/Rèm/Rèm Cầu Vòng/Mẫu Rèm Cầu Vồng Dragon.E Blackout.png',
     badge: 'Cản sáng 95%',
-    story: 'Sở hữu ma trận dệt chéo melange đan khít dày dặn, Dragon.E là "người vệ sĩ" cản sáng 95% vượt trội. Nếu phòng ngủ của bạn quay về hướng tây nắng gắt hay cạnh trục đường ồn ào, Dragon.E sẽ che chắn toàn bộ ánh chói và hạ nhiệt, đem lại sự tĩnh lặng tuyệt đối cho giấc ngủ.',
+    story: 'Sở hữu ma trận dệt chéo melange đan khít dày dặn, Dragon.E là người vệ sĩ cản sáng 95% vượt trội. Nếu phòng ngủ của bạn quay về hướng tây nắng gắt hay cạnh trục đường ồn ào, Dragon.E sẽ che chắn toàn bộ ánh chói và hạ nhiệt, đem lại sự tĩnh lặng tuyệt đối cho giấc ngủ.',
+    whyChoose: 'Ma trận dệt chéo melange đan khít cản sáng đến 95%. Với những căn phòng phía Tây nắng chiều rực lửa hoặc cạnh đường lớn ồn ào, bất kỳ loại rèm mỏng nào cũng sẽ bị nắng xuyên qua gây om nhiệt; chỉ có kết cấu dệt dày dặn của Dragon.E mới chặn đứng bức xạ nhiệt, hạ nhiệt độ phòng tức thì và bảo vệ giấc ngủ tĩnh lặng.',
     keywords: ['nang gat', 'huong tay', 'can sang 95', 'ngu ngon', 'yen tinh', 'toi gian', 'chong choi', 'mat me', 'ha nhiet', 'duong lon', 'xe co']
   },
   {
@@ -64,6 +68,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Cuốn/Mẫu Rèm Cuốn Harmony 2.png',
     badge: 'Gân dệt Corded Rib',
     story: 'Biểu tượng của sự gọn gàng và ổn định: Harmony 2 với chất vải dệt gân mịn corded rib chống trượt nước, hạn chế bám bụi tối đa. Rèm cuộn lên gọn ghẽ trong hộp máng, tiết kiệm diện tích tối ưu cho góc làm việc, văn phòng hoặc khung cửa sổ căn hộ nhỏ.',
+    whyChoose: 'Vải dệt gân corded rib tráng lớp bảo vệ chống bám bụi và chống thấm nước, cuộn gọn gàng tuyệt đối vào hộp máng. Với góc bàn làm việc hoặc căn hộ diện tích nhỏ, việc dùng rèm vải rườm rà sẽ chiếm dụng không gian và dễ bám bụi; Harmony 2 giải phóng 100% diện tích cửa sổ, dễ lau chùi và vận hành cực kỳ bền bỉ.',
     keywords: ['van phong', 'lam viec', 'gon gang', 'nho', 'dien tich nho', 'de lau chui', 'chong nuoc', 'ben bi', 'on dinh']
   },
   {
@@ -76,6 +81,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Cuốn/Mẫu Rèm Cuốn Malange 1.png',
     badge: 'Melange Bắc Âu',
     story: 'Tựa như một bức tranh tối giản phong cách Scandinavian, Malange 1 đan xen các vệt xước hoa râm đa sắc thái làm mềm đi nét cứng nhắc của những bức tường bê tông. Cản sáng 90-95% nhẹ nhàng, rèm mang lại bầu không khí thanh lịch, thư thái cho phòng khách hay căn hộ studio.',
+    whyChoose: 'Họa tiết dệt hoa râm Scandinavian làm mềm đi những mảng tường bê tông thô cứng, cản sáng 90% nhẹ nhàng. Không gian phòng khách căn hộ hoặc studio cần sự thanh lịch, thoáng đãng; Malange 1 biến khung cửa sổ thành một bức tranh nghệ thuật Bắc Âu tinh tế mà không làm phòng bị tối sầm.',
     keywords: ['bac au', 'scandinavian', 'hoa ram', 'thanh lich', 'nhe nhang', 'nghe thuat', 'studio', 'can ho', 'xanh nhat']
   },
   {
@@ -88,6 +94,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Cuốn/Mẫu Rèm Cuốn Moon.png',
     badge: '100% Blackout Tuyệt Đối',
     story: 'Lấy cảm hứng từ sự êm đềm của ánh trăng tròn, rèm cuốn Moon là giải pháp cản sáng 100% Blackout tuyệt đối nhờ lớp bọt Foam 3 lớp. Ngay cả giữa trưa hè rực lửa, căn phòng vẫn tối dịu mát mẻ, biến góc phòng ngủ thành ốc đảo bình yên để tái tạo năng lượng.',
+    whyChoose: 'Giải pháp cản sáng 100% Blackout tuyệt đối nhờ 3 lớp bọt Foam cách nhiệt độc quyền. Đối với phòng ngủ người già, trẻ nhỏ hoặc người hay mất ngủ cần bóng tối tuyệt đối giữa trưa hè, đây là tấm rèm duy nhất chặn đứng 100% tia nắng và ngăn nhiệt lượng từ kính phả vào phòng.',
     keywords: ['ngu', 'phong ngu', 'blackout', '100%', 'toi hoan toan', 'mat ngu', 'em be', 'trua', 'chong nong', 'cach nhiet']
   },
   {
@@ -100,6 +107,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Cuốn/Mẫu Rèm Cuốn Silvia.png',
     badge: 'Jacquard Châu Âu',
     story: 'Phong thái vương giả Châu Âu với hoa văn dệt nổi Jacquard Diamond Twill tinh xảo và chuẩn chống cháy B1 an toàn. Silvia là điểm tựa khẳng định vị thế và gu thẩm mỹ quyền quý cho không gian phòng khách lớn, phòng họp VIP hay biệt thự sang trọng.',
+    whyChoose: 'Vải dệt Jacquard Châu Âu hoa văn dệt nổi vương giả đạt chuẩn chống cháy B1 an toàn. Phòng khách lớn, phòng họp VIP hoặc biệt thự cần khẳng định vị thế gia chủ; các loại rèm cuốn trơn văn phòng sẽ làm giảm giá trị không gian, trong khi Silvia nâng tầm sự sang trọng quý phái như một tác phẩm dệt hoàng gia.',
     keywords: ['sang trong', 'quy toc', 'chau au', 'hoang gia', 'hoa van', 'jacquard', 'biet thu', 'vip', 'chong chay']
   },
   {
@@ -112,6 +120,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Cuốn/Mẫu Rèm Cuốn Sunny.png',
     badge: 'Lọc Sáng Tự Nhiên',
     story: 'Nếu phòng khách hoặc góc đọc sách của bạn có ban công hướng ra sân vườn hay thành phố, Sunny sẽ giúp bạn đón trọn ánh nắng ban mai mà không hề chói gắt. Mắt lưới Micro Sunscreen lọc sáng dịu mát, cản 95% tia UV nhưng vẫn giữ trọn tầm nhìn mở khoáng đạt.',
+    whyChoose: 'Mắt lưới Micro Sunscreen lọc sáng dịu mát, ngăn 95% tia UV độc hại nhưng vẫn giữ trọn 100% tầm nhìn ngắm cảnh thiên nhiên. Nếu cửa sổ của bạn có ban công đẹp, hướng biển hoặc nhìn ra sân vườn, chọn rèm tối màu sẽ làm mất view; Sunny giúp bạn đón nắng ban mai dịu êm mà không hề bị chói mắt.',
     keywords: ['loc sang', 'ngam canh', 'ban cong', 'thoang daang', 'view', 'nhin ra ngoai', 'nang som', 'doc sach', 'thien nhien']
   },
   {
@@ -124,6 +133,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Vải/Mẫu rèm vải Elogi - 1198 - 2.png',
     badge: 'Chuẩn Khách Sạn 5 Sao',
     story: 'Chuẩn mực khách sạn 5 sao cho những khung cửa kính rộng lớn: Elogi 1198 sở hữu nếp gấp sóng rèm bồng bềnh lượn sóng đều đặn từ trần xuống sàn. Sợi gấm dệt thô cao cấp phong cách Nhật Bản cản sáng 95%, tôn vinh vẻ trang nhã, bề thế cho phòng khách biệt thự.',
+    whyChoose: 'Chuẩn mực khách sạn 5 sao với kỹ thuật may sóng chữ S bồng bềnh từ trần xuống sàn, chất gấm dệt thô cao cấp phong cách Nhật Bản cản sáng 95%. Với các khung cửa kính lớn ở phòng khách biệt thự hoặc căn hộ duplex, chỉ có độ rủ mềm mại bề thế của Elogi 1198 mới xứng tầm định hình đẳng cấp kiến trúc.',
     keywords: ['rem vai', 'cua lon', 'phong khach', 'khach san', '5 sao', 'song rem', 'nhat ban', 'be the', 'trang nha', 'sang trong']
   },
   {
@@ -136,6 +146,7 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Vải/Mẫu rèm vải Elogi - 1206 - 1.png',
     badge: 'Sợi Lanh Êm Mịn',
     story: 'Cảm giác ấm cúng, vỗ về ngay từ cái chạm tay đầu tiên nhờ sự pha trộn sợi lanh tự nhiên mềm rũ như nhung cùng tone đất nung mộc mạc. Elogi 1206 giảm tiếng ồn đường phố và cản nhiệt nhẹ nhàng, lý tưởng cho phòng ngủ vợ chồng hoặc không gian nghỉ dưỡng cần thư giãn.',
+    whyChoose: 'Sợi lanh tự nhiên mềm rũ phối tone đất nung ấm áp có khả năng cách âm và tiêu âm đường phố vượt trội. Đối với phòng ngủ vợ chồng hoặc không gian nghỉ dưỡng, cảm giác thô ráp của rèm công nghiệp sẽ làm mất đi sự thư giãn; Elogi 1206 vỗ về xúc giác, giảm tiếng ồn và tạo nên chốn nghỉ ngơi bình yên, ấm cúng.',
     keywords: ['am cung', 'dat nung', 'nau be', 'lanh', 'em ai', 'cach am', 'nghi duong', 'vo chong', 'thu gian', 'phong ngu']
   },
   {
@@ -148,7 +159,34 @@ export const CURTAIN_PROFILES = [
     image: '/product/Rèm/Rèm Vải/Mẫu rèm vải Elogi - 1230 - 1.png',
     badge: 'Japandi Eco-Friendly',
     story: 'Dành cho tâm hồn yêu thiên nhiên và phong cách sống mộc mạc Japandi: Elogi 1230 dệt từ sợi Eco-friendly an toàn với các đường gân nổi mộc mạc. Tone cát vàng kem dịu mắt xua tan mọi căng thẳng âu lo, kết nối bạn với thiên nhiên thanh bình trong từng khoảnh khắc.',
+    whyChoose: 'Dệt từ sợi Eco-friendly an toàn sức khỏe với tone cát vàng kem Japandi mộc mạc xua tan mọi căng thẳng. Với căn phòng hướng Bắc thiếu sáng hoặc gia chủ theo đuổi lối sống xanh, Elogi 1230 mang năng lượng ấm áp của thiên nhiên vào từng mét vải, cân bằng thị giác và giữ không gian luôn an lành.',
     keywords: ['japandi', 'eco', 'song xanh', 'an toan', 'thien nhien', 'moc mac', 'gan noi', 'vang kem', 'thanh binh', 'thu thai']
+  },
+  {
+    id: 13,
+    studioId: 'elogi-1198-2',
+    name: 'UniVeloria Motion A25 Pro',
+    category: 'Thanh rèm',
+    price: 3450000,
+    priceDisplay: 'Từ 3.450.000đ / bộ',
+    image: '/product/Thanh Rèm/UniVeloria Motion A25 Pro.png',
+    badge: 'Smart Motor Tự Động',
+    story: 'Đỉnh cao công nghệ Smart Home cho rèm cửa: Động cơ siêu tĩnh âm <25dB công nghệ Đức, hỗ trợ kéo tay nhẹ Touch Motion và điều khiển giọng nói qua Apple HomeKit / Google Assistant. Thanh ray nhôm hàng không 6063-T5 chịu tải 60kg, tự động đóng mở theo lịch trình mỗi ngày.',
+    whyChoose: 'Motion A25 Pro giải phóng hoàn toàn sức lao động, nâng cấp căn phòng thành không gian sống thông minh đẳng cấp quốc tế. Động cơ không chổi than Brushless siêu êm không phát ra tiếng ồn (<25dB), tải trọng cực đại 60kg cho mọi bộ rèm vải dày, tính năng kéo tay nhẹ tự chạy (Touch Motion) và bảo hành đổi mới 5 năm chính hãng.',
+    keywords: ['thanh rem', 'thanh ray', 'dong co', 'tu dong', 'smart', 'motor', 'homekit', 'google', 'dieu khien', 'ray rem', 'ray tu dong', 'thanh treo']
+  },
+  {
+    id: 14,
+    studioId: 'elogi-1206-1',
+    name: 'UniVeloria Motion R25',
+    category: 'Thanh rèm',
+    price: 2850000,
+    priceDisplay: 'Từ 2.850.000đ / bộ',
+    image: '/product/Thanh Rèm/UniVeloria Motion R25.png',
+    badge: 'Ray Bi Teflon Siêu Mượt',
+    story: 'Hệ rãnh trượt bi con lăn phủ hạt nhựa Teflon tự bôi trơn siêu êm ái, kéo rèm lướt nhẹ như nhung không phát ra tiếng động. Nhôm đúc nguyên khối chịu lực uốn cong 90 độ hoặc bo tròn theo góc cửa sổ vòng cung, độ bền trên 15 năm.',
+    whyChoose: 'Motion R25 khắc phục triệt để hiện tượng kẹt rít, võng ray của các loại thanh treo thông thường. Hệ bi phủ hạt nhựa Teflon tự bôi trơn giúp rèm vải nặng lướt êm ái như nhung, kết hợp khả năng uốn góc 90 độ theo kiến trúc cửa sổ bo cong với độ bền trên 15 năm mà không cần bảo dưỡng.',
+    keywords: ['thanh rem', 'thanh treo', 'ray rem', 'ray bi', 'teflon', 'sieu muot', 'uon cong', 'keo tay', 'ben bi', 'phu kien', 'thanh ray co']
   }
 ];
 
@@ -188,7 +226,7 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     return {
       delayMs: 3800,
       curtain: null,
-      text: "Dạ em chào anh/chị ạ! Em là Trợ lý AI tư vấn rèm của UniVeloria ☁️✨\n\nEm rất sẵn lòng đồng hành cùng anh/chị tìm ra mẫu rèm hoàn hảo cho ngôi nhà. Anh/chị hãy kể cho em nghe một chút về căn phòng mình muốn lắp rèm nhé:\n• Đó là phòng ngủ, phòng khách, phòng làm việc hay ban công ạ?\n• Hướng cửa có bị nắng gắt buổi chiều không và phong cách nội thất chủ đạo là gì ạ?\n\nChỉ cần vài chi tiết, em sẽ phân tích và gợi ý ngay mẫu rèm chuẩn chỉ kèm trải nghiệm 3D trực quan ạ!"
+      text: "Dạ em chào anh/chị ạ! Em là Chuyên gia Tư vấn Không gian Rèm của UniVeloria ☁️✨\n\nEm sẵn sàng đồng hành cùng anh/chị phân tích và đưa ra giải pháp rèm chuẩn mực nhất cho ngôi nhà. Anh/chị hãy chia sẻ chi tiết về căn phòng nhé:\n• Đó là phòng ngủ, phòng khách, phòng làm việc hay ban công ạ?\n• Hướng cửa sổ có chịu nắng chiều gay gắt (hướng Tây), đón nắng sớm (hướng Đông) hay lộng gió (hướng Nam) không ạ?\n• Anh/chị cần tư vấn giải pháp rèm vải, rèm cuốn, rèm cầu vồng hay hệ thanh ray / động cơ thông minh ạ?\n\nChỉ cần vài dữ liệu không gian, em sẽ thẩm định chuyên môn và tư vấn chính xác tại sao anh/chị bắt buộc phải chọn loại rèm đó cho căn phòng kèm trải nghiệm 3D trực quan ạ!"
     };
   }
 
@@ -198,7 +236,7 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     return {
       delayMs: 3200,
       curtain: null,
-      text: "Dạ không có gì ạ! Rất vui được trò chuyện và tư vấn cùng anh/chị. Bất cứ khi nào anh/chị cần trải nghiệm phối cảnh rèm 3D hoặc tìm kiếm giải pháp che nắng, em luôn sẵn sàng hỗ trợ nhé. Chúc anh/chị một ngày thật an yên và nhiều niềm vui! 🌿✨"
+      text: "Dạ không có gì ạ! Rất vui được đồng hành tư vấn không gian cùng anh/chị. Bất cứ khi nào anh/chị cần phân tích hướng nắng, chất liệu vải hay trải nghiệm phối cảnh rèm 3D thực tế, em luôn sẵn sàng hỗ trợ nhé. Chúc anh/chị một ngày thật an yên và nhiều năng lượng tích cực! 🌿✨"
     };
   }
 
@@ -207,7 +245,7 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     return {
       delayMs: 4200,
       curtain: null,
-      text: "Dạ giá rèm tại UniVeloria được niêm yết rõ ràng và tính theo diện tích thực tế:\n• 🌟 Rèm Cuốn: Từ 380.000đ – 490.000đ / m² (Gọn gàng, hiện đại, cản sáng tốt)\n• 🌈 Rèm Cầu Vòng: Từ 1.150.000đ – 1.550.000đ / m² (Nan 2 lớp xoay lật điều chỉnh sáng linh hoạt)\n• 💎 Rèm Vải Cao Cấp: Từ 580.000đ – 680.000đ / m² (Sóng đổ bồng bềnh chuẩn 5 sao)\n\nAnh/chị hãy kể cho em về căn phòng cụ thể của mình để em gợi ý mẫu phù hợp và dẫn vào trải nghiệm 3D nhé!"
+      text: "Dạ giá rèm tại UniVeloria được niêm yết minh bạch và tính theo diện tích thực tế:\n• 🌟 Rèm Cuốn: Từ 380.000đ – 490.000đ / m² (Gọn gàng, hiện đại, cản sáng tốt)\n• 🌈 Rèm Cầu Vòng: Từ 1.150.000đ – 1.550.000đ / m² (Nan 2 lớp xoay lật điều chỉnh sáng linh hoạt)\n• 💎 Rèm Vải Cao Cấp: Từ 580.000đ – 680.000đ / m² (Sóng đổ bồng bềnh chuẩn 5 sao)\n• ⚡ Thanh Ray & Động Cơ Tự Động: Từ 2.850.000đ – 3.450.000đ / bộ (Động cơ thông minh siêu êm & ray trượt Teflon)\n\nAnh/chị hãy chia sẻ về đặc điểm căn phòng để em tư vấn phương án kỹ thuật chuẩn xác và dẫn vào trải nghiệm 3D nhé!"
     };
   }
 
@@ -231,17 +269,56 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
 
   if (isExplicitRandom) {
     const candidates = currentCurtainId 
-      ? CURTAIN_PROFILES.filter(c => c.studioId !== currentCurtainId)
-      : CURTAIN_PROFILES;
+      ? CURTAIN_PROFILES.filter(c => c.category !== 'Thanh rèm' && c.studioId !== currentCurtainId)
+      : CURTAIN_PROFILES.filter(c => c.category !== 'Thanh rèm');
     const picked = candidates[Math.floor(Math.random() * candidates.length)];
     return {
       delayMs: 5500,
       curtain: picked,
-      text: `Một đề xuất ngẫu nhiên đầy bất ngờ dành cho bạn! Dưới đây là tuyệt phẩm rèm được nhiều gia chủ và kiến trúc sư lựa chọn tại UniVeloria:`
+      text: `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN NÊN CHỌN LOẠI RÈM NÀY CHO CĂN PHÒNG\n\nPhân tích lý do chuyên gia khuyên dùng:\n${picked.whyChoose}\n\nChuyên gia tư vấn UniVeloria khẳng định: ${picked.name} (${picked.badge}) là phương án độc đáo giúp tối ưu hóa không gian sống của bạn:`
     };
   }
 
-  // 6. PHÂN TÍCH CHUYÊN SÂU: HƯỚNG MẶT TRỜI, HƯỚNG GIÓ, ÁNH SÁNG & VỊ TRÍ CĂN PHÒNG
+  // 6. PHÂN TÍCH NHU CẦU VỀ THANH RÈM / ĐỘNG CƠ RÈM TỰ ĐỘNG
+  const isThanhRemQuery = norm.includes('thanh rem') || 
+                          norm.includes('thanh treo') || 
+                          norm.includes('ray rem') || 
+                          norm.includes('thanh ray') || 
+                          norm.includes('ray truot') || 
+                          norm.includes('motor') || 
+                          norm.includes('dong co') || 
+                          norm.includes('rem tu dong') || 
+                          norm.includes('smart motor') || 
+                          norm.includes('phu kien rem') ||
+                          norm.includes('ray treo') ||
+                          norm.includes('thanh keo') ||
+                          norm.includes('treo rem');
+
+  if (isThanhRemQuery) {
+    const isAuto = norm.includes('tu dong') || norm.includes('smart') || norm.includes('dien thoai') || norm.includes('giong noi') || norm.includes('motor') || norm.includes('dong co') || norm.includes('app');
+    const chosenRod = isAuto 
+      ? CURTAIN_PROFILES.find(c => c.id === 13) 
+      : (CURTAIN_PROFILES.find(c => c.id === 14) || CURTAIN_PROFILES.find(c => c.id === 13));
+
+    const rodNarrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẮT BUỘC PHẢI CHỌN THANH RÈM VÀ ĐỘNG CƠ CAO CẤP CHO CĂN PHÒNG
+
+1. Vai trò cốt lõi của thanh rèm trong không gian:
+Thanh rèm được ví như bộ xương sống quyết định 50% độ êm ái, thẩm mỹ và tuổi thọ của cả bộ rèm. Dù vải rèm có cao cấp đến đâu nhưng nếu lắp trên thanh ray kém chất lượng, sau một thời gian ray sẽ bị xệ máng, rít kẹt bi và phát ra tiếng ồn khó chịu khi kéo.
+
+2. Tại sao thanh treo giá rẻ truyền thống KHÔNG ĐẠT YÊU CẦU:
+Các thanh nhôm mỏng thông thường trên thị trường rất nhanh bị rỉ sét, bi trượt nhanh mòn và không chịu được tải trọng của các dòng rèm vải cao cấp dày dặn. Hơn nữa, việc kéo tay thủ công mỗi ngày dễ làm xô lệch sóng rèm và tốn công sức.
+
+3. Tại sao bạn BẮT BUỘC PHẢI CHỌN thanh rèm này:
+${chosenRod.whyChoose}`;
+
+    return {
+      delayMs: 5500,
+      curtain: chosenRod,
+      text: `${rodNarrative}\n\nChuyên gia tư vấn UniVeloria khẳng định: ${chosenRod.name} (${chosenRod.badge}) là trang bị chuẩn mực nâng tầm toàn bộ không gian phòng của bạn:`
+    };
+  }
+
+  // 7. PHÂN TÍCH CHUYÊN SÂU: HƯỚNG MẶT TRỜI, HƯỚNG GIÓ, ÁNH SÁNG & VỊ TRÍ CĂN PHÒNG
   const isWest = norm.includes('phia tay') || 
                  norm.includes('huong tay') || 
                  norm.includes('nha tay') || 
@@ -311,8 +388,10 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
   const isLuxury5Star = norm.includes('sang trong') || norm.includes('5 sao') || norm.includes('khach san') || norm.includes('hoang gia') || norm.includes('quy toc') || norm.includes('chau au') || norm.includes('be the');
   const isJapandi = norm.includes('japandi') || norm.includes('eco') || norm.includes('song xanh') || norm.includes('thien nhien');
 
-  // Tính điểm phù hợp cho 12 mẫu rèm dựa trên Hướng + Vị trí + Môi trường
-  const scored = CURTAIN_PROFILES.map(item => {
+  // Lọc chỉ chấm điểm các mẫu RÈM (không gán ngẫu nhiên thanh rèm khi hỏi về rèm)
+  const curtainPool = CURTAIN_PROFILES.filter(c => c.category !== 'Thanh rèm');
+
+  const scored = curtainPool.map(item => {
     let score = 0;
 
     // Loại rèm theo mong muốn
@@ -415,78 +494,127 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     const topCandidates = scored.filter(s => s.score >= highestScore - 2).map(s => s.item);
     chosen = topCandidates[Math.floor(Math.random() * topCandidates.length)];
   } else {
-    chosen = CURTAIN_PROFILES[Math.floor(Math.random() * CURTAIN_PROFILES.length)];
+    chosen = curtainPool[Math.floor(Math.random() * curtainPool.length)];
   }
 
-  // TỔNG HỢP CÂU TRẢ LỜI THÔNG MINH (KHÔNG CÓ DẤU **)
+  // TỔNG HỢP LUẬN ĐIỂM TƯ VẤN CHUYÊN GIA: TẠI SAO BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY
   let narrative = '';
 
   if (isWest) {
-    narrative = `Đối với căn phòng nằm ở phía Tây (hoặc hướng Tây / Tây Bắc / Tây Nam):
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO CĂN PHÒNG PHÍA TÂY
 
-• Hướng Mặt Trời: Đón nhận trọn vẹn ánh nắng chiều gay gắt từ 13h00 đến 17h30 với góc chiếu xiên thấp chiếu sâu vào phòng, bức xạ nhiệt cực đại khiến căn phòng dễ bị tích nhiệt (om nhiệt), hầm hập và chói lóa mắt dữ dội.
-• Hướng Gió: Mùa hè thường đón gió Tây Nam khô nóng (gió Lào/gió phơn), độ ẩm thấp, dễ làm không khí trong phòng ngột ngạt và làm cong vênh, bạc màu đồ gỗ nội thất.
-• Ánh Sáng & Rèm Thích Hợp: Căn phòng phía Tây bắt buộc phải sử dụng rèm có khả năng cản sáng đỉnh cao từ 94% đến 100% Blackout tuyệt đối kết hợp tính năng cách nhiệt để hạ nhiệt độ phòng từ 3 - 5°C so với bên ngoài.
+1. Thực trạng khắc nghiệt của căn phòng phía Tây:
+• Hướng Mặt Trời: Đón nhận trọn vẹn ánh nắng chiều gay gắt từ 13h00 đến 17h30 với góc chiếu xiên thấp chiếu sâu vào lòng phòng, bức xạ nhiệt cực đại khiến căn phòng dễ bị tích nhiệt (om nhiệt), hầm hập và chói lóa mắt dữ dội.
+• Hướng Gió: Mùa hè thường chịu gió Tây Nam khô nóng (gió Lào/gió phơn), độ ẩm thấp, dễ làm không khí trong phòng ngột ngạt và làm cong vênh, bạc màu đồ gỗ nội thất.
 
-Các mẫu rèm thích hợp nhất cho căn phòng phía Tây:
-1. Mẫu Rèm Cầu Vồng Dragon.E Blackout: Dệt chéo melange đan khít dày dặn, cản sáng 95%, chống chói lóa và cản nhiệt vượt trội cho phòng ngủ và phòng khách hướng Tây.
-2. Mẫu Rèm Cuốn Moon: Cản sáng 100% Blackout tuyệt đối nhờ 3 lớp bọt Foam cách nhiệt, chặn đứng hoàn toàn tia bức xạ mặt trời.
-3. Mẫu Rèm Cầu Vồng Brioni.E Blackout: Vân gỗ sang trọng, cản sáng 94%, bảo vệ nội thất gỗ không bị bạc màu do nắng chiều.`;
+2. Tại sao rèm thông thường KHÔNG THỂ đáp ứng:
+Nếu bạn dùng các loại rèm vải mỏng, rèm voan hoặc rèm cuốn thông thường, ánh nắng và tia cực tím vẫn xuyên qua lớp vải, biến tấm rèm thành một tấm hấp nhiệt làm căn phòng nóng hơn và tuổi thọ rèm chỉ được vài tháng là giòn mục.
+
+3. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+Căn phòng phía Tây bắt buộc phải có rèm cản sáng từ 94% đến 100% Blackout với kết cấu dệt đa lớp hoặc lớp bọt Foam cách nhiệt để tạo màng chắn nhiệt độc lập, hạ nhiệt độ phòng từ 3 - 5°C so với bên ngoài.
+
+Lý do then chốt chuyên gia tư vấn cho căn phòng này:
+${chosen.whyChoose}`;
   } else if (isEast) {
-    narrative = `Đối với căn phòng nằm ở phía Đông (hoặc Đông Bắc / Đông Nam):
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO CĂN PHÒNG PHÍA ĐÔNG
 
+1. Đặc thù vi khí hậu của căn phòng phía Đông:
 • Hướng Mặt Trời: Đón nhận ánh nắng trực diện vào sáng sớm từ 6h00 đến 10h30 (bình minh). Ánh sáng sớm có cường độ chói mắt khi vừa thức giấc nhưng tắt nắng nhanh, từ sau 11h phòng trở nên râm mát.
 • Hướng Gió: Đón gió Đông mát mẻ vào buổi sáng, không khí trong lành và lưu thông tự nhiên rất tốt.
-• Ánh Sáng & Rèm Thích Hợp: Căn phòng phía Đông thích hợp nhất với các mẫu rèm có cơ chế điều tiết ánh sáng linh hoạt: sáng sớm cản chói để bạn ngủ ngon, ban ngày có thể mở hé để đón gió lành và ánh sáng chan hòa mà không cần kéo hết rèm lên.
 
-Các mẫu rèm thích hợp nhất cho căn phòng phía Đông:
-1. Mẫu Rèm Cầu Vồng River.E: Cấu trúc nan 2 lớp so le, sáng sớm xoay lệch nan để che chói, sau đó xoay trùng nan để đón trọn gió lành và ánh sáng dịu mát.
-2. Mẫu Rèm Cuốn Sunny: Mắt lưới Micro Sunscreen lọc sáng dịu mát, ngăn 95% tia UV nhưng vẫn giữ tầm nhìn mở thoáng đãng ngắm cảnh ban mai.
-3. Mẫu Rèm Cuốn Harmony 2: Thiết kế gọn gàng, gân dệt cản sáng 85-90% vừa đủ cho giấc ngủ sớm êm đềm.`;
+2. Tại sao rèm 1 lớp truyền thống KHÔNG PHÙ HỢP:
+Nếu bạn dùng rèm cuốn cản sáng 100% kín mít, sau khi thức dậy bạn phải kéo hết rèm lên, căn phòng sẽ mất đi sự riêng tư và bị nhìn từ bên ngoài. Nếu dùng rèm quá mỏng thì bạn sẽ bị chói mắt không thể ngủ tiếp vào sáng sớm.
+
+3. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+Căn phòng phía Đông bắt buộc phải sử dụng rèm có cơ chế điều tiết ánh sáng linh hoạt đa tầng: sáng sớm xoay nan so le cản chói để ngủ ngon, sau đó xoay trùng nan để đón trọn luồng gió Đông mát rượi và ánh sáng tự nhiên dịu nhẹ mà không cần kéo rèm lên.
+
+Lý do then chốt chuyên gia tư vấn cho căn phòng này:
+${chosen.whyChoose}`;
   } else if (isSouth) {
-    narrative = `Đối với căn phòng nằm ở phía Nam (hoặc Đông Nam):
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO CĂN PHÒNG PHÍA NAM
 
+1. Ưu thế tự nhiên của căn phòng phía Nam:
 • Hướng Mặt Trời: Đây là hướng đắc địa nhất trong kiến trúc vì tránh được ánh nắng chiếu trực diện gay gắt quanh năm. Ánh sáng mặt trời chiếu nghiêng ổn định, dịu êm và chan hòa từ sáng đến chiều.
 • Hướng Gió: Đón trọn luồng gió nồm Đông Nam mát rượi vào mùa hè, ấm áp vào mùa đông và lưu thông không khí tuyệt vời.
-• Ánh Sáng & Rèm Thích Hợp: Căn phòng phía Nam không cần loại rèm cản sáng quá dày nặng nề, mà nên ưu tiên các dòng rèm mềm mại, tôn vinh thẩm mỹ cao cấp, bay bổng theo làn gió và điều tiết ánh sáng nhẹ nhàng.
 
-Các mẫu rèm thích hợp nhất cho căn phòng phía Nam:
-1. Mẫu rèm vải Elogi - 1198 - 2: Sóng rèm chữ S lượn bồng bềnh chuẩn khách sạn 5 sao, đón gió nồm đu đưa mềm mại, tôn vinh sự bề thế của phòng khách hoặc phòng ngủ.
-2. Mẫu rèm vải Elogi - 1206 - 1: Dệt từ sợi lanh tự nhiên mềm rũ thoáng khí, giữ căn phòng luôn thơm mát, thư thái cùng làn gió Nam trong lành.
-3. Mẫu Rèm Cuốn Malange 1: Tối giản phong cách Bắc Âu Scandinavian, mang lại ánh sáng khuếch tán thanh lịch.`;
+2. Tại sao rèm thô cứng hoặc quá dày KHÔNG NÊN DÙNG:
+Nếu bạn chọn các dòng rèm cuốn tối màu hoặc rèm văn phòng cứng nhắc, bạn sẽ vô tình triệt tiêu toàn bộ ưu thế đón gió mát lành và làm không gian trở nên bí bách, mất đi tính thẩm mỹ bề thế của ngôi nhà.
+
+3. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+Căn phòng phía Nam cần loại rèm tôn vinh tính thẩm mỹ cao cấp, có chất liệu dệt tự nhiên mềm mại, sóng rèm đổ bồng bềnh lướt nhẹ theo làn gió nồm để tối ưu hóa sự thông thoáng và mang lại cảm giác nghỉ dưỡng chuẩn 5 sao.
+
+Lý do then chốt chuyên gia tư vấn cho căn phòng này:
+${chosen.whyChoose}`;
   } else if (isNorth) {
-    narrative = `Đối với căn phòng nằm ở phía Bắc (hoặc Đông Bắc):
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO CĂN PHÒNG PHÍA BẮC
 
-• Hướng Mặt Trời: Hướng này hầu như không có ánh nắng mặt trời chiếu trực tiếp quanh năm. Căn phòng thường chỉ nhận ánh sáng khuếch tán yếu, dễ tạo cảm giác thiếu sáng và tĩnh lặng.
-• Hướng Gió: Vào mùa đông phải hứng chịu gió mùa Đông Bắc (gió bấc) lạnh buốt, độ ẩm thấp, dễ làm căn phòng bị lạnh lẽo và hanh khô.
-• Ánh Sáng & Rèm Thích Hợp: Căn phòng phía Bắc rất thích hợp với các dòng rèm mang tone màu ấm áp (vàng kem, nâu gỗ, be ấm, đất nung) để cân bằng thị giác, xua tan cảm giác lạnh lẽo và có khả năng cản gió lùa giữ ấm mà không làm phòng bị tối sầm.
+1. Thách thức không gian của căn phòng phía Bắc:
+• Hướng Mặt Trời: Quanh năm hầu như không có ánh nắng mặt trời chiếu trực tiếp, ánh sáng khuếch tán yếu khiến căn phòng có cảm giác hơi tối và tĩnh mịch.
+• Hướng Gió: Mùa đông hứng trọn gió mùa Đông Bắc (gió bấc) lạnh buốt, hanh khô, làm nhiệt độ trong phòng hạ thấp và có cảm giác lạnh lẽo.
 
-Các mẫu rèm thích hợp nhất cho căn phòng phía Bắc:
-1. Mẫu rèm vải Elogi - 1230 - 1: Sợi eco gân nổi với tone cát vàng Japandi dịu mắt, mang năng lượng ấm áp xua tan sự lạnh lẽo của hướng Bắc, kết nối thiên nhiên thanh bình.
-2. Mẫu Rèm Cầu Vồng Brioni.E Blackout: Tone màu gỗ tự nhiên ấm cúng, bản nan dày dặn cản gió lùa mùa đông cực tốt khi khép kín.
-3. Mẫu Rèm Cuốn Silvia: Họa tiết dệt Jacquard Châu Âu dày dặn, giữ ấm căn phòng và tăng thêm vẻ sang trọng, quý phái.`;
+2. Tại sao rèm tối màu hoặc mỏng manh KHÔNG PHÙ HỢP:
+Rèm tối màu sẽ làm căn phòng hướng Bắc càng thêm u tối, ngột ngạt. Còn rèm quá mỏng sẽ không cản được gió lùa mùa đông, khiến căn phòng bị thất thoát nhiệt sưởi ấm.
+
+3. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+Căn phòng phía Bắc bắt buộc cần dòng rèm có tone màu ấm áp (vàng kem, be ấm, nâu gỗ) để cân bằng thị giác, mang sinh khí ấm cúng và có độ đan khít dày dặn để ngăn gió lạnh mùa đông lùa qua khe cửa mà vẫn đảm bảo độ thoáng sáng cho căn phòng.
+
+Lý do then chốt chuyên gia tư vấn cho căn phòng này:
+${chosen.whyChoose}`;
   } else if (hasWindOrSunQuery) {
-    narrative = `Tư vấn giải pháp rèm theo Hướng Mặt Trời, Hướng Gió & Ánh Sáng:
+    narrative = `TƯ VẤN CHUYÊN GIA: NGUYÊN TẮC CHỌN RÈM THEO HƯỚNG MẶT TRỜI, HƯỚNG GIÓ & ÁNH SÁNG
 
-1. Hướng Tây (Nắng chiều gay gắt, gió Tây Nam khô nóng): Thích hợp rèm cản sáng 95% - 100% có lớp cách nhiệt chống nóng (Rèm Cuốn Moon 100% Blackout, Rèm Cầu Vồng Dragon.E 95%).
-2. Hướng Đông (Nắng sớm ban mai, gió Đông mát mẻ): Thích hợp rèm điều chỉnh nan linh hoạt để cản chói sáng sớm và đón gió ban ngày (Rèm Cầu Vồng River.E, Rèm Cuốn Sunny lọc sáng tự nhiên).
-3. Hướng Nam (Ánh sáng chan hòa, gió nồm mát rượi): Thích hợp rèm vải sóng chữ S bồng bềnh hoặc rèm cuốn thanh lịch, tối ưu thông gió (Rèm Vải Elogi 1198-2, Elogi 1206-1 sợi lanh).
-4. Hướng Bắc (Thiếu nắng trực tiếp, gió mùa Đông Bắc lạnh): Thích hợp rèm tone màu ấm áp, cản gió lùa giữ nhiệt (Rèm Vải Elogi 1230-1 Japandi tone vàng cát, Rèm Cầu Vồng Brioni.E vân gỗ ấm).`;
+1. Hướng Tây (Nắng chiều gay gắt, gió Tây Nam khô nóng): Bắt buộc chọn rèm cản sáng 95% - 100% có lớp cách nhiệt chống nóng (Rèm Cuốn Moon 100% Blackout, Rèm Cầu Vồng Dragon.E 95%).
+2. Hướng Đông (Nắng sớm ban mai, gió Đông mát mẻ): Bắt buộc chọn rèm điều chỉnh nan linh hoạt để cản chói sáng sớm và đón gió ban ngày (Rèm Cầu Vồng River.E, Rèm Cuốn Sunny lọc sáng tự nhiên).
+3. Hướng Nam (Ánh sáng chan hòa, gió nồm mát rượi): Bắt buộc chọn rèm vải sóng chữ S bồng bềnh hoặc rèm cuốn thanh lịch, tối ưu thông gió (Rèm Vải Elogi 1198-2, Elogi 1206-1 sợi lanh).
+4. Hướng Bắc (Thiếu nắng trực tiếp, gió mùa Đông Bắc lạnh): Bắt buộc chọn rèm tone màu ấm áp, cản gió lùa giữ nhiệt (Rèm Vải Elogi 1230-1 Japandi tone vàng cát, Rèm Cầu Vồng Brioni.E vân gỗ ấm).`;
   } else if (isLivingRoom && isWood) {
-    narrative = `Với không gian phòng khách hiện đại kết hợp nhiều nội thất gỗ sang trọng: Sự phối hợp đắt giá nhất là tấm rèm có vân dệt tự nhiên trầm ấm, tôn lên chất mộc quý phái và đồng điệu với thẩm mỹ căn nhà.`;
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO PHÒNG KHÁCH ĐỒ GỖ
+
+1. Yêu cầu phối hợp chất liệu và kiến trúc:
+Phòng khách có nhiều nội thất gỗ đòi hỏi sự đồng điệu về sắc độ và chất cảm bề mặt. Nếu dùng rèm vải trơn công nghiệp đơn điệu sẽ làm không gian mất đi chiều sâu sang trọng.
+
+2. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+${chosen.whyChoose}`;
   } else if (isWorkRoom) {
-    narrative = `Đối với góc làm việc cần sự chỉn chu và tập trung: Tiêu chuẩn hàng đầu là khả năng cản chói chống lóa màn hình, vận hành êm ái và có đường nét kiến trúc sắc sảo, gọn gàng.`;
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO GÓC LÀM VIỆC
+
+1. Yêu cầu công năng & bảo vệ thị giác:
+Góc làm việc cần kiểm soát ánh sáng chống chói lóa màn hình tuyệt đối, đồng thời thiết kế phải gọn gàng, không chiếm dụng diện tích bàn làm việc.
+
+2. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+${chosen.whyChoose}`;
   } else if (isBedRoom) {
-    narrative = `Phòng ngủ là chốn riêng tư để nghỉ ngơi và tái tạo năng lượng: Tấm rèm hoàn hảo cần mang lại độ che chắn riêng tư cao, chất cảm êm dịu và khả năng cách âm, cản nhiệt tốt.`;
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO PHÒNG NGỦ
+
+1. Tiêu chuẩn sinh học cho giấc ngủ chất lượng cao:
+Phòng ngủ đòi hỏi khả năng chắn sáng tối ưu để kích thích cơ thể sản sinh melatonin tự nhiên cho giấc ngủ sâu, kết hợp tính năng cản nhiệt và giảm thiểu tiếng ồn từ môi trường.
+
+2. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+${chosen.whyChoose}`;
   } else if (isLivingRoom) {
-    narrative = `Phòng khách là trung tâm của ngôi nhà: Việc chọn rèm cần tạo được sự bề thế, linh hoạt lấy sáng tự nhiên đón tài lộc và tạo cảm giác thoáng đãng, ấm cúng.`;
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO PHÒNG KHÁCH
+
+1. Bộ mặt thẩm mỹ và phong thủy của ngôi nhà:
+Phòng khách cần sự bề thế, linh hoạt lấy sáng tự nhiên đón vượng khí và tạo cảm giác ấm cúng, trang nhã khi tiếp đón bạn bè người thân.
+
+2. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+${chosen.whyChoose}`;
   } else if (isApartment) {
-    narrative = `Với không gian căn hộ chung cư hiện đại: Giải pháp rèm cần tiết kiệm diện tích tối đa, dễ dàng vệ sinh lau chùi và mang lại cảm giác trẻ trung, thoáng mát.`;
+    narrative = `TƯ VẤN CHUYÊN GIA: TẠI SAO BẠN BẮT BUỘC PHẢI CHỌN LOẠI RÈM NÀY CHO CĂN HỘ CHUNG CƯ
+
+1. Tối ưu không gian và phong cách sống hiện đại:
+Căn hộ chung cư đòi hỏi giải pháp rèm tiết kiệm diện tích, hạn chế bám bụi từ gió tầng cao và mang lại sự trẻ trung, tiện dụng hàng ngày.
+
+2. Tại sao bạn BẮT BUỘC PHẢI CHỌN loại rèm này:
+${chosen.whyChoose}`;
   } else {
-    narrative = `Lắng nghe câu chuyện và mong muốn về không gian của bạn: UniVeloria đã phân tích các tiêu chí về vị trí, hướng nắng, hướng gió và phong cách nội thất để tìm ra giải pháp chuẩn xác nhất.`;
+    narrative = `TƯ VẤN CHUYÊN GIA: PHÂN TÍCH GIẢI PHÁP RÈM TỐI ƯU CHO CĂN PHÒNG CỦA BẠN
+
+Sau khi phân tích toàn diện về vị trí phòng, hướng nắng, hướng gió và công năng sử dụng, chuyên gia tư vấn UniVeloria chỉ ra lý do bạn bắt buộc phải chọn mẫu rèm này:
+${chosen.whyChoose}`;
   }
 
-  const responseText = `${narrative}\n\nUniVeloria trân trọng đề xuất ${chosen.name} (${chosen.badge}) — sự lựa chọn chuẩn mực dành riêng cho căn phòng của bạn:`;
+  const responseText = `${narrative}\n\nChuyên gia tư vấn UniVeloria khẳng định: ${chosen.name} (${chosen.badge}) là giải pháp chuẩn xác và tối ưu nhất cho căn phòng của bạn:`;
 
   return {
     delayMs: 6500, // Thời gian phân tích từ 5-10s theo yêu cầu
@@ -503,16 +631,16 @@ export function FloatingPetdexChat({ navigateTo }) {
   const [thinkingStageIdx, setThinkingStageIdx] = useState(0);
 
   const thinkingStages = [
-    { icon: '🔍', title: 'Tiếp nhận thông tin', text: 'Đang đọc hiểu câu chuyện không gian & vị trí căn phòng...' },
-    { icon: '☀️', title: 'Phân tích môi trường', text: 'Đang đánh giá hướng nắng, nhu cầu cản sáng & phong cách nội thất...' },
-    { icon: '🧵', title: 'Đối chiếu dữ liệu', text: 'Đang quét kho dữ liệu 12 mẫu rèm chính hãng UniVeloria...' },
-    { icon: '✨', title: 'Thiết lập giải pháp', text: 'Đang hoàn tất đề xuất và chuẩn bị không gian 3D tương ứng...' }
+    { icon: '🔍', title: 'Thẩm định không gian', text: 'Đang phân tích vị trí phòng, kiến trúc cửa sổ & vi khí hậu...' },
+    { icon: '☀️', title: 'Đánh giá hướng nắng & gió', text: 'Đang tính toán góc nắng, bức xạ nhiệt & lưu thông khí tươi...' },
+    { icon: '🧵', title: 'Đối chiếu vật liệu & kỹ thuật', text: 'Đang thẩm định mật độ sợi dệt, độ cản sáng & hệ ray rèm...' },
+    { icon: '🎯', title: 'Xác lập luận điểm tư vấn', text: 'Đang hoàn thiện lý do tại sao bắt buộc phải chọn dòng sản phẩm này...' }
   ];
 
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: 'Xin chào! Tôi là Trợ lý AI UniVeloria ☁️✨ Hãy kể cho tôi nghe về căn phòng của bạn (phòng ngủ, phòng khách, hướng nắng, phong cách yêu thích...) hoặc bất kỳ câu chuyện nào, tôi sẽ phân tích chuyên sâu và gợi ý ngay mẫu rèm hoàn hảo kèm câu chuyện, mức giá và dẫn bạn vào trải nghiệm 3D ngay lập tức!',
+      text: 'Xin chào! Tôi là Chuyên gia Tư vấn Không gian Rèm UniVeloria ☁️✨ Hãy cho tôi biết về căn phòng của bạn (vị trí phòng, hướng cửa sổ, hướng nắng, hướng gió, phong cách nội thất, hoặc nhu cầu thanh rèm / động cơ tự động...). Tôi sẽ thẩm định chuyên môn và tư vấn chính xác tại sao bạn bắt buộc phải chọn loại rèm này cho căn phòng của mình!',
       curtain: null
     }
   ]);
@@ -676,11 +804,11 @@ export function FloatingPetdexChat({ navigateTo }) {
   };
 
   const quickPrompts = [
-    { label: '🌅 Căn phòng phía tây nắng gắt chiều', text: 'Tôi muốn có 1 bộ rèm ở căn phòng phía tây, hướng nắng chiều gay gắt cần chống nóng và cản nhiệt tốt.' },
-    { label: '☀️ Căn phòng phía đông đón nắng sớm', text: 'Căn phòng phía đông nhà tôi bị chói mắt lúc bình minh, tôi cần rèm điều chỉnh sáng linh hoạt và đón gió ban ngày.' },
-    { label: '🍃 Căn phòng phía nam đón gió mát', text: 'Căn phòng phía nam nhà tôi nhiều gió mát quanh năm, cần rèm mềm mại sang trọng đón gió lưu thông.' },
-    { label: '❄️ Căn phòng phía bắc cần giữ ấm', text: 'Căn phòng phía bắc ít nắng và mùa đông có gió lạnh, cần rèm tone màu ấm cúng và cản gió tốt.' },
-    { label: '🎲 Gợi ý ngẫu nhiên 1 mẫu rèm', text: 'Gợi ý ngẫu nhiên cho tôi 1 mẫu rèm độc đáo kèm câu chuyện của nó.' }
+    { label: '🌅 Căn phòng phía tây nắng gắt chiều', text: 'Tôi cần tư vấn rèm cho căn phòng phía tây, hướng nắng chiều gay gắt và om nhiệt, tại sao nên chọn loại rèm cản nhiệt chuyên dụng?' },
+    { label: '☀️ Căn phòng phía đông đón nắng sớm', text: 'Tôi cần tư vấn rèm cho căn phòng phía đông bị chói mắt lúc bình minh, cần loại rèm điều tiết sáng và đón gió ban ngày.' },
+    { label: '🍃 Căn phòng phía nam đón gió mát', text: 'Tôi cần tư vấn rèm cho căn phòng phía nam lộng gió mát quanh năm, loại rèm nào tối ưu độ thông thoáng và thẩm mỹ?' },
+    { label: '❄️ Căn phòng phía bắc cần giữ ấm', text: 'Tôi cần tư vấn rèm cho căn phòng phía bắc ít nắng và mùa đông có gió lạnh, loại rèm nào cân bằng thị giác và cản gió tốt?' },
+    { label: '⚡ Tư vấn thanh rèm & động cơ tự động', text: 'Tư vấn cho tôi về thanh rèm và động cơ rèm tự động thông minh, tại sao bắt buộc phải chọn thanh ray cao cấp?' }
   ];
 
   return (
@@ -705,8 +833,8 @@ export function FloatingPetdexChat({ navigateTo }) {
                 <span className="chatbot-status-dot" />
               </div>
               <div>
-                <strong className="chatbot-header-title">Trợ lý AI Tư Vấn Rèm</strong>
-                <small className="chatbot-header-sub">UniVeloria AI</small>
+                <strong className="chatbot-header-title">Chuyên Gia Tư Vấn Không Gian Rèm</strong>
+                <small className="chatbot-header-sub">UniVeloria AI · Chuyên gia tư vấn</small>
               </div>
             </div>
             <button
@@ -779,7 +907,7 @@ export function FloatingPetdexChat({ navigateTo }) {
                           disabled={isTyping}
                         >
                           <Dices size={13} />
-                          <span>Gợi ý mẫu khác cho phòng này</span>
+                          <span>Tư vấn phương án khác cho căn phòng</span>
                         </button>
                       </div>
                     </div>
@@ -811,7 +939,7 @@ export function FloatingPetdexChat({ navigateTo }) {
             {/* Quick Story Prompts */}
             <div className="chatbot-quick-pills">
               <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600, marginTop: '4px' }}>
-                💡 Gợi ý câu chuyện mẫu:
+                💡 Tình huống tư vấn thực tế:
               </span>
               {quickPrompts.map((p, i) => (
                 <button
@@ -829,7 +957,7 @@ export function FloatingPetdexChat({ navigateTo }) {
           <div className="chatbot-popup-footer">
             <input
               type="text"
-              placeholder={isTyping ? "AI đang phân tích câu chuyện căn phòng..." : "Kể về căn phòng (phòng ngủ hướng tây, phòng khách đồ gỗ...)"}
+              placeholder={isTyping ? "Chuyên gia AI đang phân tích dữ liệu không gian..." : "Kể về căn phòng (phía tây nắng gắt, phòng khách đồ gỗ, cần thanh ray rèm...)"}
               className="chatbot-input"
               value={chatInput}
               disabled={isTyping}
