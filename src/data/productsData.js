@@ -414,26 +414,40 @@ export const productsData = [
     name: "Rèm Cuốn CoastalLite",
     code: "UVL-RC-CL01",
     category: "Rèm cuốn",
-    room: "Ngoài trời",
-    style: "Tự nhiên",
+    room: "Ngoài trời / Ban công / Biển",
+    style: "Tối giản & Thoáng đãng",
+    slogan: "Không gian thoáng đãng đón trọn thiên nhiên",
     colors: ["#f5ebe2", "#ede1d4", "#c4b6a5", "#747d4d"],
-    colorNames: ["Cát biển trắng", "Be san hô", "Nâu vỏ ốc", "Xanh rêu mặn"],
+    colorNames: ["Trắng kem đón sáng", "Be cát san hô", "Nâu vỏ ốc ấm", "Xanh rêu mặn"],
     price: 850000,
     oldPrice: 990000,
     rating: "4.9",
     reviews: 91,
     badge: "Mới",
     unit: "m² hoàn thiện",
-    image: "/product/Rèm/Rèm Cuốn/Rèm Cuốn CoastalLite.png",
-    mainImage: "/product/Rèm/Rèm Cuốn/Rèm Cuốn CoastalLite.png",
-    subImages: [],
-    description: "Thiết kế chuyên dụng chịu gió biển, chống muối mặn và chống thấm nước tuyệt hảo cho các căn hộ hướng biển hoặc ban công nhà phố.",
-    fullDescription: "Sản phẩm được gia cố khung đáy nhôm đúc nặng giúp rèm đứng vững trước gió lớn. Sợi vải dệt thủy tinh phủ nhựa chịu được bức xạ mặt trời cường độ cao và sương muối ven biển mà không giòn rách, hoen gỉ phụ kiện.",
-    material: "Sợi thủy tinh bọc nhựa PVC cao cấp chịu nhiệt chống cháy",
-    lightBlocking: "Cản nắng 95%, chịu sức gió cấp 6",
-    fabricWidth: "250cm",
-    origin: "Nhập khẩu Châu Âu",
-    warranty: "Bảo hành 3 năm"
+    image: "/product/Rèm/Rèm Cuốn/Rèm Cuốn CoastalLite.jpg",
+    mainImage: "/product/Rèm/Rèm Cuốn/Rèm Cuốn CoastalLite.jpg",
+    subImages: [
+      "/product/Rèm/Rèm Cuốn/Rèm Cuốn CoastalLite.jpg"
+    ],
+    description: "Thiết kế tối giản, tinh tế, mang lại sự nhẹ nhàng, thoáng sáng cho không gian sống hiện đại đón trọn thiên nhiên.",
+    fullDescription: "Rèm cuốn CoastalLite mang lại giải pháp che nắng tinh tế và tối ưu cho các căn hộ, biệt thự hướng biển hoặc ban công nhà phố hiện đại. Chất liệu cao cấp mềm mịn, bền màu, chống tia UV, kết hợp khả năng chống thấm nước vượt trội hạn chế bám bụi và dễ dàng lau chùi. Hệ thống cuốn hiện đại vận hành êm ái, bền bỉ theo thời gian.",
+    highlights: [
+      { title: "Cản sáng hiệu quả", desc: "Giảm chói, bảo vệ nội thất tối ưu" },
+      { title: "Cách nhiệt tốt", desc: "Giữ không gian luôn mát mẻ, tiết kiệm điện năng" },
+      { title: "Riêng tư", desc: "Tạo cảm giác an toàn, kín đáo nhưng vẫn thoáng đãng" },
+      { title: "Thẩm mỹ tối giản", desc: "Phù hợp mọi không gian sống hiện đại" }
+    ],
+    features: [
+      "1. Chất liệu cao cấp: Mềm mịn, bền màu, chống tia UV hiệu quả",
+      "2. Khả năng chống thấm nước: Bề mặt trượt nước, hạn chế bám bụi, dễ lau chùi",
+      "3. Hệ thống cuốn hiện đại: Trục cuốn trợ lực nhôm đúc, vận hành êm ái, bền bỉ"
+    ],
+    material: "Vải dệt cao cấp mềm mịn chống tia UV & tráng phủ chống thấm nước",
+    lightBlocking: "Cản sáng 95%, chống chói & chống tia UV 99%",
+    fabricWidth: "250cm - 300cm",
+    origin: "UniVeloria Chính Hãng",
+    warranty: "Bảo hành 3 năm chính hãng"
   },
   {
     id: 17,
@@ -441,34 +455,49 @@ export const productsData = [
     code: "UVL-RC-LL02",
     category: "Rèm cuốn",
     room: "Phòng khách",
-    style: "Tối giản",
+    style: "Tối giản & Thanh lịch",
+    slogan: "Tối giản – Thanh lịch – Hài hòa cho không gian sống",
     colors: ["#f4ece3", "#bdab95", "#b8a58d", "#9d6d42"],
-    colorNames: ["Kem ngà", "Be nâu nhạt", "Nâu hạnh nhân", "Gỗ gõ đỏ"],
+    colorNames: ["Kem ngà thanh lịch", "Be nâu nhạt", "Nâu hạnh nhân ấm", "Gỗ gõ đỏ"],
     price: 730000,
-    oldPrice: null,
+    oldPrice: 850000,
     rating: "4.8",
     reviews: 75,
-    badge: "",
+    badge: "Thanh lịch",
     unit: "m² hoàn thiện",
-    image: "/product/Rèm/Rèm Cuốn/Rèm cuốn LivingLite.png",
-    mainImage: "/product/Rèm/Rèm Cuốn/Rèm cuốn LivingLite.png",
-    subImages: [],
-    description: "Trọng lượng nhẹ, bộ kéo trợ lực siêu êm giảm 30% lực kéo tay, vận hành mượt mà thích hợp cho các ô cửa sổ phòng khách diện tích lớn.",
-    fullDescription: "LivingLite mang đến sự thoải mái tối đa cho người sử dụng với trục lò xo trợ lực thế hệ mới, chỉ cần kéo nhẹ tay là rèm đã có thể cuộn lên hoặc hạ xuống trơn tru. Tông màu nâu kem trang nhã tôn vinh sàn gỗ và sofa cao cấp.",
-    material: "Hợp kim nhôm siêu nhẹ & vải dệt Polyester phủ Nano",
-    lightBlocking: "Cản sáng 90%",
+    image: "/product/Rèm/Rèm Cuốn/Rèm cuốn LivingLite.jpg",
+    mainImage: "/product/Rèm/Rèm Cuốn/Rèm cuốn LivingLite.jpg",
+    subImages: [
+      "/product/Rèm/Rèm Cuốn/Rèm cuốn LivingLite.jpg"
+    ],
+    description: "Thiết kế tinh tế, cản sáng hiệu quả, mang lại sự riêng tư và vẻ đẹp hiện đại, thanh lịch cho phòng khách.",
+    fullDescription: "Rèm cuốn LivingLite là giải pháp lý tưởng cho phòng khách hiện đại với thiết kế tối giản, thanh lịch, hài hòa hoàn hảo với nội thất. Chất liệu dệt mịn chắc, bền màu lâu dài, hạn chế bám bụi và chống thấm nước nhẹ giúp dễ dàng vệ sinh. Hệ thống cuốn trợ lực siêu mượt mà giúp thao tác kéo thả êm ái và bền bỉ theo thời gian.",
+    highlights: [
+      { title: "Cản sáng hiệu quả", desc: "Lọc sáng êm dịu, bảo vệ mắt và nội thất" },
+      { title: "Cách nhiệt, giữ không gian mát mẻ", desc: "Giữ không gian phòng khách luôn thoáng mát" },
+      { title: "Giảm tiếng ồn nhẹ nhàng", desc: "Hấp thụ tạp âm nhẹ từ môi trường bên ngoài" },
+      { title: "Phù hợp nhiều không gian", desc: "Dễ phối cùng sofa, sàn gỗ và đèn decor" }
+    ],
+    features: [
+      "1. Chất liệu cao cấp: Bề mặt mịn, dệt chắc, bền màu lâu dài theo năm tháng",
+      "2. Dễ vệ sinh: Hạn chế bám bụi, chống thấm nước nhẹ, lau sạch nhanh chóng",
+      "3. Vận hành linh hoạt: Cơ chế cuốn trợ lực mượt mà, siêu êm và bền bỉ"
+    ],
+    material: "Sợi Polyester dệt mịn dệt chắc cao cấp phủ Nano kháng bụi",
+    lightBlocking: "Cản sáng 90% - 95%, cách nhiệt tốt",
     fabricWidth: "250cm",
-    origin: "Đài Loan",
-    warranty: "Bảo hành 2 năm"
+    origin: "UniVeloria Chính Hãng",
+    warranty: "Bảo hành 3 năm chính hãng"
   },
   {
     id: 18,
     name: "Rèm Cuốn OfficePro",
     code: "UVL-RC-OP03",
     category: "Rèm cuốn",
-    room: "Văn phòng",
-    style: "Hiện đại",
-    colors: ["#f2dfcf", "#efdbc9", "#c5b5aa", "#6e727e"],
+    room: "Văn phòng / Phòng làm việc",
+    style: "Hiện đại & Chuyên nghiệp",
+    slogan: "Giải pháp che nắng hiện đại cho không gian làm việc",
+    colors: ["#6e727e", "#f2dfcf", "#efdbc9", "#c5b5aa"],
     colorNames: ["Ghi văn phòng", "Be nhạt trang nhã", "Xám ximăng", "Xám xanh than"],
     price: 650000,
     oldPrice: 790000,
@@ -476,16 +505,29 @@ export const productsData = [
     reviews: 154,
     badge: "Bán chạy",
     unit: "m² hoàn thiện",
-    image: "/product/Rèm/Rèm Cuốn/Rèm Cuốn OfficePro.png",
-    mainImage: "/product/Rèm/Rèm Cuốn/Rèm Cuốn OfficePro.png",
-    subImages: [],
-    description: "Giải pháp tiêu chuẩn dành cho các cao ốc văn phòng chuyên nghiệp, chống lóa màn hình máy tính, cản nhiệt tốt giúp tiết kiệm 25% điện điều hòa.",
-    fullDescription: "Được hơn 500+ doanh nghiệp tin chọn lắp đặt cho các tòa nhà văn phòng hiện đại. Đạt tiêu chuẩn an toàn chống cháy lan quốc tế NFPA 701, cách nhiệt xuất sắc, giúp duy trì nhiệt độ mát mẻ và tối ưu chi phí điện năng vận hành tòa nhà.",
-    material: "Polyester dệt chống tia UV, kháng cháy lan chuẩn NFPA 701",
-    lightBlocking: "Cản sáng 100%, chống chói 99%",
+    image: "/product/Rèm/Rèm Cuốn/Rèm Cuốn OfficePro.jpg",
+    mainImage: "/product/Rèm/Rèm Cuốn/Rèm Cuốn OfficePro.jpg",
+    subImages: [
+      "/product/Rèm/Rèm Cuốn/Rèm Cuốn OfficePro.jpg"
+    ],
+    description: "Thiết kế tối giản, vận hành linh hoạt, kiểm soát ánh sáng hiệu quả, kiến tạo không gian làm việc chuyên nghiệp.",
+    fullDescription: "Rèm cuốn văn phòng OfficePro là giải pháp tiêu chuẩn được hơn 500+ doanh nghiệp tin chọn cho các tòa nhà văn phòng hiện đại. Thiết kế tối giản, thẩm mỹ cao cùng khả năng kiểm soát ánh sáng chống chói lóa màn hình máy tính tuyệt đối. Khả năng giảm nhiệt giúp tiết kiệm 25% điện điều hòa, chất liệu bề mặt dệt mịn bền màu chống bám bụi và dễ vệ sinh lau chùi nhanh chóng.",
+    highlights: [
+      { title: "Kiểm soát ánh sáng hiệu quả", desc: "Chống lóa màn hình máy tính làm việc" },
+      { title: "Giảm nhiệt, tiết kiệm năng lượng", desc: "Giảm tới 25% điện năng điều hòa" },
+      { title: "Vận hành êm ái", desc: "Hệ thống kéo nhẹ tay, không phát ra tiếng động" },
+      { title: "Thiết kế hiện đại, thẩm mỹ cao", desc: "Tôn vinh diện mạo cao ốc văn phòng chuyên nghiệp" }
+    ],
+    features: [
+      "1. Chất liệu cao cấp: Bề mặt dệt mịn, bền màu, chống bám bụi và chống tia UV",
+      "2. Dễ vệ sinh: Hạn chế thấm nước, lau chùi nhanh chóng chỉ với khăn ẩm",
+      "3. Vận hành linh hoạt: Cơ chế cuốn mượt mà, khung máng hộp nhôm định hình bền bỉ"
+    ],
+    material: "Polyester dệt chống tia UV, kháng cháy lan chuẩn quốc tế NFPA 701",
+    lightBlocking: "Cản sáng 100%, chống chói lóa 99%",
     fabricWidth: "250cm",
-    origin: "Nhập khẩu chính hãng",
-    warranty: "Bảo hành 3 năm"
+    origin: "UniVeloria Chính Hãng",
+    warranty: "Bảo hành 3 năm chính hãng"
   },
 
   // ==========================================

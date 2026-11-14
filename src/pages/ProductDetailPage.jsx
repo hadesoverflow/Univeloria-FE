@@ -550,6 +550,9 @@ export function ProductDetailPage({
                     else if (product?.name?.includes('1230')) targetStudioId = 'elogi-1230-1';
                     else if (product?.name?.includes('Xếp Ly') || product?.name?.includes('1 Lớp')) targetStudioId = 'single-pleat';
                     else if (product?.name?.includes('S-Fold') || product?.name?.includes('2 Lớp')) targetStudioId = 'sfold-luxury';
+                    else if (product?.name?.includes('OfficePro')) targetStudioId = 'roller-officepro';
+                    else if (product?.name?.includes('LivingLite')) targetStudioId = 'roller-livinglite';
+                    else if (product?.name?.includes('CoastalLite')) targetStudioId = 'roller-coastallite';
                     navigateTo('studio', targetStudioId);
                   }}
                 >
@@ -1443,6 +1446,9 @@ export function ProductDetailPage({
                 else if (product?.name?.includes('1230')) targetStudioId = 'elogi-1230-1';
                 else if (product?.name?.includes('Xếp Ly') || product?.name?.includes('1 Lớp')) targetStudioId = 'single-pleat';
                 else if (product?.name?.includes('S-Fold') || product?.name?.includes('2 Lớp')) targetStudioId = 'sfold-luxury';
+                else if (product?.name?.includes('OfficePro')) targetStudioId = 'roller-officepro';
+                else if (product?.name?.includes('LivingLite')) targetStudioId = 'roller-livinglite';
+                else if (product?.name?.includes('CoastalLite')) targetStudioId = 'roller-coastallite';
                 navigateTo('studio', targetStudioId);
               }}
             >

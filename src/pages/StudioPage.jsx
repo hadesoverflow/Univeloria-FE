@@ -238,9 +238,13 @@ export function StudioPage({
 
     return list.filter((t) => {
       if (activeStudioFilter === 'Tất cả') return true;
-      if (activeStudioFilter === '2 Lớp S-Fold' || activeStudioFilter === 'Khách Sạn 5 Sao') return t.id === 'sfold-luxury';
-      if (activeStudioFilter === '1 Lớp Xếp Ly' || activeStudioFilter === 'Tối giản & Hiện đại') return t.id === 'single-pleat';
-      return t.style === activeStudioFilter;
+      if (activeStudioFilter === 'Rèm vải' || activeStudioFilter === 'Khách Sạn 5 Sao' || activeStudioFilter === '2 Lớp S-Fold' || activeStudioFilter === '1 Lớp Xếp Ly') {
+        return t.category === 'Rèm vải' || t.id === 'sfold-luxury' || t.id === 'single-pleat';
+      }
+      if (activeStudioFilter === 'Rèm cuốn') {
+        return t.isRoller || t.category === 'Rèm cuốn' || t.id.startsWith('roller-');
+      }
+      return t.style === activeStudioFilter || t.category === activeStudioFilter;
     });
   }, [activeStudioFilter, aiDiagnosis]);
 
@@ -534,7 +538,7 @@ export function StudioPage({
           onClick={() => setMobileActiveTab('curtains')}
         >
           <Layers size={16} />
-          <span>Loại rèm ({curtainTypes?.length || 2})</span>
+          <span>Loại rèm ({curtainTypes?.length || 5})</span>
         </button>
         <button
           type="button"
