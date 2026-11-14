@@ -993,8 +993,8 @@ function applyRollerFabricMaterial(mesh, fabricId, colorHex) {
 // Texture cache for rainbow zebra textures
 const rainbowTextureCache = new Map();
 
-function createRainbowZebraTexture(colorHex, stripeStyle = 'standard', isBackLayer = false) {
-  const cacheKey = `${colorHex}_${stripeStyle}_${isBackLayer ? 'back' : 'front'}`;
+function createRainbowZebraTexture(colorHex, stripeStyle = 'standard') {
+  const cacheKey = `${colorHex}_${stripeStyle}`;
   if (rainbowTextureCache.has(cacheKey)) {
     return rainbowTextureCache.get(cacheKey);
   }
@@ -1004,44 +1004,41 @@ function createRainbowZebraTexture(colorHex, stripeStyle = 'standard', isBackLay
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  const cycleHeight = 64; // 8 cycles over 512px
+  const cycleHeight = 64; // 8 cycles over 512px (exact 12.5cm per stripe cycle on 2.5m drop)
   const solidHeight = stripeStyle === 'wide' ? 42 : 38; // ~60% solid fabric band, ~40% sheer mesh
   const sheerHeight = cycleHeight - solidHeight;
-  const offset = isBackLayer ? Math.floor(cycleHeight * 0.45) : 0;
 
   // Background clear
   ctx.clearRect(0, 0, 512, 512);
 
   for (let y = 0; y < 512; y += cycleHeight) {
-    const startY = (y + offset) % 512;
-
     // 1. Solid Fabric Band
     ctx.save();
     ctx.fillStyle = colorHex || '#cbae92';
-    ctx.fillRect(0, startY, 512, solidHeight);
+    ctx.fillRect(0, y, 512, solidHeight);
 
     // Micro horizontal & vertical fabric weave grain
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    for (let py = startY; py < startY + solidHeight; py += 3) {
+    for (let py = y; py < y + solidHeight; py += 3) {
       ctx.fillRect(0, py, 512, 1);
     }
     ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
     for (let px = 0; px < 512; px += 4) {
-      ctx.fillRect(px, startY, 1, solidHeight);
+      ctx.fillRect(px, y, 1, solidHeight);
     }
 
-    // Top & bottom subtle drop shadow along stripe edge for 3D depth
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
-    ctx.fillRect(0, startY + solidHeight - 2, 512, 2);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-    ctx.fillRect(0, startY, 512, 1.5);
+    // Top highlight & bottom drop shadow along stripe edge for rich 3D slat depth
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.14)';
+    ctx.fillRect(0, y + solidHeight - 2, 512, 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.fillRect(0, y, 512, 1.5);
     ctx.restore();
 
     // 2. Sheer Mesh / Voile Band (Transparent Netting)
-    const sheerStartY = (startY + solidHeight) % 512;
+    const sheerStartY = y + solidHeight;
 
     // Translucent sheer voile background
-    ctx.fillStyle = 'rgba(248, 248, 250, 0.22)';
+    ctx.fillStyle = 'rgba(250, 250, 252, 0.22)';
     ctx.fillRect(0, sheerStartY, 512, sheerHeight);
 
     // Fine delicate mesh netting grid
@@ -1073,23 +1070,28 @@ function createRainbowZebraTexture(colorHex, stripeStyle = 'standard', isBackLay
 
 function applyRainbowFabricMaterial(mesh, colorHex, isBackLayer = false, stripeStyle = 'standard') {
   if (!mesh) return;
-  const tex = createRainbowZebraTexture(colorHex, stripeStyle, isBackLayer);
+  const tex = createRainbowZebraTexture(colorHex, stripeStyle);
 
-  if (mesh.material && mesh.material.isMeshStandardMaterial && mesh.material.map === tex) {
-    mesh.material.needsUpdate = true;
-  } else {
-    mesh.material = new THREE.MeshStandardMaterial({
-      map: tex,
-      transparent: true,
-      alphaTest: 0.015,
-      opacity: isBackLayer ? 0.92 : 0.98,
-      roughness: 0.75,
-      metalness: 0.02,
-      side: THREE.DoubleSide,
-      depthWrite: true
-    });
-    mesh.material.needsUpdate = true;
-  }
+  // Clone texture so front and back meshes have completely independent repeat and offset!
+  const layerTex = tex.clone();
+  layerTex.wrapS = THREE.RepeatWrapping;
+  layerTex.wrapT = THREE.RepeatWrapping;
+  layerTex.repeat.set(1, 2.5);
+  layerTex.offset.set(0, 0);
+  layerTex.needsUpdate = true;
+
+  mesh.material = new THREE.MeshStandardMaterial({
+    map: layerTex,
+    transparent: true,
+    alphaTest: 0.015,
+    opacity: isBackLayer ? 0.94 : 0.98,
+    roughness: 0.75,
+    metalness: 0.02,
+    side: THREE.DoubleSide,
+    depthWrite: isBackLayer ? true : false
+  });
+  mesh.renderOrder = isBackLayer ? 10 : 12;
+  mesh.material.needsUpdate = true;
 }
 
 export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
@@ -1104,6 +1106,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   isAnalyzing = false,
   aiDiagnosis = null,
   openRatio = 0.0, // controlled from parent
+  rainbowStripeMode = 'sheer', // 'sheer' (trùng nan lấy sáng) | 'blackout' (so le nan cản sáng)
   activeAtmosphere = 'noon',
   setActiveAtmosphere,
   onConsultClick,
@@ -1150,6 +1153,11 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   const customRainbowTopTubeRef = useRef(null);
   const customRainbowPullChainRef = useRef(null);
   const customRainbowTopHoodRef = useRef(null);
+  const rainbowStripeModeRef = useRef(rainbowStripeMode);
+  rainbowStripeModeRef.current = rainbowStripeMode;
+  const currentRainbowShiftRef = useRef(rainbowStripeMode === 'blackout' ? 0.0625 : 0.0);
+  const openRatioRef = useRef(openRatio);
+  openRatioRef.current = openRatio;
   const studioColorRef = useRef(studioColor);
   studioColorRef.current = studioColor;
   const activeFabricIdRef = useRef(activeFabricId);
@@ -1446,6 +1454,10 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     scalePhoto,
     resetPhotoScale,
     setCurtainOpenRatio: applyCurtainOpenRatio,
+    setRainbowStripeMode: (mode) => {
+      rainbowStripeModeRef.current = mode;
+      applyCurtainOpenRatio(openRatioRef.current || 0);
+    },
     focusFabricDetail: () => {
       // Zoom close to inspect fabric texture and micro-weave
       zoomTargetRef.current = 2.4;
@@ -1603,30 +1615,61 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
         }
       }
 
-    // 0B. For Rainbow / Zebra Blinds (Rèm Cầu Vồng 2 Lớp Sọc)
+    // 0B. For Rainbow / Zebra Blinds (Rèm Cầu Vồng 2 Lớp Sọc Chuẩn Vật Lý)
     if (customRainbowFrontFabricRef.current) {
       if (genericAssemblyRef.current) genericAssemblyRef.current.visible = false;
       const unrollProgress = Math.max(0.015, 1.0 - ratio * 0.985);
       const fullFabricH = 2.50;
       const currentH = fullFabricH * unrollProgress;
 
+      // 1. Position & scale geometry smoothly
       customRainbowFrontFabricRef.current.scale.y = unrollProgress;
       customRainbowFrontFabricRef.current.position.y = 1.26 - currentH * 0.5;
       customRainbowFrontFabricRef.current.visible = true;
+
+      // 2. Keep physical stripe size fixed (Zero squishing!):
+      // As scale.y decreases, repeat.y scales down proportionally so each stripe is always 12.5cm!
+      const currentRepeatY = 2.5 * unrollProgress;
+      const frontMap = customRainbowFrontFabricRef.current.material?.map;
+      if (frontMap) {
+        frontMap.repeat.y = currentRepeatY;
+        // As fabric rolls into top tube, offset shifts upwards
+        frontMap.offset.y = (1.0 - unrollProgress) * 2.5;
+        frontMap.needsUpdate = true;
+      }
 
       if (customRainbowBackFabricRef.current) {
         customRainbowBackFabricRef.current.scale.y = unrollProgress;
         customRainbowBackFabricRef.current.position.y = 1.26 - currentH * 0.5;
         customRainbowBackFabricRef.current.visible = true;
+
+        const backMap = customRainbowBackFabricRef.current.material?.map;
+        if (backMap) {
+          backMap.repeat.y = currentRepeatY;
+          // Apply active shift relative to front map (Trùng nan lấy sáng vs So le nan cản sáng)
+          const activeShift = currentRainbowShiftRef.current;
+          backMap.offset.y = (frontMap ? frontMap.offset.y : (1.0 - unrollProgress) * 2.5) + activeShift;
+          backMap.needsUpdate = true;
+        }
       }
 
+      // 3. Move & rotate bottom weighted teardrop roller bar
       if (customRainbowBottomBarRef.current) {
         customRainbowBottomBarRef.current.position.y = 1.26 - currentH;
+        customRainbowBottomBarRef.current.rotation.x = -ratio * Math.PI * 14.0;
         customRainbowBottomBarRef.current.visible = true;
       }
+
+      // 4. Rotate top cassette roller tube
       if (customRainbowTopTubeRef.current) {
-        customRainbowTopTubeRef.current.rotation.x = -ratio * Math.PI * 8.0;
+        customRainbowTopTubeRef.current.rotation.x = -ratio * Math.PI * 14.0;
       }
+
+      // 5. Subtle pull chain movement
+      if (customRainbowPullChainRef.current) {
+        customRainbowPullChainRef.current.position.y = 0.73 + Math.sin(ratio * Math.PI * 14.0) * 0.02;
+      }
+
       return;
     }
 
@@ -2011,10 +2054,11 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     };
   }, [curtainType?.model3dUrl, curtainType?.id, threeReady]);
 
-  // Update openRatio
+  // Update openRatio & rainbowStripeMode
   useEffect(() => {
+    rainbowStripeModeRef.current = rainbowStripeMode;
     applyCurtainOpenRatio(openRatio);
-  }, [openRatio, curtainType.id]);
+  }, [openRatio, rainbowStripeMode, curtainType?.id]);
 
   // Update Fabric Color & Distinct Procedural Texture Pattern
   useEffect(() => {
@@ -2069,6 +2113,9 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     }
     if (customRainbowBackFabricRef.current) {
       applyRainbowFabricMaterial(customRainbowBackFabricRef.current, studioColor, true, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+    }
+    if (customRainbowFrontFabricRef.current || customRainbowBackFabricRef.current) {
+      applyCurtainOpenRatio(openRatioRef.current || 0);
     }
     if (customTriptychRef.current && customTriptychRef.current.fabrics.length > 0) {
       customTriptychRef.current.fabrics.forEach((f) => {
@@ -2637,6 +2684,19 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
           customTriptychRef.current.bottomBars.forEach((b) => {
             b.position.z += (0.02 - b.position.z) * 0.1;
           });
+        }
+        // Smoothly interpolate zebra blind mode shift (Lấy sáng <-> Che kín)
+        if (customRainbowFrontFabricRef.current && customRainbowBackFabricRef.current) {
+          const targetShift = (rainbowStripeModeRef.current === 'blackout') ? 0.0625 : 0.0;
+          if (Math.abs(targetShift - currentRainbowShiftRef.current) > 0.0002) {
+            currentRainbowShiftRef.current += (targetShift - currentRainbowShiftRef.current) * 0.16;
+            const frontMap = customRainbowFrontFabricRef.current.material?.map;
+            const backMap = customRainbowBackFabricRef.current.material?.map;
+            if (frontMap && backMap) {
+              backMap.offset.y = frontMap.offset.y + currentRainbowShiftRef.current;
+              backMap.needsUpdate = true;
+            }
+          }
         }
       }
 

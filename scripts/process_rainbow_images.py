@@ -38,3 +38,4 @@ for k, src_path in src_map.items():
     print(f'Processed {k}: {target1}, {target_jpg}, {target_png}')
 
 print('All 5 rainbow curtain images processed successfully!')
+

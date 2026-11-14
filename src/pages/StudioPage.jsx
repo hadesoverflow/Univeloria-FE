@@ -219,6 +219,7 @@ export function StudioPage({
   const [calibrationPrecision, setCalibrationPrecision] = useState('fine'); // 'fine' (2%) | 'medium' (5%) | 'coarse' (10%)
   const isRollerCurtain = currentType?.isRoller || currentType?.category === 'Rèm cuốn';
   const isRainbowCurtain = currentType?.isRainbow || currentType?.category === 'Rèm cầu vồng';
+  const [rainbowStripeMode, setRainbowStripeMode] = useState('sheer'); // 'sheer' (Lấy sáng - Trùng nan) | 'blackout' (Che kín - So le nan)
 
   const availableFabricSamples = useMemo(() => {
     return isRollerCurtain ? rollerCurtainSamples : fabricCurtainSamples;
@@ -1059,6 +1060,7 @@ export function StudioPage({
                 isAnalyzing={analyzingState}
                 aiDiagnosis={aiDiagnosis}
                 openRatio={curtainOpenRatio}
+                rainbowStripeMode={rainbowStripeMode}
                 activeAtmosphere={activeAtmosphere}
                 setActiveAtmosphere={setActiveAtmosphere}
                 onConsultClick={() => navigateTo('contact')}
@@ -1093,6 +1095,35 @@ export function StudioPage({
               />
               <span className="ratio-badge">{Math.round(curtainOpenRatio * 100)}%</span>
             </div>
+
+            {isRainbowCurtain && (
+              <div className="rainbow-mode-switch">
+                <button
+                  type="button"
+                  className={`rainbow-mode-btn ${rainbowStripeMode === 'sheer' ? 'active' : ''}`}
+                  onClick={() => {
+                    setRainbowStripeMode('sheer');
+                    viewer3dRef.current?.setRainbowStripeMode?.('sheer');
+                  }}
+                  title="Chỉnh nan rèm trùng nhau để lấy sáng tự nhiên qua dải voan"
+                >
+                  <Sun size={13} />
+                  <span>Lấy sáng (Trùng nan)</span>
+                </button>
+                <button
+                  type="button"
+                  className={`rainbow-mode-btn ${rainbowStripeMode === 'blackout' ? 'active' : ''}`}
+                  onClick={() => {
+                    setRainbowStripeMode('blackout');
+                    viewer3dRef.current?.setRainbowStripeMode?.('blackout');
+                  }}
+                  title="Chỉnh nan rèm so le nhau để cản sáng 100% che kín riêng tư"
+                >
+                  <Moon size={13} />
+                  <span>Che kín (So le nan)</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Streamlined Bottom Control Bar matching Image 2 */}

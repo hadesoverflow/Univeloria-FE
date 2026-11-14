@@ -24064,6 +24064,69 @@ button:active:not(:disabled),
   text-align: center !important;
 }
 
+/* Rainbow Zebra Blind Mode Switch (Lấy sáng / Che kín) */
+.studio-page .rainbow-mode-switch {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: rgba(23, 51, 82, 0.06) !important;
+  padding: 3px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(23, 51, 82, 0.08) !important;
+  margin-left: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.studio-page .rainbow-mode-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  border: none !important;
+  background: transparent !important;
+  color: #173352 !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  white-space: nowrap !important;
+}
+
+.studio-page .rainbow-mode-btn:hover {
+  background: rgba(23, 51, 82, 0.08) !important;
+  color: #0f243c !important;
+}
+
+.studio-page .rainbow-mode-btn.active {
+  background: #173352 !important;
+  color: #FEF3E3 !important;
+  box-shadow: 0 2px 8px rgba(23, 51, 82, 0.25) !important;
+}
+
+.studio-page .rainbow-mode-btn svg {
+  flex-shrink: 0 !important;
+  stroke-width: 2.2 !important;
+}
+
+@media (max-width: 768px) {
+  .studio-page .external-curtain-dock {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .studio-page .rainbow-mode-switch {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-left: 0 !important;
+  }
+  .studio-page .rainbow-mode-btn {
+    flex: 1 !important;
+    justify-content: center !important;
+    font-size: 11px !important;
+    padding: 6px 8px !important;
+  }
+}
+
 /* ==========================================================================
    HOMEPAGE BACKGROUND MUSIC PLAYER BUTTON (BOTTOM-LEFT)
    ========================================================================== */
