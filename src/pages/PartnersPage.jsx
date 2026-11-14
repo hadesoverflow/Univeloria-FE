@@ -94,6 +94,7 @@ export const PARTNERS_DATA = [
     id: 'art-men-decor',
     category: 'Tranh treo tường nghệ thuật',
     categoryIcon: '🖼️',
+    memberTier: 'Thành viên đối tác vàng',
     name: 'Tiệm tranh Men Decor',
     subtitle: 'Tranh tráng gương & Canvas hiện đại',
     description: 'Tranh treo tường tráng gương pha lê và canvas cao cấp, phối màu tinh tế ăn khớp hoàn mỹ với từng màu rèm UniVeloria.',
