@@ -2,7 +2,6 @@ export const aboutStory = {
   eyebrow: " GIỚI THIỆU THƯƠNG HIỆU",
   sectionCode: "1.5.1",
   title: "Mô tả sản phẩm và dịch vụ",
-  quote: "A Beautiful Space, A Better You.",
   p1: "UniVeloria là nền tảng thương mại điện tử trong lĩnh vực nội thất và không gian sống, lấy rèm cửa custom làm sản phẩm cốt lõi và từng bước mở rộng sang các sản phẩm hỗ trợ hoàn thiện không gian. Điểm khác biệt của UniVeloria nằm ở việc kết hợp AI và công nghệ trực quan hóa 3D để hỗ trợ khách hàng lựa chọn sản phẩm phù hợp với chính căn phòng của mình.",
   p2: "Hệ sinh thái UniVeloria gồm bốn thành phần chính: VELORIA 3D Studio hỗ trợ trực quan hóa sản phẩm trong không gian; VELO AI Stylist tư vấn phong cách, màu sắc và sản phẩm phù hợp; Smart Order Platform hỗ trợ quá trình đặt rèm custom trực tuyến; và Eco-Tech Supply Chain kết nối việc đặt hàng với sản xuất, đo đạc và lắp đặt theo nhu cầu. Các thành phần này tạo thành một hành trình liền mạch từ tư vấn, xem trước phương án đến đặt hàng và hoàn thiện sản phẩm.",
   ecosystem: [
