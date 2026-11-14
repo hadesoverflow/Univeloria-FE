@@ -207,7 +207,7 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     return {
       delayMs: 4200,
       curtain: null,
-      text: "Dạ giá rèm tại UniVeloria được niêm yết rõ ràng và tính theo diện tích thực tế:\n• 🌟 **Rèm Cuốn:** Từ 380.000đ – 490.000đ / m² (Gọn gàng, hiện đại, cản sáng tốt)\n• 🌈 **Rèm Cầu Vòng:** Từ 1.150.000đ – 1.550.000đ / m² (Nan 2 lớp xoay lật điều chỉnh sáng linh hoạt)\n• 💎 **Rèm Vải Cao Cấp:** Từ 580.000đ – 680.000đ / m² (Sóng đổ bồng bềnh chuẩn 5 sao)\n\nAnh/chị hãy kể cho em về căn phòng cụ thể của mình để em gợi ý mẫu phù hợp và dẫn vào trải nghiệm 3D nhé!"
+      text: "Dạ giá rèm tại UniVeloria được niêm yết rõ ràng và tính theo diện tích thực tế:\n• 🌟 Rèm Cuốn: Từ 380.000đ – 490.000đ / m² (Gọn gàng, hiện đại, cản sáng tốt)\n• 🌈 Rèm Cầu Vòng: Từ 1.150.000đ – 1.550.000đ / m² (Nan 2 lớp xoay lật điều chỉnh sáng linh hoạt)\n• 💎 Rèm Vải Cao Cấp: Từ 580.000đ – 680.000đ / m² (Sóng đổ bồng bềnh chuẩn 5 sao)\n\nAnh/chị hãy kể cho em về căn phòng cụ thể của mình để em gợi ý mẫu phù hợp và dẫn vào trải nghiệm 3D nhé!"
     };
   }
 
@@ -216,7 +216,7 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     return {
       delayMs: 4200,
       curtain: null,
-      text: "Dạ dịch vụ trọn gói chuẩn 5 sao của UniVeloria bao gồm:\n1. **Đo đạc tận nơi:** Chuyên viên mang mẫu vải thực tế đến tận nhà tư vấn và đo đạc miễn phí.\n2. **Thi công lắp đặt:** Nhanh gọn, chuẩn chỉ trong vòng 24h - 48h.\n3. **Bảo hành vàng:** 3 năm chính hãng cho chất liệu vải & phụ kiện máng rèm, 5 năm cho động cơ rèm tự động.\n\nAnh/chị đang muốn tân trang cho không gian phòng nào trong nhà ạ?"
+      text: "Dạ dịch vụ trọn gói chuẩn 5 sao của UniVeloria bao gồm:\n1. Đo đạc tận nơi: Chuyên viên mang mẫu vải thực tế đến tận nhà tư vấn và đo đạc miễn phí.\n2. Thi công lắp đặt: Nhanh gọn, chuẩn chỉ trong vòng 24h - 48h.\n3. Bảo hành vàng: 3 năm chính hãng cho chất liệu vải & phụ kiện máng rèm, 5 năm cho động cơ rèm tự động.\n\nAnh/chị đang muốn tân trang cho không gian phòng nào trong nhà ạ?"
     };
   }
 
@@ -241,43 +241,126 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     };
   }
 
-  // 6. PHÂN TÍCH CHUYÊN SÂU CÂU CHUYỆN CĂN PHÒNG & VỊ TRÍ KHÔNG GIAN
+  // 6. PHÂN TÍCH CHUYÊN SÂU: HƯỚNG MẶT TRỜI, HƯỚNG GIÓ, ÁNH SÁNG & VỊ TRÍ CĂN PHÒNG
+  const isWest = norm.includes('phia tay') || 
+                 norm.includes('huong tay') || 
+                 norm.includes('nha tay') || 
+                 norm.includes('cua tay') ||
+                 norm.includes('nang tay') || 
+                 norm.includes('chieu tay') || 
+                 norm.includes('tay bac') || 
+                 norm.includes('tay nam') || 
+                 norm.includes('mat troi lan') || 
+                 norm.includes('nang chieu') || 
+                 norm.includes('nang gat') || 
+                 norm.includes('om nhiet') || 
+                 norm.includes('nong ham hap') ||
+                 norm.includes('buc xa') ||
+                 /\b(tay|phia tay|huong tay)\b/.test(norm);
+
+  const isEast = norm.includes('phia dong') || 
+                 norm.includes('huong dong') || 
+                 norm.includes('nha dong') || 
+                 norm.includes('cua dong') ||
+                 norm.includes('nang dong') || 
+                 norm.includes('dong bac') || 
+                 norm.includes('dong nam') || 
+                 norm.includes('mat troi moc') || 
+                 norm.includes('binh minh') || 
+                 norm.includes('nang som') || 
+                 norm.includes('ban mai') ||
+                 norm.includes('nang sang') ||
+                 /\b(dong|phia dong|huong dong)\b/.test(norm);
+
+  const isSouth = norm.includes('phia nam') || 
+                  norm.includes('huong nam') || 
+                  norm.includes('nha nam') || 
+                  norm.includes('cua nam') || 
+                  norm.includes('gio nam') || 
+                  norm.includes('gio nom') || 
+                  norm.includes('gio mat') ||
+                  norm.includes('thoang gio') ||
+                  /\b(nam|phia nam|huong nam)\b/.test(norm);
+
+  const isNorth = norm.includes('phia bac') || 
+                  norm.includes('huong bac') || 
+                  norm.includes('nha bac') || 
+                  norm.includes('cua bac') || 
+                  norm.includes('gio bac') || 
+                  norm.includes('gio lanh') || 
+                  norm.includes('dong bac') || 
+                  norm.includes('tay bac') || 
+                  norm.includes('mua dong') || 
+                  norm.includes('thieu sang') || 
+                  norm.includes('thieu nang') ||
+                  norm.includes('it nang') ||
+                  /\b(bac|phia bac|huong bac)\b/.test(norm);
+
+  const hasWindOrSunQuery = norm.includes('huong gio') || 
+                            norm.includes('huong mat troi') || 
+                            norm.includes('anh sang phu hop') || 
+                            norm.includes('theo huong');
+
   const isLivingRoom = norm.includes('phong khach') || norm.includes('khach') || norm.includes('biet thu') || norm.includes('gian chinh') || norm.includes('phong sinh hoat');
   const isBedRoom = norm.includes('phong ngu') || norm.includes('ngu') || norm.includes('em be') || norm.includes('master') || norm.includes('vo chong');
   const isWorkRoom = norm.includes('lam viec') || norm.includes('van phong') || norm.includes('cong ty') || norm.includes('ban lam viec') || norm.includes('doc sach');
   const isApartment = norm.includes('chung cu') || norm.includes('can ho') || norm.includes('studio') || norm.includes('phong nho') || norm.includes('dien tich hep');
-
-  const isWestSun = norm.includes('huong tay') || norm.includes('nang gat') || norm.includes('nang chieu') || norm.includes('chong choi') || norm.includes('nong') || norm.includes('ha nhiet') || norm.includes('chong nang');
-  const isMorningSunOrView = norm.includes('huong dong') || norm.includes('ban cong') || norm.includes('ngam canh') || norm.includes('view') || norm.includes('thoang daang') || norm.includes('loc sang') || norm.includes('don nang');
-  const isTotalDark = norm.includes('toi hoan toan') || norm.includes('blackout') || norm.includes('mat ngu') || norm.includes('ngu ngon') || norm.includes('cach am') || norm.includes('yen tinh');
 
   const isWood = norm.includes('go') || norm.includes('van go') || norm.includes('nau') || norm.includes('am cung') || norm.includes('moc mac');
   const isScandinavian = norm.includes('bac au') || norm.includes('scandinavian') || norm.includes('hoa ram') || norm.includes('thanh lich');
   const isLuxury5Star = norm.includes('sang trong') || norm.includes('5 sao') || norm.includes('khach san') || norm.includes('hoang gia') || norm.includes('quy toc') || norm.includes('chau au') || norm.includes('be the');
   const isJapandi = norm.includes('japandi') || norm.includes('eco') || norm.includes('song xanh') || norm.includes('thien nhien');
 
-  // Tính điểm phù hợp cho 12 mẫu rèm
+  // Tính điểm phù hợp cho 12 mẫu rèm dựa trên Hướng + Vị trí + Môi trường
   const scored = CURTAIN_PROFILES.map(item => {
     let score = 0;
 
     // Loại rèm theo mong muốn
     if (norm.includes('cau vong') || norm.includes('zebra')) {
-      if (item.category === 'Rèm cầu vồng') score += 12;
+      if (item.category === 'Rèm cầu vồng') score += 15;
       else score -= 15;
     }
     if (norm.includes('cuon') || norm.includes('roller')) {
-      if (item.category === 'Rèm cuốn') score += 12;
+      if (item.category === 'Rèm cuốn') score += 15;
       else score -= 15;
     }
     if (norm.includes('rem vai') || norm.includes('vai')) {
-      if (item.category === 'Rèm vải') score += 12;
+      if (item.category === 'Rèm vải') score += 15;
       else score -= 15;
+    }
+
+    // 1. Phù hợp hướng Tây (Nắng chiều gay gắt, gió khô nóng)
+    if (isWest) {
+      if (item.studioId === 'rainbow-dragon') score += 28;
+      if (item.studioId === 'roller-moon') score += 28;
+      if (item.studioId === 'rainbow-brioni') score += 20;
+    }
+
+    // 2. Phù hợp hướng Đông (Nắng sớm ban mai, gió Đông mát mẻ)
+    if (isEast) {
+      if (item.studioId === 'rainbow-rivere') score += 26;
+      if (item.studioId === 'roller-sunny') score += 26;
+      if (item.studioId === 'roller-harmony-2') score += 18;
+    }
+
+    // 3. Phù hợp hướng Nam (Ánh sáng chan hòa, gió nồm mát rượi)
+    if (isSouth) {
+      if (item.studioId === 'elogi-1198-2') score += 26;
+      if (item.studioId === 'elogi-1206-1') score += 24;
+      if (item.studioId === 'roller-malange-1') score += 18;
+    }
+
+    // 4. Phù hợp hướng Bắc (Thiếu nắng trực tiếp, gió mùa Đông Bắc lạnh)
+    if (isNorth) {
+      if (item.studioId === 'elogi-1230-1') score += 26;
+      if (item.studioId === 'rainbow-brioni') score += 22;
+      if (item.studioId === 'roller-silvia') score += 20;
     }
 
     // Phòng & Công năng
     if (isLivingRoom) {
       if (item.studioId === 'elogi-1198-2') score += 16;
-      if (item.studioId === 'rainbow-brioni') score += 14;
+      if (item.studioId === 'rainbow-brioni') score += 15;
       if (item.studioId === 'roller-silvia') score += 13;
       if (item.studioId === 'roller-sunny') score += 10;
     }
@@ -296,21 +379,6 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
       if (item.studioId === 'rainbow-rivere') score += 16;
       if (item.studioId === 'roller-malange-1') score += 15;
       if (item.studioId === 'roller-harmony-2') score += 13;
-    }
-
-    // Hướng nắng & Ánh sáng
-    if (isWestSun) {
-      if (item.studioId === 'rainbow-dragon') score += 20;
-      if (item.studioId === 'roller-moon') score += 20;
-      if (item.studioId === 'rainbow-brioni') score += 14;
-    }
-    if (isMorningSunOrView) {
-      if (item.studioId === 'roller-sunny') score += 20;
-      if (item.studioId === 'rainbow-rivere') score += 16;
-    }
-    if (isTotalDark) {
-      if (item.studioId === 'roller-moon') score += 22;
-      if (item.studioId === 'rainbow-dragon') score += 18;
     }
 
     // Phong cách nội thất
@@ -350,10 +418,60 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     chosen = CURTAIN_PROFILES[Math.floor(Math.random() * CURTAIN_PROFILES.length)];
   }
 
-  // TỔNG HỢP CÂU TRẢ LỜI THÔNG MINH DÀNH RIÊNG CHO CĂN PHÒNG ĐÓ
+  // TỔNG HỢP CÂU TRẢ LỜI THÔNG MINH (KHÔNG CÓ DẤU **)
   let narrative = '';
-  if (isBedRoom && isWestSun) {
-    narrative = `Lắng nghe câu chuyện về phòng ngủ hướng tây đón nhiều nắng gắt của bạn: Đây là vị trí rất cần giải pháp cản nhiệt và chắn sáng triệt để để giữ phòng luôn mát dịu, bảo vệ giấc ngủ sâu và yên tĩnh trọn vẹn.`;
+
+  if (isWest) {
+    narrative = `Đối với căn phòng nằm ở phía Tây (hoặc hướng Tây / Tây Bắc / Tây Nam):
+
+• Hướng Mặt Trời: Đón nhận trọn vẹn ánh nắng chiều gay gắt từ 13h00 đến 17h30 với góc chiếu xiên thấp chiếu sâu vào phòng, bức xạ nhiệt cực đại khiến căn phòng dễ bị tích nhiệt (om nhiệt), hầm hập và chói lóa mắt dữ dội.
+• Hướng Gió: Mùa hè thường đón gió Tây Nam khô nóng (gió Lào/gió phơn), độ ẩm thấp, dễ làm không khí trong phòng ngột ngạt và làm cong vênh, bạc màu đồ gỗ nội thất.
+• Ánh Sáng & Rèm Thích Hợp: Căn phòng phía Tây bắt buộc phải sử dụng rèm có khả năng cản sáng đỉnh cao từ 94% đến 100% Blackout tuyệt đối kết hợp tính năng cách nhiệt để hạ nhiệt độ phòng từ 3 - 5°C so với bên ngoài.
+
+Các mẫu rèm thích hợp nhất cho căn phòng phía Tây:
+1. Mẫu Rèm Cầu Vồng Dragon.E Blackout: Dệt chéo melange đan khít dày dặn, cản sáng 95%, chống chói lóa và cản nhiệt vượt trội cho phòng ngủ và phòng khách hướng Tây.
+2. Mẫu Rèm Cuốn Moon: Cản sáng 100% Blackout tuyệt đối nhờ 3 lớp bọt Foam cách nhiệt, chặn đứng hoàn toàn tia bức xạ mặt trời.
+3. Mẫu Rèm Cầu Vồng Brioni.E Blackout: Vân gỗ sang trọng, cản sáng 94%, bảo vệ nội thất gỗ không bị bạc màu do nắng chiều.`;
+  } else if (isEast) {
+    narrative = `Đối với căn phòng nằm ở phía Đông (hoặc Đông Bắc / Đông Nam):
+
+• Hướng Mặt Trời: Đón nhận ánh nắng trực diện vào sáng sớm từ 6h00 đến 10h30 (bình minh). Ánh sáng sớm có cường độ chói mắt khi vừa thức giấc nhưng tắt nắng nhanh, từ sau 11h phòng trở nên râm mát.
+• Hướng Gió: Đón gió Đông mát mẻ vào buổi sáng, không khí trong lành và lưu thông tự nhiên rất tốt.
+• Ánh Sáng & Rèm Thích Hợp: Căn phòng phía Đông thích hợp nhất với các mẫu rèm có cơ chế điều tiết ánh sáng linh hoạt: sáng sớm cản chói để bạn ngủ ngon, ban ngày có thể mở hé để đón gió lành và ánh sáng chan hòa mà không cần kéo hết rèm lên.
+
+Các mẫu rèm thích hợp nhất cho căn phòng phía Đông:
+1. Mẫu Rèm Cầu Vồng River.E: Cấu trúc nan 2 lớp so le, sáng sớm xoay lệch nan để che chói, sau đó xoay trùng nan để đón trọn gió lành và ánh sáng dịu mát.
+2. Mẫu Rèm Cuốn Sunny: Mắt lưới Micro Sunscreen lọc sáng dịu mát, ngăn 95% tia UV nhưng vẫn giữ tầm nhìn mở thoáng đãng ngắm cảnh ban mai.
+3. Mẫu Rèm Cuốn Harmony 2: Thiết kế gọn gàng, gân dệt cản sáng 85-90% vừa đủ cho giấc ngủ sớm êm đềm.`;
+  } else if (isSouth) {
+    narrative = `Đối với căn phòng nằm ở phía Nam (hoặc Đông Nam):
+
+• Hướng Mặt Trời: Đây là hướng đắc địa nhất trong kiến trúc vì tránh được ánh nắng chiếu trực diện gay gắt quanh năm. Ánh sáng mặt trời chiếu nghiêng ổn định, dịu êm và chan hòa từ sáng đến chiều.
+• Hướng Gió: Đón trọn luồng gió nồm Đông Nam mát rượi vào mùa hè, ấm áp vào mùa đông và lưu thông không khí tuyệt vời.
+• Ánh Sáng & Rèm Thích Hợp: Căn phòng phía Nam không cần loại rèm cản sáng quá dày nặng nề, mà nên ưu tiên các dòng rèm mềm mại, tôn vinh thẩm mỹ cao cấp, bay bổng theo làn gió và điều tiết ánh sáng nhẹ nhàng.
+
+Các mẫu rèm thích hợp nhất cho căn phòng phía Nam:
+1. Mẫu rèm vải Elogi - 1198 - 2: Sóng rèm chữ S lượn bồng bềnh chuẩn khách sạn 5 sao, đón gió nồm đu đưa mềm mại, tôn vinh sự bề thế của phòng khách hoặc phòng ngủ.
+2. Mẫu rèm vải Elogi - 1206 - 1: Dệt từ sợi lanh tự nhiên mềm rũ thoáng khí, giữ căn phòng luôn thơm mát, thư thái cùng làn gió Nam trong lành.
+3. Mẫu Rèm Cuốn Malange 1: Tối giản phong cách Bắc Âu Scandinavian, mang lại ánh sáng khuếch tán thanh lịch.`;
+  } else if (isNorth) {
+    narrative = `Đối với căn phòng nằm ở phía Bắc (hoặc Đông Bắc):
+
+• Hướng Mặt Trời: Hướng này hầu như không có ánh nắng mặt trời chiếu trực tiếp quanh năm. Căn phòng thường chỉ nhận ánh sáng khuếch tán yếu, dễ tạo cảm giác thiếu sáng và tĩnh lặng.
+• Hướng Gió: Vào mùa đông phải hứng chịu gió mùa Đông Bắc (gió bấc) lạnh buốt, độ ẩm thấp, dễ làm căn phòng bị lạnh lẽo và hanh khô.
+• Ánh Sáng & Rèm Thích Hợp: Căn phòng phía Bắc rất thích hợp với các dòng rèm mang tone màu ấm áp (vàng kem, nâu gỗ, be ấm, đất nung) để cân bằng thị giác, xua tan cảm giác lạnh lẽo và có khả năng cản gió lùa giữ ấm mà không làm phòng bị tối sầm.
+
+Các mẫu rèm thích hợp nhất cho căn phòng phía Bắc:
+1. Mẫu rèm vải Elogi - 1230 - 1: Sợi eco gân nổi với tone cát vàng Japandi dịu mắt, mang năng lượng ấm áp xua tan sự lạnh lẽo của hướng Bắc, kết nối thiên nhiên thanh bình.
+2. Mẫu Rèm Cầu Vồng Brioni.E Blackout: Tone màu gỗ tự nhiên ấm cúng, bản nan dày dặn cản gió lùa mùa đông cực tốt khi khép kín.
+3. Mẫu Rèm Cuốn Silvia: Họa tiết dệt Jacquard Châu Âu dày dặn, giữ ấm căn phòng và tăng thêm vẻ sang trọng, quý phái.`;
+  } else if (hasWindOrSunQuery) {
+    narrative = `Tư vấn giải pháp rèm theo Hướng Mặt Trời, Hướng Gió & Ánh Sáng:
+
+1. Hướng Tây (Nắng chiều gay gắt, gió Tây Nam khô nóng): Thích hợp rèm cản sáng 95% - 100% có lớp cách nhiệt chống nóng (Rèm Cuốn Moon 100% Blackout, Rèm Cầu Vồng Dragon.E 95%).
+2. Hướng Đông (Nắng sớm ban mai, gió Đông mát mẻ): Thích hợp rèm điều chỉnh nan linh hoạt để cản chói sáng sớm và đón gió ban ngày (Rèm Cầu Vồng River.E, Rèm Cuốn Sunny lọc sáng tự nhiên).
+3. Hướng Nam (Ánh sáng chan hòa, gió nồm mát rượi): Thích hợp rèm vải sóng chữ S bồng bềnh hoặc rèm cuốn thanh lịch, tối ưu thông gió (Rèm Vải Elogi 1198-2, Elogi 1206-1 sợi lanh).
+4. Hướng Bắc (Thiếu nắng trực tiếp, gió mùa Đông Bắc lạnh): Thích hợp rèm tone màu ấm áp, cản gió lùa giữ nhiệt (Rèm Vải Elogi 1230-1 Japandi tone vàng cát, Rèm Cầu Vồng Brioni.E vân gỗ ấm).`;
   } else if (isLivingRoom && isWood) {
     narrative = `Với không gian phòng khách hiện đại kết hợp nhiều nội thất gỗ sang trọng: Sự phối hợp đắt giá nhất là tấm rèm có vân dệt tự nhiên trầm ấm, tôn lên chất mộc quý phái và đồng điệu với thẩm mỹ căn nhà.`;
   } else if (isWorkRoom) {
@@ -362,17 +480,13 @@ export function analyzeUserMessage(rawInput, currentCurtainId = null) {
     narrative = `Phòng ngủ là chốn riêng tư để nghỉ ngơi và tái tạo năng lượng: Tấm rèm hoàn hảo cần mang lại độ che chắn riêng tư cao, chất cảm êm dịu và khả năng cách âm, cản nhiệt tốt.`;
   } else if (isLivingRoom) {
     narrative = `Phòng khách là trung tâm của ngôi nhà: Việc chọn rèm cần tạo được sự bề thế, linh hoạt lấy sáng tự nhiên đón tài lộc và tạo cảm giác thoáng đãng, ấm cúng.`;
-  } else if (isWestSun) {
-    narrative = `Với khung cửa hướng tây chịu ảnh hưởng của nắng chiều oi ả: Khả năng hạ nhiệt và chặn 95-100% tia UV là yếu tố then chốt giúp bảo vệ sức khỏe gia đình và độ bền của nội thất.`;
-  } else if (isMorningSunOrView) {
-    narrative = `Với khung cửa sổ có ban công hoặc tầm nhìn thoáng đãng: Bạn cần một tấm rèm lọc sáng dịu nhẹ, vừa cản tia cực tím hiệu quả nhưng vẫn giữ trọn không gian mở để ngắm cảnh thư thái.`;
   } else if (isApartment) {
     narrative = `Với không gian căn hộ chung cư hiện đại: Giải pháp rèm cần tiết kiệm diện tích tối đa, dễ dàng vệ sinh lau chùi và mang lại cảm giác trẻ trung, thoáng mát.`;
   } else {
-    narrative = `Lắng nghe câu chuyện và mong muốn về không gian của bạn: UniVeloria đã phân tích các tiêu chí về vị trí, cường độ ánh sáng và phong cách nội thất để tìm ra giải pháp chuẩn xác nhất.`;
+    narrative = `Lắng nghe câu chuyện và mong muốn về không gian của bạn: UniVeloria đã phân tích các tiêu chí về vị trí, hướng nắng, hướng gió và phong cách nội thất để tìm ra giải pháp chuẩn xác nhất.`;
   }
 
-  const responseText = `${narrative}\n\nUniVeloria trân trọng đề xuất **${chosen.name}** (${chosen.badge}) — sự lựa chọn chuẩn mực dành riêng cho căn phòng của bạn:`;
+  const responseText = `${narrative}\n\nUniVeloria trân trọng đề xuất ${chosen.name} (${chosen.badge}) — sự lựa chọn chuẩn mực dành riêng cho căn phòng của bạn:`;
 
   return {
     delayMs: 6500, // Thời gian phân tích từ 5-10s theo yêu cầu
@@ -562,9 +676,10 @@ export function FloatingPetdexChat({ navigateTo }) {
   };
 
   const quickPrompts = [
-    { label: '🌅 Phòng ngủ hướng tây nắng gắt', text: 'Tôi cần một tấm rèm cản sáng thật tốt cho phòng ngủ hướng tây nắng gắt, chống nóng và giúp ngủ sâu.' },
-    { label: '🛋️ Phòng khách tông gỗ sang trọng', text: 'Phòng khách nhà tôi thiết kế phong cách hiện đại với nhiều đồ gỗ, cần một tấm rèm sang trọng và ấm cúng.' },
-    { label: '🏢 Góc làm việc căn hộ cần rèm gọn', text: 'Tôi muốn tìm rèm cuốn gọn gàng, hiện đại cho góc bàn làm việc trong căn hộ nhỏ, dễ vệ sinh lau chùi.' },
+    { label: '🌅 Căn phòng phía tây nắng gắt chiều', text: 'Tôi muốn có 1 bộ rèm ở căn phòng phía tây, hướng nắng chiều gay gắt cần chống nóng và cản nhiệt tốt.' },
+    { label: '☀️ Căn phòng phía đông đón nắng sớm', text: 'Căn phòng phía đông nhà tôi bị chói mắt lúc bình minh, tôi cần rèm điều chỉnh sáng linh hoạt và đón gió ban ngày.' },
+    { label: '🍃 Căn phòng phía nam đón gió mát', text: 'Căn phòng phía nam nhà tôi nhiều gió mát quanh năm, cần rèm mềm mại sang trọng đón gió lưu thông.' },
+    { label: '❄️ Căn phòng phía bắc cần giữ ấm', text: 'Căn phòng phía bắc ít nắng và mùa đông có gió lạnh, cần rèm tone màu ấm cúng và cản gió tốt.' },
     { label: '🎲 Gợi ý ngẫu nhiên 1 mẫu rèm', text: 'Gợi ý ngẫu nhiên cho tôi 1 mẫu rèm độc đáo kèm câu chuyện của nó.' }
   ];
 
@@ -612,7 +727,7 @@ export function FloatingPetdexChat({ navigateTo }) {
                     className={m.sender === 'bot' ? 'chatbot-bot-msg' : 'chatbot-user-msg'}
                     style={{ whiteSpace: 'pre-line' }}
                   >
-                    {m.text}
+                    {typeof m.text === 'string' ? m.text.replace(/\*\*/g, '') : m.text}
                   </div>
 
                   {/* Render Curtain Recommendation Card if present */}
@@ -629,7 +744,7 @@ export function FloatingPetdexChat({ navigateTo }) {
                       <div className="chatbot-rec-info">
                         <h4 className="chatbot-rec-title">{m.curtain.name}</h4>
                         <div className="chatbot-rec-price">{m.curtain.priceDisplay}</div>
-                        <p className="chatbot-rec-story">{m.curtain.story}</p>
+                        <p className="chatbot-rec-story">{typeof m.curtain.story === 'string' ? m.curtain.story.replace(/\*\*/g, '') : m.curtain.story}</p>
                         <div className="chatbot-rec-actions">
                           <button
                             type="button"
