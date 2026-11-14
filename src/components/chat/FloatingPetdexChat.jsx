@@ -658,8 +658,9 @@ export function FloatingPetdexChat({ navigateTo }) {
     const result = analyzeUserMessage(query, currentCtx, lastBotCurtain);
 
     if (result.type === 'question' || result.type === 'faq') {
-      setIsTyping(false);
+      setIsTyping(true);
       const t = setTimeout(() => {
+        setIsTyping(false);
         setMessages((prev) => [
           ...prev,
           {
@@ -671,7 +672,7 @@ export function FloatingPetdexChat({ navigateTo }) {
         if (result.updatedContext) {
           setConsultationContext(result.updatedContext);
         }
-      }, result.delayMs || 800);
+      }, result.delayMs || 600);
       timersRef.current = [t];
     } else if (result.type === 'final_consultation') {
       // 1. Phản hồi xác nhận đối thoại: "Tôi hiểu rồi bạn đợi tôi trong giây phút..."

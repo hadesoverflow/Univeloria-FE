@@ -119,7 +119,7 @@ a:focus-visible {
 .nav button {
   background: none;
   border: 0;
-  color: #071319;
+  color: #173352;
   font-size: 13px;
   padding: 9px 0;
   position: relative
@@ -259,20 +259,20 @@ a:focus-visible {
 }
 
 .pill-dark {
-  background: #020d12;
+  background: #173352;
   color: white
 }
 
 .pill-light {
   background: rgba(255, 255, 255, .7);
-  color: #061116;
+  color: #173352;
   border: 1px solid rgba(6, 17, 22, .15);
   backdrop-filter: blur(12px)
 }
 
 .pill-cream {
   background: #f5efe4;
-  color: #071116
+  color: #173352
 }
 
 .preview-card {
@@ -332,7 +332,7 @@ a:focus-visible {
   position: absolute;
   bottom: 7px;
   left: 7px;
-  background: #071116bd;
+  background: rgba(23, 51, 82, 0.74);
   color: white;
   border-radius: 99px;
   font-size: 7px;
@@ -363,7 +363,7 @@ a:focus-visible {
 }
 
 .swatch.selected {
-  outline: 2px solid #061116;
+  outline: 2px solid #173352;
   outline-offset: 2px
 }
 
@@ -1278,7 +1278,7 @@ a:focus-visible {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
-  color: #061217;
+  color: #173352;
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
@@ -1424,7 +1424,7 @@ a:focus-visible {
   letter-spacing: -0.055em;
   margin: 0 0 18px;
   font-weight: 800;
-  color: #061217;
+  color: #173352;
 }
 
 .hero-copy .intro {
@@ -1464,14 +1464,14 @@ a:focus-visible {
 }
 
 .hero-actions .pill-dark {
-  background: #061217 !important;
+  background: #173352 !important;
   color: #ffffff !important;
   box-shadow: 0 4px 14px rgba(6, 18, 23, 0.18) !important;
 }
 
 .hero-actions .pill-light {
   background: #fbf8f2 !important;
-  color: #061217 !important;
+  color: #173352 !important;
   border: 1px solid rgba(6, 18, 23, 0.08) !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
 }
@@ -1510,7 +1510,7 @@ a:focus-visible {
 .preview-head span {
   font-size: 15px;
   font-weight: 800;
-  color: #061217;
+  color: #173352;
   letter-spacing: -0.02em;
 }
 
@@ -1520,7 +1520,7 @@ a:focus-visible {
   border-radius: 50%;
   border: 1.2px solid rgba(6, 18, 23, 0.25);
   background: transparent;
-  color: #061217;
+  color: #173352;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -1529,7 +1529,7 @@ a:focus-visible {
 }
 
 .preview-head button:hover {
-  background: #061217;
+  background: #173352;
   color: white;
   transform: scale(1.05);
 }
@@ -1580,7 +1580,7 @@ a:focus-visible {
 }
 
 .swatch.selected {
-  outline: 2px solid #061217;
+  outline: 2px solid #173352;
   outline-offset: 2px;
   transform: scale(1.04);
 }
@@ -1619,7 +1619,7 @@ a:focus-visible {
   margin-top: 14px;
   border: 0;
   background: none;
-  color: #061217;
+  color: #173352;
   font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
@@ -1673,7 +1673,7 @@ a:focus-visible {
 .slide-counter strong {
   font-size: 16px;
   font-weight: 800;
-  color: #061217;
+  color: #173352;
 }
 
 .slide-progress-track {
@@ -1688,7 +1688,7 @@ a:focus-visible {
 
 .slide-progress-bar {
   height: 100%;
-  background: #061217;
+  background: #173352;
   border-radius: 2px;
   transition: width 0.35s ease;
 }
@@ -1713,11 +1713,11 @@ a:focus-visible {
 }
 
 .slide-category:hover {
-  color: #061217;
+  color: #173352;
 }
 
 .slide-category.active {
-  color: #061217;
+  color: #173352;
   font-weight: 700;
 }
 
@@ -1745,12 +1745,12 @@ a:focus-visible {
 .nav-arrow-prev {
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(6, 18, 23, 0.15) !important;
-  color: #061217;
+  color: #173352;
   backdrop-filter: blur(10px);
 }
 
 .nav-arrow-next {
-  background: #061217;
+  background: #173352;
   color: #ffffff;
   box-shadow: 0 4px 14px rgba(6, 18, 23, 0.25);
 }
@@ -2017,7 +2017,7 @@ a:focus-visible {
 }
 
 .topbar-collections .nav button.active-nav-btn {
-  color: #061217;
+  color: #173352;
   font-weight: 800;
 }
 
@@ -2139,11 +2139,11 @@ a:focus-visible {
 
 .collections-hero .dark-button {
   color: #fff;
-  background: #071318;
+  background: #173352;
 }
 
 .collections-hero .light-button {
-  color: #071318;
+  color: #173352;
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(7, 19, 24, 0.14);
   backdrop-filter: blur(10px);
@@ -2217,9 +2217,9 @@ a:focus-visible {
 }
 
 .filter-chip.selected {
-  background: #071318;
+  background: #173352;
   color: #fff;
-  border-color: #071318;
+  border-color: #173352;
   box-shadow: 0 4px 12px rgba(7, 19, 24, 0.15);
 }
 
@@ -2232,7 +2232,7 @@ a:focus-visible {
 }
 
 .collection-count span {
-  color: #071318;
+  color: #173352;
   font-size: 19px;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -2329,7 +2329,7 @@ a:focus-visible {
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.88);
-  color: #071318;
+  color: #173352;
   cursor: pointer;
   font-size: 17px;
   line-height: 1;
@@ -2344,7 +2344,7 @@ a:focus-visible {
 }
 
 .save-button.saved {
-  background: #071318;
+  background: #173352;
   color: #ff4d6d;
 }
 
@@ -2391,7 +2391,7 @@ a:focus-visible {
   margin: 0;
   font: 700 17.5px/1.25 "Manrope", sans-serif;
   letter-spacing: -0.04em;
-  color: #071318;
+  color: #173352;
 }
 
 .round-arrow {
@@ -2410,7 +2410,7 @@ a:focus-visible {
 
 .round-arrow:hover {
   color: #fff;
-  background: #071318;
+  background: #173352;
   transform: rotate(45deg);
 }
 
@@ -2486,7 +2486,7 @@ a:focus-visible {
 }
 
 .footer-back-home:hover {
-  color: #071318;
+  color: #173352;
 }
 
 .footer-scroll {
@@ -2495,7 +2495,7 @@ a:focus-visible {
   gap: 12px;
   font-size: 11px;
   font-weight: 600;
-  color: #071318;
+  color: #173352;
   text-decoration: none;
 }
 
@@ -2507,12 +2507,12 @@ a:focus-visible {
   border: 1px solid rgba(7, 19, 24, 0.18);
   border-radius: 50%;
   font-size: 16px;
-  color: #071318;
+  color: #173352;
   transition: all 0.2s;
 }
 
 .footer-scroll:hover span {
-  background: #071318;
+  background: #173352;
   color: #fff;
 }
 
@@ -2696,7 +2696,7 @@ a:focus-visible {
 }
 
 .topbar-studio .nav button.active-nav-btn {
-  color: #061217;
+  color: #173352;
   font-weight: 800;
 }
 
@@ -2726,7 +2726,7 @@ a:focus-visible {
   font-weight: 700;
   letter-spacing: 0.28em;
   margin-bottom: 18px;
-  color: #071318;
+  color: #173352;
 }
 
 .studio-intro .kicker span {
@@ -2740,7 +2740,7 @@ a:focus-visible {
   font: 800 clamp(35px, 3.25vw, 56px)/0.98 "Manrope", sans-serif;
   letter-spacing: -0.065em;
   margin: 0;
-  color: #071318;
+  color: #173352;
 }
 
 .studio-intro h1 em {
@@ -2794,14 +2794,14 @@ a:focus-visible {
   place-items: center;
   border: 1px solid rgba(29, 37, 36, 0.12);
   background: rgba(255, 255, 255, 0.35);
-  color: #071318;
+  color: #173352;
 }
 
 .step-active .step-icon,
 .step-done .step-icon {
-  background: #071318;
+  background: #173352;
   color: white;
-  border-color: #071318;
+  border-color: #173352;
 }
 
 .step-text {
@@ -2813,7 +2813,7 @@ a:focus-visible {
 
 .step-text b {
   font: 600 19px/1 "Manrope", sans-serif;
-  color: #071318;
+  color: #173352;
 }
 
 .step-text small {
@@ -2872,7 +2872,7 @@ a:focus-visible {
   font: 700 17.5px/1.25 "Manrope", sans-serif;
   letter-spacing: -0.045em;
   margin: 5px 0 0;
-  color: #071318;
+  color: #173352;
 }
 
 .studio-page .icon-button {
@@ -2884,12 +2884,12 @@ a:focus-visible {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  color: #071318;
+  color: #173352;
   transition: all 0.2s;
 }
 
 .studio-page .icon-button:hover {
-  background: #071318;
+  background: #173352;
   color: #fff;
 }
 
@@ -2915,14 +2915,14 @@ a:focus-visible {
 }
 
 .dropzone.dragging {
-  border-color: #071318;
+  border-color: #173352;
   background: #fff;
 }
 
 .upload-illustration {
   position: relative;
   margin-bottom: 10px;
-  color: #071318;
+  color: #173352;
 }
 
 .upload-illustration i {
@@ -2938,7 +2938,7 @@ a:focus-visible {
 .dropzone>strong {
   font-size: 12.5px;
   font-weight: 600;
-  color: #071318;
+  color: #173352;
 }
 
 .or {
@@ -2971,15 +2971,15 @@ a:focus-visible {
 }
 
 .upload-actions .button-dark {
-  background: #071318;
+  background: #173352;
   color: #fff;
-  border: 1px solid #071318;
+  border: 1px solid #173352;
 }
 
 .upload-actions .button-light {
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid #bcb5aa;
-  color: #071318;
+  color: #173352;
 }
 
 .upload-actions .button:hover {
@@ -3000,7 +3000,7 @@ a:focus-visible {
   font-size: 11.5px;
   font-weight: 700;
   margin: 16px 0 9px;
-  color: #071318;
+  color: #173352;
 }
 
 .tips-grid {
@@ -3053,7 +3053,7 @@ a:focus-visible {
   padding: 13px 18px;
   border: 0;
   border-radius: 99px;
-  background: #071318;
+  background: #173352;
   color: white;
   font-size: 12px;
   font-weight: 600;
@@ -3186,11 +3186,11 @@ a:focus-visible {
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  color: #071318;
+  color: #173352;
 }
 
 .compare-switch button.selected {
-  background: #071318;
+  background: #173352;
   color: #fff;
 }
 
@@ -3304,7 +3304,7 @@ a:focus-visible {
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  color: #071318;
+  color: #173352;
 }
 
 .viewer-controls button:hover {
@@ -3324,7 +3324,7 @@ a:focus-visible {
 }
 
 .mode-switch button.selected {
-  background: #071318;
+  background: #173352;
   color: #fff;
 }
 
@@ -3390,13 +3390,13 @@ a:focus-visible {
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
-  color: #071318;
+  color: #173352;
   transition: all 0.2s;
 }
 
 .filter-tabs button.selected {
-  background: #071318;
-  border-color: #071318;
+  background: #173352;
+  border-color: #173352;
   color: white;
 }
 
@@ -3477,7 +3477,7 @@ a:focus-visible {
 .recommend-info strong {
   font-size: 11px;
   line-height: 1.25;
-  color: #071318;
+  color: #173352;
 }
 
 .recommend-info small {
@@ -3509,13 +3509,13 @@ a:focus-visible {
   border: 1px solid #cfc6b9;
   border-radius: 50%;
   transition: background 0.2s, color 0.2s;
-  color: #071318;
+  color: #173352;
 }
 
 .recommend-card.active .recommend-arrow {
-  background: #071318;
+  background: #173352;
   color: white;
-  border-color: #071318;
+  border-color: #173352;
 }
 
 .color-picker {
@@ -3529,7 +3529,7 @@ a:focus-visible {
   justify-content: space-between;
   align-items: center;
   font-size: 11.5px;
-  color: #071318;
+  color: #173352;
 }
 
 .subheading span {
@@ -3561,7 +3561,7 @@ a:focus-visible {
 }
 
 .color-swatches button.chosen {
-  box-shadow: 0 0 0 1.5px #071318;
+  box-shadow: 0 0 0 1.5px #173352;
   outline: 1px solid #fff;
   outline-offset: 2px;
 }
@@ -3591,7 +3591,7 @@ a:focus-visible {
 
 .selected-summary strong {
   font-size: 11.5px;
-  color: #071318;
+  color: #173352;
 }
 
 .selected-summary>button {
@@ -3601,7 +3601,7 @@ a:focus-visible {
   padding: 10px 14px;
   border: 0;
   border-radius: 99px;
-  background: #071318;
+  background: #173352;
   color: white;
   font-size: 10px;
   font-weight: 600;
@@ -3645,7 +3645,7 @@ a:focus-visible {
 .studio-footer strong {
   font: 800 12px "Manrope", sans-serif;
   letter-spacing: -0.4px;
-  color: #071318;
+  color: #173352;
 }
 
 .studio-footer small {
@@ -3663,7 +3663,7 @@ a:focus-visible {
   align-items: center;
   gap: 7px;
   font-size: 10.5px;
-  color: #071318;
+  color: #173352;
   background: none;
   border: 0;
   font-weight: 700;
@@ -3927,7 +3927,7 @@ a:focus-visible {
 }
 
 .topbar-products .nav button.active-nav-btn {
-  color: #061217;
+  color: #173352;
   font-weight: 800;
 }
 
@@ -4061,7 +4061,7 @@ a:focus-visible {
 
 .category-card.chosen {
   background: #ffffff;
-  border-color: #071318;
+  border-color: #173352;
   box-shadow: 0 8px 24px rgba(7, 19, 24, 0.09);
 }
 
@@ -4525,13 +4525,13 @@ a:focus-visible {
 
 .favorite-button:hover {
   transform: scale(1.1);
-  color: #071318;
+  color: #173352;
 }
 
 .favorite-button.favorited {
-  background: #071318;
+  background: #173352;
   color: #e85959;
-  border-color: #071318;
+  border-color: #173352;
 }
 
 .favorite-button.favorited svg {
@@ -4601,7 +4601,7 @@ a:focus-visible {
 }
 
 .product-colors button.active {
-  outline-color: #071318;
+  outline-color: #173352;
 }
 
 .product-pricing-row {
@@ -4791,7 +4791,7 @@ a:focus-visible {
   gap: 10px;
   padding: 13px 18px;
   border-radius: 13px;
-  background: #071318;
+  background: #173352;
   color: white;
   font-size: 12.5px;
   font-weight: 500;
@@ -5074,7 +5074,7 @@ a:focus-visible {
   gap: 20px;
   padding: 13px 22px;
   border-radius: 99px;
-  background: #071318;
+  background: #173352;
   color: #fff;
   font-size: 11px;
   font-weight: 600;
@@ -5172,7 +5172,7 @@ a:focus-visible {
   font-family: "Playfair Display", Georgia, serif;
   font-weight: 500;
   letter-spacing: -0.04em;
-  color: #0a1113;
+  color: #173352;
 }
 
 .about-page-view .story-copy h2,
@@ -5244,7 +5244,7 @@ a:focus-visible {
   font-size: 15px;
   font-weight: 700;
   margin: 0 0 10px;
-  color: #0a1113;
+  color: #173352;
 }
 
 .about-page-view .value-card p {
@@ -5315,7 +5315,7 @@ a:focus-visible {
   font-size: 12.5px;
   font-weight: 700;
   margin: 0 0 4px;
-  color: #0a1113;
+  color: #173352;
 }
 
 .about-page-view .reason p {
@@ -5443,7 +5443,7 @@ a:focus-visible {
   gap: 8px;
   font-size: 11px;
   font-weight: 600;
-  color: #0a1113;
+  color: #173352;
   text-decoration: none;
 }
 
@@ -5617,7 +5617,7 @@ a:focus-visible {
 
 .topbar-contact .nav button.active-nav-btn,
 .topbar-about .nav button.active-nav-btn {
-  color: #061217;
+  color: #173352;
   font-weight: 800;
 }
 
@@ -5779,7 +5779,7 @@ a:focus-visible {
   font-size: 11.5px;
   margin: 0 0 4px;
   font-weight: 700;
-  color: #081214;
+  color: #173352;
 }
 
 .contact-page-view .contact-detail {
@@ -6043,7 +6043,7 @@ a:focus-visible {
   line-height: 1.3;
   margin: 0 0 4px;
   font-weight: 700;
-  color: #081214;
+  color: #173352;
 }
 
 .contact-page-view .showroom-card p {
@@ -6142,7 +6142,7 @@ a:focus-visible {
   box-shadow: 0 5px 15px rgba(74, 56, 35, 0.12);
   font-size: 10px;
   font-weight: 700;
-  color: #081214;
+  color: #173352;
 }
 
 .contact-page-view .map-pin {
@@ -6184,7 +6184,7 @@ a:focus-visible {
 
 .contact-page-view .map-address strong {
   font-size: 9.5px;
-  color: #081214;
+  color: #173352;
 }
 
 .contact-page-view .map-address span {
@@ -6399,7 +6399,7 @@ a:focus-visible {
   text-align: left;
   font-size: 11px;
   font-weight: 600;
-  color: #081214;
+  color: #173352;
   cursor: pointer;
 }
 
@@ -6481,7 +6481,7 @@ a:focus-visible {
   font-size: 19px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: #061116;
+  color: #173352;
   line-height: 1.1;
 }
 
@@ -6521,7 +6521,7 @@ a:focus-visible {
   gap: 8px;
   font-size: 10.5px;
   font-weight: 600;
-  color: #081214;
+  color: #173352;
   text-decoration: none;
   background: none;
   border: 0;
@@ -9540,12 +9540,12 @@ a:focus-visible {
   font-size: 21px !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
-  color: #061116 !important;
+  color: #173352 !important;
   line-height: 1.2 !important;
 }
 
 .unified-footer .brand-name .brand-uni {
-  color: #061116 !important;
+  color: #173352 !important;
 }
 
 .unified-footer .brand-name .brand-veloria {
@@ -9933,7 +9933,7 @@ a:focus-visible {
   max-height: 100vh !important;
   position: relative !important;
   overflow: hidden !important;
-  background: #061116 !important;
+  background: #173352 !important;
 }
 
 .smart-auth-bg-img {
@@ -10045,7 +10045,7 @@ a:focus-visible {
   font-weight: 600 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.06em !important;
-  color: #1e293b !important;
+  color: #173352 !important;
   background: #ffffff !important;
   cursor: pointer !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -10055,7 +10055,7 @@ a:focus-visible {
 .smart-back-pill:hover {
   background: #f8fafc !important;
   border-color: #cbd5e1 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   transform: translateX(-3px) !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
 }
@@ -10080,7 +10080,7 @@ a:focus-visible {
 .smart-auth-heading {
   font-size: 28px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 0 6px 0 !important;
   letter-spacing: -0.025em !important;
 }
@@ -10105,7 +10105,7 @@ a:focus-visible {
   gap: 12px !important;
   font-size: 13.5px !important;
   font-weight: 600 !important;
-  color: #1e293b !important;
+  color: #173352 !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
@@ -10171,14 +10171,14 @@ a:focus-visible {
   border-radius: 8px !important;
   padding: 0 14px !important;
   font-size: 13.5px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   box-sizing: border-box !important;
   transition: all 0.2s ease !important;
   background: #ffffff !important;
 }
 
 .smart-field input:focus {
-  border-color: #0f172a !important;
+  border-color: #173352 !important;
   outline: none !important;
   box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
 }
@@ -10236,7 +10236,7 @@ a:focus-visible {
 .smart-checkbox-label input[type="checkbox"] {
   width: 16px !important;
   height: 16px !important;
-  accent-color: #0f172a !important;
+  accent-color: #173352 !important;
   cursor: pointer !important;
   border-radius: 4px !important;
 }
@@ -10258,7 +10258,7 @@ a:focus-visible {
 .smart-submit-btn {
   width: 100% !important;
   height: 46px !important;
-  background: #0f172a !important;
+  background: #173352 !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 9px !important;
@@ -10296,7 +10296,7 @@ a:focus-visible {
 .smart-switch-btn {
   background: none !important;
   border: none !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   font-weight: 700 !important;
   cursor: pointer !important;
   padding: 0 4px !important;
@@ -10333,9 +10333,9 @@ a:focus-visible {
 }
 
 .role-select-btn.active {
-  background: #0f172a !important;
+  background: #173352 !important;
   color: #ffffff !important;
-  border-color: #0f172a !important;
+  border-color: #173352 !important;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15) !important;
 }
 
@@ -10383,7 +10383,7 @@ a:focus-visible {
 }
 
 .smart-role-tag {
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .smart-user-details {
@@ -10406,7 +10406,7 @@ a:focus-visible {
 }
 
 .detail-row strong {
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .smart-logged-actions {
@@ -10422,7 +10422,7 @@ a:focus-visible {
   gap: 8px !important;
   width: 100% !important;
   height: 44px !important;
-  background: #0f172a !important;
+  background: #173352 !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 8px !important;
@@ -10444,7 +10444,7 @@ a:focus-visible {
   width: 100% !important;
   height: 44px !important;
   background: #f1f5f9 !important;
-  color: #1e293b !important;
+  color: #173352 !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 8px !important;
   font-size: 13.5px !important;
@@ -10557,7 +10557,7 @@ a:focus-visible {
   width: 32px !important;
   height: 32px !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, #061116 0%, #1a2936 100%) !important;
+  background: linear-gradient(135deg, #173352 0%, #24466d 100%) !important;
   color: #c8a87d !important;
   font-weight: 700 !important;
   font-size: 13px !important;
@@ -10570,7 +10570,7 @@ a:focus-visible {
 .user-name-label {
   font-size: 13.5px !important;
   font-weight: 600 !important;
-  color: #061116 !important;
+  color: #173352 !important;
   max-width: 140px !important;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -10626,7 +10626,7 @@ a:focus-visible {
   width: 40px !important;
   height: 40px !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, #061116 0%, #203545 100%) !important;
+  background: linear-gradient(135deg, #173352 0%, #24466d 100%) !important;
   color: #d7ba91 !important;
   font-size: 16px !important;
   font-weight: 700 !important;
@@ -10645,7 +10645,7 @@ a:focus-visible {
 .menu-name {
   font-size: 14px !important;
   font-weight: 700 !important;
-  color: #061116 !important;
+  color: #173352 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -10773,7 +10773,7 @@ a:focus-visible {
 }
 
 .crumb-link:hover {
-  color: #0f172a !important;
+  color: #173352 !important;
   text-decoration: underline !important;
 }
 
@@ -10782,7 +10782,7 @@ a:focus-visible {
 }
 
 .crumb-current {
-  color: #0f172a !important;
+  color: #173352 !important;
   font-weight: 600 !important;
 }
 
@@ -10855,7 +10855,7 @@ a:focus-visible {
   width: 22px !important;
   height: 22px !important;
   border-radius: 50% !important;
-  background: #0f172a !important;
+  background: #173352 !important;
   color: #e5cbab !important;
   display: flex !important;
   align-items: center !important;
@@ -10874,7 +10874,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 17px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 !important;
   line-height: 1.3 !important;
 }
@@ -10983,7 +10983,7 @@ a:focus-visible {
 
 .menu-nav-item:hover {
   background: #faf7f2 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .menu-nav-item:hover .menu-arrow {
@@ -10992,9 +10992,9 @@ a:focus-visible {
 }
 
 .menu-nav-item.active {
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #ffffff !important;
-  box-shadow: 0 3px 10px rgba(16, 30, 40, 0.15) !important;
+  box-shadow: 0 3px 10px rgba(23, 51, 82, 0.15) !important;
 }
 
 .menu-nav-item.active .menu-arrow {
@@ -11046,7 +11046,7 @@ a:focus-visible {
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
   text-decoration: none !important;
@@ -11120,7 +11120,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 19px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 16px 0 8px 0 !important;
 }
 
@@ -11170,7 +11170,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 22px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 0 4px 0 !important;
 }
 
@@ -11184,7 +11184,7 @@ a:focus-visible {
   display: inline-flex !important;
   align-items: center !important;
   gap: 7px !important;
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 8px !important;
@@ -11224,7 +11224,7 @@ a:focus-visible {
 
 .btn-ghost-cancel:hover {
   background: #e2e8f0 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .header-edit-actions {
@@ -11304,7 +11304,7 @@ a:focus-visible {
 .info-val {
   font-size: 14.5px !important;
   font-weight: 600 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   line-height: 1.4 !important;
 }
 
@@ -11351,7 +11351,7 @@ a:focus-visible {
   border-radius: 8px !important;
   padding: 10px 13px !important;
   font-size: 13.5px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   background: #ffffff !important;
   box-sizing: border-box !important;
   transition: all 0.15s ease !important;
@@ -11449,7 +11449,7 @@ a:focus-visible {
 
 .perk-text strong {
   font-size: 13px !important;
-  color: #1e293b !important;
+  color: #173352 !important;
   font-weight: 600 !important;
 }
 
@@ -11543,7 +11543,7 @@ a:focus-visible {
 .order-code-tag {
   font-weight: 700 !important;
   font-size: 13px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .order-date-text {
@@ -11601,7 +11601,7 @@ a:focus-visible {
 .order-name {
   font-size: 15px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 !important;
   line-height: 1.35 !important;
 }
@@ -11635,7 +11635,7 @@ a:focus-visible {
 .price-amount {
   font-size: 16.5px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .payment-status-tag {
@@ -11664,8 +11664,8 @@ a:focus-visible {
 }
 
 .btn-compact-detail:hover {
-  background: #101e28 !important;
-  border-color: #101e28 !important;
+  background: #173352 !important;
+  border-color: #173352 !important;
   color: #ffffff !important;
 }
 
@@ -11738,7 +11738,7 @@ a:focus-visible {
   position: absolute !important;
   top: 10px !important;
   left: 10px !important;
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #e5cbab !important;
   font-size: 10.5px !important;
   font-weight: 700 !important;
@@ -11765,7 +11765,7 @@ a:focus-visible {
 .fav-item-title {
   font-size: 14.5px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 0 10px 0 !important;
   line-height: 1.3 !important;
 }
@@ -11782,7 +11782,7 @@ a:focus-visible {
 .fav-cost {
   font-size: 14.5px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .fav-cost small {
@@ -11797,7 +11797,7 @@ a:focus-visible {
 }
 
 .fav-btn-order {
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 5px !important;
@@ -11826,7 +11826,7 @@ a:focus-visible {
 
 .fav-btn-studio:hover {
   background: #e2e8f0 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .panel-loading-state,
@@ -11844,7 +11844,7 @@ a:focus-visible {
 .panel-empty-state h3 {
   font-size: 17px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 !important;
 }
 
@@ -11944,7 +11944,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 20px !important;
   font-weight: 700 !important;
-  color: #061116 !important;
+  color: #173352 !important;
   margin: 3px 0 0 0 !important;
 }
 
@@ -11959,8 +11959,8 @@ a:focus-visible {
 }
 
 .modal-close-btn:hover {
-  background: rgba(0, 0, 0, 0.06) !important;
-  color: #000000 !important;
+  background: rgba(23, 51, 82, 0.08) !important;
+  color: #173352 !important;
 }
 
 .modal-body-scroll {
@@ -12006,7 +12006,7 @@ a:focus-visible {
 .modal-right-info h4 {
   font-size: 18px !important;
   font-weight: 700 !important;
-  color: #061116 !important;
+  color: #173352 !important;
   margin: 0 0 16px 0 !important;
 }
 
@@ -12029,7 +12029,7 @@ a:focus-visible {
 }
 
 .data-row strong {
-  color: #061116 !important;
+  color: #173352 !important;
   text-align: right !important;
 }
 
@@ -12072,7 +12072,7 @@ a:focus-visible {
 
 .price-item strong {
   font-size: 13.5px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .price-item strong.paid {
@@ -12103,7 +12103,7 @@ a:focus-visible {
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
-  background: #061116 !important;
+  background: #173352 !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 8px !important;
@@ -12198,7 +12198,7 @@ a:focus-visible {
 .admin-sidebar {
   width: 275px !important;
   background: linear-gradient(180deg, #faf7f2 0%, #f4ede2 100%) !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   display: flex !important;
   flex-direction: column !important;
   flex-shrink: 0 !important;
@@ -12245,7 +12245,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 19px !important;
   font-weight: 700 !important;
-  color: #101e28 !important;
+  color: #173352 !important;
   margin: 0 !important;
   letter-spacing: -0.01em !important;
   display: flex !important;
@@ -12305,7 +12305,7 @@ a:focus-visible {
 .admin-meta h4 {
   font-size: 13.5px !important;
   font-weight: 700 !important;
-  color: #101e28 !important;
+  color: #173352 !important;
   margin: 0 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -12366,7 +12366,7 @@ a:focus-visible {
 
 .admin-nav-btn:hover {
   background: rgba(200, 168, 125, 0.16) !important;
-  color: #101e28 !important;
+  color: #173352 !important;
 }
 
 /* Active State: Elegant Warm Ivory Card with Gold Accent Bar */
@@ -12374,7 +12374,7 @@ a:focus-visible {
   background: linear-gradient(90deg, #ffffff 0%, #fbf8f2 100%) !important;
   border: 1px solid #dfd3c2 !important;
   border-left: 4px solid #8b6b3e !important;
-  color: #101e28 !important;
+  color: #173352 !important;
   font-weight: 700 !important;
   box-shadow: 0 3px 12px rgba(139, 107, 62, 0.09) !important;
 }
@@ -12498,7 +12498,7 @@ a:focus-visible {
 }
 
 .crumb-active {
-  color: #0f172a !important;
+  color: #173352 !important;
   font-weight: 700 !important;
 }
 
@@ -12546,7 +12546,7 @@ a:focus-visible {
 
 .admin-icon-btn:hover {
   background: #f4ede1 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .icon-badge-dot {
@@ -12579,7 +12579,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 24px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 0 4px 0 !important;
 }
 
@@ -12600,7 +12600,7 @@ a:focus-visible {
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
-  background: linear-gradient(135deg, #101e28 0%, #1a2d3c 100%) !important;
+  background: linear-gradient(135deg, #173352 0%, #24466d 100%) !important;
   color: #ffffff !important;
   padding: 10px 18px !important;
   border-radius: 10px !important;
@@ -12609,7 +12609,7 @@ a:focus-visible {
   font-weight: 600 !important;
   cursor: pointer !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: 0 4px 14px rgba(16, 30, 40, 0.18) !important;
+  box-shadow: 0 4px 14px rgba(23, 51, 82, 0.18) !important;
 }
 
 .btn-admin-primary:hover,
@@ -12693,7 +12693,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 26px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin-bottom: 8px !important;
 }
 
@@ -12808,7 +12808,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 19px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 3px 0 0 0 !important;
 }
 
@@ -12919,7 +12919,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 17px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 !important;
 }
 
@@ -12965,7 +12965,7 @@ a:focus-visible {
 }
 
 .substat-card strong {
-  color: #0f172a !important;
+  color: #173352 !important;
   font-size: 14px !important;
 }
 
@@ -13033,8 +13033,8 @@ a:focus-visible {
 }
 
 .filter-pill-btn.active {
-  background: #101e28 !important;
-  border-color: #101e28 !important;
+  background: #173352 !important;
+  border-color: #173352 !important;
   color: #ffffff !important;
 }
 
@@ -13102,7 +13102,7 @@ a:focus-visible {
 
 .table-user-cell strong {
   font-size: 13.5px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .table-user-cell small {
@@ -13119,7 +13119,7 @@ a:focus-visible {
 
 .table-curtain-cell strong {
   font-size: 13px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   line-height: 1.3 !important;
 }
 
@@ -13131,7 +13131,7 @@ a:focus-visible {
 
 .table-price {
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   font-size: 14px !important;
 }
 
@@ -13232,7 +13232,7 @@ a:focus-visible {
 
 .btn-table-action:hover {
   background: #faf8f5 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .btn-table-action.view:hover {
@@ -13310,7 +13310,7 @@ a:focus-visible {
 }
 
 .cell-avatar.admin {
-  background: #0f172a !important;
+  background: #173352 !important;
   color: #e5cbab !important;
   border-color: #c8a87d !important;
 }
@@ -13322,7 +13322,7 @@ a:focus-visible {
 
 .cell-user-info strong {
   font-size: 13px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .cell-user-info span {
@@ -13364,7 +13364,7 @@ a:focus-visible {
 
 .product-info-cell strong {
   font-size: 13.5px !important;
-  color: #101e28 !important;
+  color: #173352 !important;
   line-height: 1.3 !important;
 }
 
@@ -13530,7 +13530,7 @@ a:focus-visible {
   gap: 8px !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
-  color: #101e28 !important;
+  color: #173352 !important;
   margin: 0 !important;
   padding-bottom: 8px !important;
   border-bottom: 1px solid #f1ece4 !important;
@@ -13571,7 +13571,7 @@ a:focus-visible {
   border: 1px solid #dfd6c8 !important;
   background: #ffffff !important;
   font-size: 13px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   outline: none !important;
   box-sizing: border-box !important;
   transition: border-color 0.15s ease !important;
@@ -13760,7 +13760,7 @@ a:focus-visible {
 
 .preview-meta strong {
   font-size: 13.5px !important;
-  color: #101e28 !important;
+  color: #173352 !important;
 }
 
 .preview-meta span {
@@ -13884,7 +13884,7 @@ a:focus-visible {
 
 .feed-item-top strong {
   font-size: 13.5px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .feed-time {
@@ -13915,7 +13915,7 @@ a:focus-visible {
 }
 
 .btn-feed-action {
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #ffffff !important;
   border: none !important;
   border-radius: 6px !important;
@@ -13930,7 +13930,7 @@ a:focus-visible {
 }
 
 .table-phone-link {
-  color: #0f172a !important;
+  color: #173352 !important;
   font-size: 12px !important;
   text-decoration: none !important;
   font-weight: 600 !important;
@@ -13991,7 +13991,7 @@ a:focus-visible {
   border-radius: 10px !important;
   border: 1px solid rgba(200, 168, 125, 0.35) !important;
   background: rgba(255, 255, 255, 0.9) !important;
-  color: #1e293b !important;
+  color: #173352 !important;
   cursor: pointer !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
@@ -14104,7 +14104,7 @@ a:focus-visible {
   margin: 0 !important;
   font-size: 17px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   font-family: 'Cinzel', serif !important;
   letter-spacing: 0.3px !important;
 }
@@ -14130,7 +14130,7 @@ a:focus-visible {
 
 .cart-drawer-close-btn:hover {
   background: #f8fafc !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   border-color: #cbd5e1 !important;
 }
 
@@ -14179,7 +14179,7 @@ a:focus-visible {
 .cart-empty-view h4 {
   font-size: 18px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 0 0 8px 0 !important;
 }
 
@@ -14207,7 +14207,7 @@ a:focus-visible {
 }
 
 .cart-btn-explore:hover {
-  background: #0f172a !important;
+  background: #173352 !important;
   transform: translateY(-1px) !important;
 }
 
@@ -14281,7 +14281,7 @@ a:focus-visible {
   margin: 0 !important;
   font-size: 14px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   line-height: 1.4 !important;
 }
 
@@ -14385,7 +14385,7 @@ a:focus-visible {
 
 .cart-qty-btn:hover {
   background: #f1f5f9 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .cart-qty-val {
@@ -14393,7 +14393,7 @@ a:focus-visible {
   text-align: center !important;
   font-size: 13px !important;
   font-weight: 700 !important;
-  color: #1e293b !important;
+  color: #173352 !important;
 }
 
 .cart-item-subtotal-line {
@@ -14407,7 +14407,7 @@ a:focus-visible {
 }
 
 .cart-item-subtotal-line strong {
-  color: #0f172a !important;
+  color: #173352 !important;
   font-weight: 700 !important;
 }
 
@@ -14445,7 +14445,7 @@ a:focus-visible {
 
 .cart-total-row {
   font-size: 15px !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .cart-total-amount {
@@ -14571,7 +14571,7 @@ a:focus-visible {
   font-family: 'Playfair Display', Georgia, serif !important;
   font-size: 21px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   margin: 3px 0 0 0 !important;
 }
 
@@ -14586,7 +14586,7 @@ a:focus-visible {
 .cart-checkout-modal-body {
   padding: 22px 28px !important;
   overflow-y: auto !important;
-  color: #1e293b !important;
+  color: #173352 !important;
   flex: 1 !important;
 }
 
@@ -14625,7 +14625,7 @@ a:focus-visible {
 .checkout-card-title {
   font-size: 13.5px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
@@ -14665,7 +14665,7 @@ a:focus-visible {
   padding: 10px 42px 10px 14px !important;
   font-size: 14px !important;
   font-weight: 600 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
   transition: border-color 0.15s ease !important;
 }
 
@@ -14773,7 +14773,7 @@ a:focus-visible {
 .payment-card-title {
   font-size: 13px !important;
   font-weight: 700 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 .payment-card-desc {
@@ -14843,7 +14843,7 @@ a:focus-visible {
 
 .vietqr-copy-btn:hover {
   background: #e2e8f0 !important;
-  color: #0f172a !important;
+  color: #173352 !important;
 }
 
 /* Payment Status Badges */
@@ -16697,7 +16697,7 @@ a:focus-visible {
 
 .image-slot-card.has-image {
   border: 1.5px solid #d4c5b1 !important;
-  background: #101e28 !important;
+  background: #173352 !important;
   padding: 0 !important;
 }
 
@@ -16716,7 +16716,7 @@ a:focus-visible {
   position: absolute !important;
   top: 6px !important;
   left: 6px !important;
-  background: rgba(16, 30, 40, 0.82) !important;
+  background: rgba(23, 51, 82, 0.82) !important;
   backdrop-filter: blur(4px) !important;
   color: #ffffff !important;
   font-size: 10px !important;
@@ -16794,7 +16794,7 @@ a:focus-visible {
   border-radius: 6px !important;
   font-size: 10.5px !important;
   font-weight: 600 !important;
-  color: #1e293b !important;
+  color: #173352 !important;
   cursor: pointer !important;
   display: flex !important;
   align-items: center !important;
@@ -17076,7 +17076,7 @@ a:focus-visible {
   justify-content: center !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
-  box-shadow: 0 3px 10px rgba(16, 30, 40, 0.18) !important;
+  box-shadow: 0 3px 10px rgba(23, 51, 82, 0.18) !important;
 }
 
 .card-cart-btn:hover {
@@ -17113,8 +17113,8 @@ a:focus-visible {
   width: 9px !important;
   height: 9px !important;
   border-radius: 50% !important;
-  background: #c5a27d !important;
-  box-shadow: 0 0 0 3px rgba(197, 162, 125, 0.22) !important;
+  background: #173352 !important;
+  box-shadow: 0 0 0 3px rgba(23, 51, 82, 0.22) !important;
   flex-shrink: 0 !important;
   animation: pulsePagination 2.4s infinite ease-in-out !important;
 }
@@ -17139,12 +17139,12 @@ a:focus-visible {
   align-items: center !important;
   gap: 10px !important;
   font-size: 13px !important;
-  color: #64748b !important;
+  color: #173352 !important;
   flex-wrap: wrap !important;
 }
 
 .pagination-info-main strong {
-  color: #101e28 !important;
+  color: #173352 !important;
   font-weight: 700 !important;
 }
 
@@ -17153,11 +17153,11 @@ a:focus-visible {
   align-items: center !important;
   padding: 3px 10px !important;
   border-radius: 99px !important;
-  background: rgba(197, 162, 125, 0.12) !important;
-  color: #8b6b3e !important;
+  background: rgba(23, 51, 82, 0.08) !important;
+  color: #173352 !important;
   font-size: 11.5px !important;
   font-weight: 600 !important;
-  border: 1px solid rgba(197, 162, 125, 0.25) !important;
+  border: 1px solid rgba(23, 51, 82, 0.2) !important;
   letter-spacing: 0.02em !important;
 }
 
@@ -17183,9 +17183,9 @@ a:focus-visible {
   height: 40px !important;
   padding: 0 10px !important;
   border-radius: 12px !important;
-  border: 1px solid rgba(220, 212, 200, 0.8) !important;
+  border: 1px solid rgba(23, 51, 82, 0.2) !important;
   background: #ffffff !important;
-  color: #334155 !important;
+  color: #173352 !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   cursor: pointer !important;
@@ -17195,18 +17195,18 @@ a:focus-visible {
 }
 
 .pagination-btn:hover:not(:disabled) {
-  border-color: #c5a27d !important;
-  color: #8b6b3e !important;
-  background: #faf7f2 !important;
+  border-color: #173352 !important;
+  color: #173352 !important;
+  background: rgba(23, 51, 82, 0.06) !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 14px rgba(197, 162, 125, 0.16) !important;
+  box-shadow: 0 6px 14px rgba(23, 51, 82, 0.16) !important;
 }
 
 .pagination-btn.active {
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #ffffff !important;
-  border-color: #101e28 !important;
-  box-shadow: 0 6px 18px rgba(16, 30, 40, 0.22) !important;
+  border-color: #173352 !important;
+  box-shadow: 0 6px 18px rgba(23, 51, 82, 0.28) !important;
   transform: scale(1.02) !important;
 }
 
@@ -17255,8 +17255,8 @@ a:focus-visible {
   align-items: center !important;
   gap: 10px !important;
   font-size: 13.5px !important;
-  color: #64748b !important;
-  font-weight: 500 !important;
+  color: #173352 !important;
+  font-weight: 600 !important;
 }
 
 .pagesize-select-wrap {
@@ -17268,9 +17268,9 @@ a:focus-visible {
   -webkit-appearance: none !important;
   padding: 9px 34px 9px 14px !important;
   border-radius: 12px !important;
-  border: 1px solid rgba(215, 195, 170, 0.8) !important;
-  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b6b3e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat calc(100% - 11px) center !important;
-  color: #101e28 !important;
+  border: 1px solid rgba(23, 51, 82, 0.3) !important;
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23173352' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat calc(100% - 11px) center !important;
+  color: #173352 !important;
   font-size: 13.5px !important;
   font-weight: 600 !important;
   cursor: pointer !important;
@@ -18600,12 +18600,12 @@ a:focus-visible {
 
 .studio-pagination-info {
   font-size: 12px !important;
-  color: #718096 !important;
+  color: #173352 !important;
   font-weight: 500 !important;
 }
 
 .studio-pagination-info strong {
-  color: #101e28 !important;
+  color: #173352 !important;
   font-weight: 700 !important;
 }
 
@@ -18622,20 +18622,20 @@ a:focus-visible {
   width: 32px !important;
   height: 32px !important;
   border-radius: 9px !important;
-  border: 1px solid rgba(210, 202, 190, 0.75) !important;
+  border: 1px solid rgba(23, 51, 82, 0.25) !important;
   background: #ffffff !important;
-  color: #334155 !important;
+  color: #173352 !important;
   cursor: pointer !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
 }
 
 .studio-pagi-nav:hover:not(:disabled) {
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #ffffff !important;
-  border-color: #101e28 !important;
+  border-color: #173352 !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 4px 10px rgba(16, 30, 40, 0.18) !important;
+  box-shadow: 0 4px 10px rgba(23, 51, 82, 0.22) !important;
 }
 
 .studio-pagi-nav:disabled {
@@ -18654,9 +18654,9 @@ a:focus-visible {
   height: 32px !important;
   padding: 0 8px !important;
   border-radius: 9px !important;
-  border: 1px solid rgba(210, 202, 190, 0.75) !important;
+  border: 1px solid rgba(23, 51, 82, 0.25) !important;
   background: #ffffff !important;
-  color: #475569 !important;
+  color: #173352 !important;
   font-size: 13.5px !important;
   font-weight: 600 !important;
   cursor: pointer !important;
@@ -18665,17 +18665,17 @@ a:focus-visible {
 }
 
 .studio-pagi-num:hover:not(.active) {
-  background: #faf7f2 !important;
-  color: #8b6b3e !important;
-  border-color: #c5a27d !important;
+  background: rgba(23, 51, 82, 0.06) !important;
+  color: #173352 !important;
+  border-color: #173352 !important;
   transform: translateY(-1px) !important;
 }
 
 .studio-pagi-num.active {
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #ffffff !important;
-  border-color: #101e28 !important;
-  box-shadow: 0 3px 10px rgba(16, 30, 40, 0.25) !important;
+  border-color: #173352 !important;
+  box-shadow: 0 3px 10px rgba(23, 51, 82, 0.3) !important;
   font-weight: 700 !important;
 }
 
@@ -20366,7 +20366,7 @@ button:active:not(:disabled),
 
 .survey-close-btn:hover {
   background: rgba(0, 0, 0, 0.06);
-  color: #0f172a;
+  color: #173352;
 }
 
 .survey-modal-body {
@@ -20438,7 +20438,7 @@ button:active:not(:disabled),
   gap: 7px;
   font-size: 12.5px;
   font-weight: 700;
-  color: #1e293b;
+  color: #173352;
   margin-bottom: 5px;
 }
 
@@ -20619,7 +20619,7 @@ button:active:not(:disabled),
 
 .opt-text strong {
   font-size: 12px;
-  color: #0f172a;
+  color: #173352;
   line-height: 1.25;
 }
 
@@ -20828,7 +20828,7 @@ button:active:not(:disabled),
   gap: 8px;
   font-size: 13px;
   font-weight: 700;
-  color: #1e293b;
+  color: #173352;
 }
 
 .timer-seconds {
@@ -21235,7 +21235,7 @@ button:active:not(:disabled),
 
 .measure-modal-close:hover {
   background: #f1f5f9;
-  color: #1e293b;
+  color: #173352;
 }
 
 /* Modal Body */
@@ -21649,7 +21649,7 @@ button:active:not(:disabled),
 .measuring-tab-footer-callout .callout-text strong {
   display: block;
   font-size: 13px;
-  color: #1e293b;
+  color: #173352;
   margin-bottom: 2px;
 }
 
@@ -21672,7 +21672,7 @@ button:active:not(:disabled),
 }
 
 .measuring-tab-footer-callout .btn-call-consult:hover {
-  background: #0f172a;
+  background: #173352;
 }
 
 @media (max-width: 640px) {
