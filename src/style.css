@@ -3957,7 +3957,7 @@ a:focus-visible {
   position: absolute;
   left: clamp(24px, 4.8vw, 84px);
   top: 115px;
-  max-width: 500px;
+  max-width: 650px;
 }
 
 .products-hero .eyebrow {
@@ -3968,20 +3968,30 @@ a:focus-visible {
   letter-spacing: 0.27em;
   font-weight: 700;
   margin-bottom: 14px;
-  color: #5d6668;
+  color: #173352;
 }
 
 .products-hero .eyebrow span {
   height: 1px;
   width: 38px;
-  background: #8d8b83;
+  background: #173352;
+  opacity: 0.4;
 }
 
-.products-hero .hero-copy h1 {
-  font: 800 clamp(31px, 3.2vw, 47px) / 1.02 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
-  letter-spacing: -0.06em;
-  margin: 0;
-  color: var(--ink);
+.products-hero .hero-copy h1,
+.products-hero-title {
+  margin: 0 !important;
+  font-family: 'Lora', Georgia, serif !important;
+  font-size: clamp(34px, 4.2vw, 62px) !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
+  color: #173352 !important;
+}
+
+.products-hero-title .title-row {
+  display: block !important;
+  white-space: nowrap !important;
 }
 
 .products-hero .hero-copy p {
@@ -4826,8 +4836,10 @@ a:focus-visible {
     right: 20px;
   }
 
-  .products-hero .hero-copy h1 {
-    font-size: clamp(30px, 7.5vw, 42px);
+  .products-hero .hero-copy h1,
+  .products-hero-title {
+    font-size: clamp(26px, 7.5vw, 44px) !important;
+    line-height: 1.18 !important;
   }
 
   .products-hero .hero-copy p {

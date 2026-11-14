@@ -92,7 +92,10 @@ export function ProductsPage({
             <div className="hero-fade" />
             <div className="hero-copy">
               <div className="eyebrow">SẢN PHẨM <span /></div>
-              <h1>Rèm cao cấp<br />cho mọi không gian</h1>
+              <h1 className="products-hero-title">
+                <span className="title-row">Rèm cao cấp</span>
+                <span className="title-row">cho mọi không gian</span>
+              </h1>
               <p>
                 Tinh tế trong từng chi tiết, mang đến sự hài hòa<br className="desktop-break" /> giữa thẩm mỹ và công năng cho ngôi nhà của bạn.
               </p>

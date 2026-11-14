@@ -139,6 +139,10 @@ function isLightColorHex(hex) {
   return brightness > 155;
 }
 const isLightColor = isLightColorHex;
+if (typeof window !== 'undefined') {
+  window.isLightColor = isLightColorHex;
+  window.isLightColorHex = isLightColorHex;
+}
 
 export function StudioPage({
   navigateTo,
