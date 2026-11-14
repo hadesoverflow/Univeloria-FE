@@ -103,6 +103,7 @@ function isLightColorHex(hex) {
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   return brightness > 155;
 }
+const isLightColor = isLightColorHex;
 
 export function StudioPage({
   navigateTo,
