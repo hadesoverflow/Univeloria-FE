@@ -882,66 +882,112 @@ function createSunnyCanvasTexture(baseColorHex, isBump = false) {
   return texture;
 }
 
+const rollerTextureCache = new Map();
+
+function getPhotographicRollerTextures(fabricId) {
+  const cleanId = (fabricId || 'harmony-2').replace('roller-', '').toLowerCase();
+
+  // Normalized repeat counts tuned specifically so each pattern matches real scale on 3.54m curtain
+  const repeatConfig = {
+    'harmony-2': [14, 10], // ~140 fine pinstripe vertical ribs across 3.54m curtain
+    'moon': [16, 16],      // fine diagonal twill diamond weave
+    'sunny': [12, 12],     // textured Oxford canvas cross-grain
+    'malange-1': [12, 12], // salt-and-pepper tweed weave
+    'silvia': [10, 10]     // organic slub linen striations
+  };
+
+  const repeat = repeatConfig[cleanId] || [12, 12];
+
+  const diffuseUrl = `/assets/curtains/fabric-roller-${cleanId}-diffuse.png`;
+  const bumpUrl = `/assets/curtains/fabric-roller-${cleanId}-bump.png`;
+
+  if (!rollerTextureCache.has(diffuseUrl)) {
+    const loader = new THREE.TextureLoader();
+    const dTex = loader.load(diffuseUrl);
+    dTex.colorSpace = THREE.SRGBColorSpace;
+    dTex.wrapS = THREE.RepeatWrapping;
+    dTex.wrapT = THREE.RepeatWrapping;
+    dTex.minFilter = THREE.LinearMipmapLinearFilter;
+    dTex.magFilter = THREE.LinearFilter;
+    dTex.anisotropy = 8;
+    dTex.repeat.set(repeat[0], repeat[1]);
+    rollerTextureCache.set(diffuseUrl, dTex);
+  }
+
+  if (!rollerTextureCache.has(bumpUrl)) {
+    const loader = new THREE.TextureLoader();
+    const bTex = loader.load(bumpUrl);
+    bTex.colorSpace = THREE.NoColorSpace;
+    bTex.wrapS = THREE.RepeatWrapping;
+    bTex.wrapT = THREE.RepeatWrapping;
+    bTex.minFilter = THREE.LinearMipmapLinearFilter;
+    bTex.magFilter = THREE.LinearFilter;
+    bTex.anisotropy = 8;
+    bTex.repeat.set(repeat[0], repeat[1]);
+    rollerTextureCache.set(bumpUrl, bTex);
+  }
+
+  return {
+    map: rollerTextureCache.get(diffuseUrl),
+    bumpMap: rollerTextureCache.get(bumpUrl)
+  };
+}
+
 function applyRollerFabricMaterial(mesh, fabricId, colorHex) {
   if (!mesh) return;
 
-  let mapTex, bumpTex, roughness, metalness, bumpScale;
+  const cleanId = (fabricId || 'harmony-2').replace('roller-', '').toLowerCase();
+  const { map, bumpMap } = getPhotographicRollerTextures(cleanId);
 
-  if (fabricId === 'roller-harmony-2' || fabricId === 'harmony-2') {
-    mapTex = createHarmonyRibbedTexture(colorHex, false);
-    bumpTex = createHarmonyRibbedTexture(colorHex, true);
-    roughness = 0.68;
+  let roughness = 0.78;
+  let metalness = 0.01;
+  let bumpScale = 0.25;
+
+  if (cleanId === 'harmony-2') {
+    // Harmony 2: Gân tăm dọc thanh mảnh song song (Fine vertical pinstripe ribs)
+    roughness = 0.72;
     metalness = 0.02;
-    bumpScale = 0.38;
-  } else if (fabricId === 'roller-malange-1' || fabricId === 'malange-1') {
-    mapTex = createMelangeTexture(colorHex, false);
-    bumpTex = createMelangeTexture(colorHex, true);
-    roughness = 0.82;
-    metalness = 0.01;
+    bumpScale = 0.35;
+  } else if (cleanId === 'moon') {
+    // Moon: Dệt chéo micro-twill mịn cản sáng (Fine diagonal twill / diamond weave)
+    roughness = 0.62;
+    metalness = 0.02;
     bumpScale = 0.28;
-  } else if (fabricId === 'roller-moon' || fabricId === 'moon') {
-    mapTex = createMoonMatteTexture(colorHex, false);
-    bumpTex = createMoonMatteTexture(colorHex, true);
-    roughness = 0.42; // Satin eggshell reflection
-    metalness = 0.04;
-    bumpScale = 0.015;
-  } else if (fabricId === 'roller-silvia' || fabricId === 'silvia') {
-    mapTex = createSilviaSoftTexture(colorHex, false);
-    bumpTex = createSilviaSoftTexture(colorHex, true);
+  } else if (cleanId === 'sunny') {
+    // Sunny: Vải bố Oxford canvas dệt thô dày dặn (Textured Oxford canvas cross-grain)
     roughness = 0.88;
     metalness = 0.01;
-    bumpScale = 0.32;
-  } else if (fabricId === 'roller-sunny' || fabricId === 'sunny') {
-    mapTex = createSunnyCanvasTexture(colorHex, false);
-    bumpTex = createSunnyCanvasTexture(colorHex, true);
-    roughness = 0.98;
-    metalness = 0.01;
-    bumpScale = 0.52;
-  } else {
-    mapTex = createHarmonyRibbedTexture(colorHex, false);
-    bumpTex = createHarmonyRibbedTexture(colorHex, true);
-    roughness = 0.68;
-    metalness = 0.02;
     bumpScale = 0.38;
+  } else if (cleanId === 'malange-1') {
+    // Malange 1: Sợi dệt hoa râm đa sắc (Salt-and-pepper heathered tweed)
+    roughness = 0.82;
+    metalness = 0.01;
+    bumpScale = 0.30;
+  } else if (cleanId === 'silvia') {
+    // Silvia: Vải đũi lanh xước mộc tự nhiên (Soft organic slub linen)
+    roughness = 0.86;
+    metalness = 0.01;
+    bumpScale = 0.32;
   }
 
-  if (mesh.material?.map && mesh.material.map !== mapTex) {
-    mesh.material.map.dispose();
+  if (mesh.material && mesh.material.isMeshStandardMaterial && mesh.material.map === map) {
+    mesh.material.color.set(colorHex);
+    mesh.material.bumpScale = bumpScale;
+    mesh.material.roughness = roughness;
+    mesh.material.metalness = metalness;
+    mesh.material.needsUpdate = true;
+  } else {
+    mesh.material = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(colorHex), // Tints the neutral albedo photographic map to exact catalog color!
+      map: map,
+      bumpMap: bumpMap,
+      bumpScale: bumpScale,
+      roughness: roughness,
+      metalness: metalness,
+      side: THREE.DoubleSide
+    });
+    mesh.material.needsUpdate = true;
   }
-  if (mesh.material?.bumpMap && mesh.material.bumpMap !== bumpTex) {
-    mesh.material.bumpMap.dispose();
-  }
-
-  mesh.material = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(0xffffff), // Crucial fix: do not double-darken the painted canvas!
-    map: mapTex,
-    bumpMap: bumpTex,
-    bumpScale: bumpScale,
-    roughness: roughness,
-    metalness: metalness,
-    side: THREE.DoubleSide
-  });
-  mesh.material.needsUpdate = true;
 }
 
 export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
