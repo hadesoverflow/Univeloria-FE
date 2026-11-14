@@ -219,12 +219,269 @@ function createPvcCanvasTexture(stripeColor = '#1a56b7') {
   return texture;
 }
 
+/**
+ * Procedural Fabric Generators for 3 distinct Elogi fabric collections
+ */
+
+// 1. Elogi - 1198 - 2: Phong cách Nhật Bản - Vân dệt chéo tinh tế (Diagonal Twill Weave)
+function createElogi1198TwillTexture(baseColorHex, isBump = false) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  if (isBump) {
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(0, 0, 512, 512);
+  } else {
+    ctx.fillStyle = baseColorHex;
+    ctx.fillRect(0, 0, 512, 512);
+  }
+
+  // Draw 45-degree diagonal twill ridges (vân chéo sắc sảo)
+  const step = 8;
+  const count = 512 / step;
+
+  for (let i = -count; i < count * 2; i++) {
+    const x0 = i * step;
+    const y0 = 0;
+    const x1 = x0 + 512;
+    const y1 = 512;
+
+    // Raised twill thread peak (light highlight)
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x1, y1);
+    ctx.lineWidth = 2.4;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.48)' : 'rgba(255, 255, 255, 0.22)';
+    ctx.stroke();
+
+    // Secondary sub-ridge for Japanese 2/2 twill definition
+    ctx.beginPath();
+    ctx.moveTo(x0 + 1.2, y0);
+    ctx.lineTo(x1 + 1.2, y1);
+    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.26)' : 'rgba(255, 255, 255, 0.12)';
+    ctx.stroke();
+
+    // Groove / seam shadow between twill ribs
+    ctx.beginPath();
+    ctx.moveTo(x0 + 3.6, y0);
+    ctx.lineTo(x1 + 3.6, y1);
+    ctx.lineWidth = 2.0;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.55)' : 'rgba(0, 0, 0, 0.18)';
+    ctx.stroke();
+  }
+
+  // Interlocking cross weft threads (fine horizontal micro-fibers)
+  for (let y = 0; y < 512; y += 4) {
+    ctx.fillStyle = isBump ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.06)';
+    ctx.fillRect(0, y, 512, 1);
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(18, 18);
+  return texture;
+}
+
+// 2. Elogi - 1206 - 1: Phong cách Nhật Bản - Tông nâu be êm mịn, lụa nhung mềm mại (Velvet Suede Nap)
+function createElogi1206VelvetTexture(baseColorHex, isBump = false) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  if (isBump) {
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(0, 0, 512, 512);
+  } else {
+    ctx.fillStyle = baseColorHex;
+    ctx.fillRect(0, 0, 512, 512);
+  }
+
+  // Subtle velvety clouds and ultra-fine micro-nap
+  const imgData = ctx.getImageData(0, 0, 512, 512);
+  const data = imgData.data;
+
+  for (let y = 0; y < 512; y++) {
+    for (let x = 0; x < 512; x++) {
+      const idx = (y * 512 + x) * 4;
+      // Ultra-fine micro-nap texture
+      const micro = Math.sin(x * 0.7) * Math.cos(y * 0.7) * 4;
+      // Soft brushed cloudy velvet sheen
+      const cloud = Math.sin(x * 0.04 + y * 0.02) * Math.cos(x * 0.02 - y * 0.03) * 10;
+      const val = micro + cloud;
+
+      if (isBump) {
+        const b = Math.max(0, Math.min(255, 128 + val * 0.8));
+        data[idx] = b;
+        data[idx + 1] = b;
+        data[idx + 2] = b;
+      } else {
+        data[idx] = Math.max(0, Math.min(255, data[idx] + val * 0.6));
+        data[idx + 1] = Math.max(0, Math.min(255, data[idx + 1] + val * 0.6));
+        data[idx + 2] = Math.max(0, Math.min(255, data[idx + 2] + val * 0.6));
+      }
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(28, 28);
+  return texture;
+}
+
+// 3. Elogi - 1230 - 1: Vẻ đẹp tinh tế UniVeloria - Vải Eco-friendly vân dệt sợi tự nhiên, hạt đan sắc nét (Slub Linen Canvas)
+function createElogi1230SlubLinenTexture(baseColorHex, isBump = false) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  if (isBump) {
+    ctx.fillStyle = '#808080';
+    ctx.fillRect(0, 0, 512, 512);
+  } else {
+    ctx.fillStyle = baseColorHex;
+    ctx.fillRect(0, 0, 512, 512);
+  }
+
+  // Crosshatch organic slub weave
+  const threadSpacing = 6;
+  const numThreads = 512 / threadSpacing;
+
+  // Vertical warp threads with heavy slub yarn variations
+  for (let i = 0; i < numThreads; i++) {
+    const x = i * threadSpacing;
+    const isHeavy = (i % 3 === 0);
+    const lineW = isHeavy ? 3.0 : 1.6;
+
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 512);
+    ctx.lineWidth = lineW;
+    ctx.strokeStyle = isBump
+      ? (isHeavy ? 'rgba(255, 255, 255, 0.48)' : 'rgba(255, 255, 255, 0.22)')
+      : 'rgba(255, 255, 255, 0.18)';
+    ctx.stroke();
+
+    // Groove crevice shadow
+    ctx.beginPath();
+    ctx.moveTo(x + lineW, 0);
+    ctx.lineTo(x + lineW, 512);
+    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.58)' : 'rgba(0, 0, 0, 0.22)';
+    ctx.stroke();
+  }
+
+  // Horizontal weft threads
+  for (let j = 0; j < numThreads; j++) {
+    const y = j * threadSpacing;
+    const isHeavy = (j % 4 === 0);
+    const lineW = isHeavy ? 3.2 : 1.6;
+
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.lineWidth = lineW;
+    ctx.strokeStyle = isBump
+      ? (isHeavy ? 'rgba(255, 255, 255, 0.52)' : 'rgba(255, 255, 255, 0.24)')
+      : 'rgba(255, 255, 255, 0.20)';
+    ctx.stroke();
+
+    // Groove crevice shadow
+    ctx.beginPath();
+    ctx.moveTo(0, y + lineW);
+    ctx.lineTo(512, y + lineW);
+    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.62)' : 'rgba(0, 0, 0, 0.24)';
+    ctx.stroke();
+  }
+
+  // Visible tactile slub yarn knots (hạt dệt sợi nổi mộc mạc đặc trưng)
+  for (let k = 0; k < 75; k++) {
+    const rx = ((k * 137) % 500) + 6;
+    const ry = ((k * 241) % 500) + 6;
+    ctx.beginPath();
+    ctx.arc(rx, ry, 2.6, 0, Math.PI * 2);
+    ctx.fillStyle = isBump ? 'rgba(255, 255, 255, 0.68)' : 'rgba(255, 255, 255, 0.26)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(rx + 1.2, ry + 1.2, 1.2, 0, Math.PI * 2);
+    ctx.fillStyle = isBump ? 'rgba(0, 0, 0, 0.45)' : 'rgba(0, 0, 0, 0.16)';
+    ctx.fill();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(15, 15);
+  return texture;
+}
+
+function applyDrapeFabricMaterial(mesh, fabricId, colorHex) {
+  if (!mesh) return;
+
+  let mapTex, bumpTex, roughness, metalness, bumpScale;
+
+  if (fabricId === 'elogi-1198-2') {
+    // Vân dệt chéo tinh tế
+    mapTex = createElogi1198TwillTexture(colorHex, false);
+    bumpTex = createElogi1198TwillTexture(colorHex, true);
+    roughness = 0.78;
+    metalness = 0.02;
+    bumpScale = 0.08;
+  } else if (fabricId === 'elogi-1206-1') {
+    // Êm mịn như lụa nhung
+    mapTex = createElogi1206VelvetTexture(colorHex, false);
+    bumpTex = createElogi1206VelvetTexture(colorHex, true);
+    roughness = 0.58;
+    metalness = 0.06;
+    bumpScale = 0.02;
+  } else {
+    // elogi-1230-1: Vải Eco-friendly vân dệt hạt sắc nét
+    mapTex = createElogi1230SlubLinenTexture(colorHex, false);
+    bumpTex = createElogi1230SlubLinenTexture(colorHex, true);
+    roughness = 0.94;
+    metalness = 0.01;
+    bumpScale = 0.16;
+  }
+
+  if (mesh.material?.map && mesh.material.map !== mapTex) {
+    mesh.material.map.dispose();
+  }
+  if (mesh.material?.bumpMap && mesh.material.bumpMap !== bumpTex) {
+    mesh.material.bumpMap.dispose();
+  }
+
+  mesh.material = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(colorHex),
+    map: mapTex,
+    bumpMap: bumpTex,
+    bumpScale: bumpScale,
+    roughness: roughness,
+    metalness: metalness,
+    side: THREE.DoubleSide
+  });
+  mesh.material.needsUpdate = true;
+}
+
 export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   roomImage,
   hasUploaded = false,
   isAdjusting = false,
   studioColor = '#d5cbbe',
   curtainType = { id: 'sfold-luxury', name: 'Rèm Hai Lớp S-Fold Định Hình Cao Cấp' },
+  activeFabricId = 'elogi-1198-2',
+  fabricSample = null,
   showOriginal = false,
   isAnalyzing = false,
   aiDiagnosis = null,
@@ -271,6 +528,8 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   const customPvcTopHemRef = useRef(null);
   const studioColorRef = useRef(studioColor);
   studioColorRef.current = studioColor;
+  const activeFabricIdRef = useRef(activeFabricId);
+  activeFabricIdRef.current = activeFabricId;
   const balconyFrameGroupRef = useRef(null);
   const [threeReady, setThreeReady] = useState(false);
 
@@ -563,6 +822,10 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     scalePhoto,
     resetPhotoScale,
     setCurtainOpenRatio: applyCurtainOpenRatio,
+    focusFabricDetail: () => {
+      // Zoom close to inspect fabric texture and micro-weave
+      zoomTargetRef.current = 2.4;
+    },
     getCurtainTransform: () => ({
       offset: curtainOffset,
       scale: curtainScale,
@@ -889,20 +1152,10 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
 
               if (child.name === 'OuterDrapeLeft') {
                 customLeftDrapeRef.current = child;
-                child.material = new THREE.MeshStandardMaterial({
-                  color: new THREE.Color(studioColor),
-                  roughness: 0.82,
-                  metalness: 0.03,
-                  side: THREE.DoubleSide
-                });
+                applyDrapeFabricMaterial(child, activeFabricIdRef.current, studioColorRef.current);
               } else if (child.name === 'OuterDrapeRight') {
                 customRightDrapeRef.current = child;
-                child.material = new THREE.MeshStandardMaterial({
-                  color: new THREE.Color(studioColor),
-                  roughness: 0.82,
-                  metalness: 0.03,
-                  side: THREE.DoubleSide
-                });
+                applyDrapeFabricMaterial(child, activeFabricIdRef.current, studioColorRef.current);
               } else if (child.name === 'RollerFabricPanel') {
                 customRollerFabricRef.current = child;
                 const mat = new THREE.MeshStandardMaterial({
@@ -1065,10 +1318,14 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
           wallMeshesRef.current = [...roomWallMeshesRef.current, ...glbWalls];
           applyWallTexture();
 
-          // Apply current studioColor immediately to newly loaded model!
+          // Apply current studioColor & fabric texture immediately to newly loaded model!
           const initTargetColor = new THREE.Color(studioColorRef.current);
-          if (customLeftDrapeRef.current?.material?.color) customLeftDrapeRef.current.material.color.set(initTargetColor);
-          if (customRightDrapeRef.current?.material?.color) customRightDrapeRef.current.material.color.set(initTargetColor);
+          if (customLeftDrapeRef.current) {
+            applyDrapeFabricMaterial(customLeftDrapeRef.current, activeFabricIdRef.current, studioColorRef.current);
+          }
+          if (customRightDrapeRef.current) {
+            applyDrapeFabricMaterial(customRightDrapeRef.current, activeFabricIdRef.current, studioColorRef.current);
+          }
           if (customRollerFabricRef.current?.material?.color) customRollerFabricRef.current.material.color.set(initTargetColor);
           if (customRollerWrapRef.current?.material?.color) customRollerWrapRef.current.material.color.set(initTargetColor);
           customTriptychRef.current?.fabrics?.forEach((f) => { if (f?.material?.color) f.material.color.set(initTargetColor); });
@@ -1110,17 +1367,15 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     applyCurtainOpenRatio(openRatio);
   }, [openRatio, curtainType.id]);
 
-  // Update Fabric Color
+  // Update Fabric Color & Distinct Procedural Texture Pattern
   useEffect(() => {
     const targetColor = new THREE.Color(studioColor);
 
-    if (customLeftDrapeRef.current?.material?.color) {
-      customLeftDrapeRef.current.material.color.set(targetColor);
-      customLeftDrapeRef.current.material.needsUpdate = true;
+    if (customLeftDrapeRef.current) {
+      applyDrapeFabricMaterial(customLeftDrapeRef.current, activeFabricId, studioColor);
     }
-    if (customRightDrapeRef.current?.material?.color) {
-      customRightDrapeRef.current.material.color.set(targetColor);
-      customRightDrapeRef.current.material.needsUpdate = true;
+    if (customRightDrapeRef.current) {
+      applyDrapeFabricMaterial(customRightDrapeRef.current, activeFabricId, studioColor);
     }
     if (customHoneycombFabricRef.current?.material?.color) {
       customHoneycombFabricRef.current.material.color.set(targetColor);
@@ -1190,12 +1445,9 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       }
 
       [leftCurtainMeshRef.current, rightCurtainMeshRef.current].forEach((mesh) => {
-        if (mesh?.material?.color) mesh.material.color.set(targetColor);
-        mesh.material.roughness = roughness;
-        mesh.material.metalness = metalness;
+        applyDrapeFabricMaterial(mesh, activeFabricId, studioColor);
         mesh.material.opacity = opacity;
         mesh.material.transparent = transparent;
-        mesh.material.needsUpdate = true;
       });
 
       const isDouble = curtainType.id === 'double-layer' || curtainType.id === 'leaf-embroidery';
@@ -1204,7 +1456,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
         rightSheerMeshRef.current.visible = isDouble;
       }
     }
-  }, [studioColor, curtainType]);
+  }, [studioColor, curtainType, activeFabricId]);
 
   // Update Time of Day / Weather Atmosphere
   useEffect(() => {
