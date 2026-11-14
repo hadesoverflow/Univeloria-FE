@@ -706,7 +706,7 @@ export function FloatingPetdexChat({ navigateTo }) {
               </div>
               <div>
                 <strong className="chatbot-header-title">Trợ lý AI Tư Vấn Rèm</strong>
-                <small className="chatbot-header-sub">UniVeloria AI · Phân tích sâu 5-10s</small>
+                <small className="chatbot-header-sub">UniVeloria AI</small>
               </div>
             </div>
             <button
