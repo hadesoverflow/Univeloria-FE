@@ -235,7 +235,7 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
       type: 'faq',
       delayMs: 1200,
       curtain: null,
-      text: "Dạ giá rèm tại UniVeloria được niêm yết minh bạch và tính theo diện tích thực tế:\n• 🌟 Rèm Cuốn: Từ 390.000đ / m² (Gọn gàng, lọc sáng tự nhiên chống chói)\n• 🌈 Rèm Cầu Vòng: Từ 1.350.000đ / m² (Vân dệt gỗ sang trọng, cản sáng 94%)\n• 💎 Rèm Vải: Từ 680.000đ / m² (Sóng đổ bồng bềnh chuẩn khách sạn 5 sao)\n• ⚡ Thanh Ray & Động Cơ Tự Động: Từ 2.850.000đ – 3.450.000đ / bộ (Động cơ thông minh siêu êm & ray trượt Teflon)\n\nBạn hãy chia sẻ về căn phòng của mình để tôi tư vấn phương án kỹ thuật chuẩn xác và cùng bạn trải nghiệm mô phỏng 3D nhé!"
+      text: "Dạ giá rèm tại UniVeloria được niêm yết minh bạch và tính theo diện tích thực tế:\n• 🌟 Rèm Cuốn: Từ 395.000đ / m² (Gọn gàng, lọc sáng tự nhiên chống chói)\n• 🌈 Rèm Cầu Vòng: Từ 720.000đ / m² (Vân dệt gỗ sang trọng, cản sáng 94%)\n• 💎 Rèm Vải: Từ 780.000đ / m² (Sóng đổ bồng bềnh chuẩn khách sạn 5 sao)\n• ⚡ Thanh Ray & Động Cơ Thông Minh: Từ 2.500.000đ – 2.800.000đ / bộ (Smart Automation A25 Pro & R25)\n\nBạn hãy chia sẻ về căn phòng của mình để tôi tư vấn phương án kỹ thuật chuẩn xác và cùng bạn trải nghiệm mô phỏng 3D nhé!"
     };
   }
 

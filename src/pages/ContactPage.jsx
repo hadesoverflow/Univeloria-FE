@@ -414,55 +414,6 @@ export function ContactPage({
             </div>
           </section>
 
-          {/* Showroom & Interactive Vector Map Section */}
-          <section className="showroom-section" id="showroom">
-            <div className="showroom-heading">
-              <div>
-                <div className="eyebrow">SHOWROOM <span /></div>
-                <h2>Trải nghiệm thực tế tại showroom</h2>
-                <p>Trực tiếp cảm nhận chất liệu, màu sắc và các mẫu rèm cao cấp của UNIVELORIA với không gian trưng bày hiện đại và sang trọng.</p>
-              </div>
-            </div>
-            <div className="showroom-layout">
-              <div className="showroom-cards">
-                {showroomCards.map((card) => (
-                  <article className="showroom-card" key={card.title}>
-                    <img src={card.image} alt={card.title} />
-                    <div>
-                      <h3>{card.title}</h3>
-                      <p>{card.desc}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-              <div className="map-card">
-                <div className="map-art">
-                  <div className="map-road road-one" />
-                  <div className="map-road road-two" />
-                  <div className="map-road road-three" />
-                  <div className="map-green green-one" />
-                  <div className="map-green green-two" />
-                  <div className="map-label">Trực Tuyến Toàn Quốc</div>
-                  <div className="map-pin"><ContactIcon name="pin" size={24} /></div>
-                  <span className="map-caption">DỊCH VỤ TOÀN QUỐC</span>
-                </div>
-                <div className="map-bottom">
-                  <div className="map-pin-small"><ContactIcon name="pin" size={18} /></div>
-                  <div className="map-address">
-                    <strong>UNIVELORIA Online Studio & May Đo Tận Nơi</strong>
-                    <span>Tư vấn AI 3D trực tuyến & Giao hàng may đo toàn quốc</span>
-                  </div>
-                  <a
-                    className="directions"
-                    href="tel:0398356785"
-                  >
-                    Gọi ngay <ContactIcon name="arrow" size={14} />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* AI 3D Studio Banner */}
           <section className="ai-banner">
             <div className="ai-photo" />

@@ -218,34 +218,53 @@ export default function App() {
             wood: 'Rèm gỗ',
             pattern: 'Rèm vải'
           };
-          const mapped = res.data.map((p) => ({
-            id: p.id,
-            name: p.name,
-            code: p.code || `UVL-${p.id}`,
-            category: categoryMap[p.category?.toLowerCase()] || p.category || 'Rèm vải',
-            room: p.roomType || 'Phòng khách',
-            style: p.style || 'Hiện đại',
-            colors: Array.isArray(p.colors) && p.colors.length > 0
-              ? p.colors.map((c) => (typeof c === 'string' ? c : c.hexCode || '#c8a87d'))
-              : ['#e9d8c2', '#c5a27d'],
-            price: Number(p.basePrice) || 2450000,
-            oldPrice: p.oldPrice ? Number(p.oldPrice) : null,
-            rating: p.rating ? String(p.rating) : '5.0',
-            reviews: p.reviewsCount || 12,
-            badge: p.badge || (p.isFeatured ? 'Nổi bật' : ''),
-            image: p.thumbnailUrl || '/assets/uvl4-card-photo.png',
-            mainImage: (p.code === 'UVL-4' || p.id === 4) ? '/assets/uvl4-main.jpg' : (p.imageUrls?.[0] || p.thumbnailUrl || '/assets/uvl4-main.jpg'),
-            subImages: (p.code === 'UVL-4' || p.id === 4)
-              ? ['/assets/uvl4-sub1.jpg', '/assets/uvl4-sub2.jpg', '/assets/uvl4-sub3.jpg']
-              : (Array.isArray(p.imageUrls) && p.imageUrls.length >= 4 ? p.imageUrls.slice(1, 4) : ['/assets/uvl4-sub1.jpg', '/assets/uvl4-sub2.jpg', '/assets/uvl4-sub3.jpg']),
-            description: p.description,
-            fullDescription: p.fullDescription,
-            material: p.material,
-            lightBlocking: p.lightBlocking,
-            fabricWidth: p.fabricWidth,
-            origin: p.origin,
-            warranty: p.warranty
-          }));
+          const mapped = res.data.map((p) => {
+            const local = productsData.find(
+              (lp) => String(lp.id) === String(p.id) ||
+                      lp.code === p.code ||
+                      lp.name === p.name ||
+                      (p.name?.includes('A25') && lp.code === 'UVL-TR-A25') ||
+                      (p.name?.includes('R25') && lp.code === 'UVL-TR-R25')
+            );
+            const isA25 = String(p.id) === '13' || p.code === 'UVL-TR-A25' || p.name?.includes('A25');
+            const isR25 = String(p.id) === '14' || p.code === 'UVL-TR-R25' || p.name?.includes('R25');
+
+            const name = isA25 ? 'Smart Automation A25 Pro' : isR25 ? 'Smart Automation R25' : (local?.name || p.name);
+            const price = isA25 ? 2800000 : isR25 ? 2500000 : (local?.price || Number(p.basePrice) || 2450000);
+            const oldPrice = isA25 ? 3400000 : isR25 ? 2900000 : (local?.oldPrice || (p.oldPrice ? Number(p.oldPrice) : null));
+            const image = isA25 ? '/product/Thanh Rèm/Smart Automation A25 Pro.png' : isR25 ? '/product/Thanh Rèm/Smart Automation R25.png' : (local?.image || p.thumbnailUrl || '/assets/uvl4-card-photo.png');
+            const mainImage = isA25 ? '/product/Thanh Rèm/Smart Automation A25 Pro.png' : isR25 ? '/product/Thanh Rèm/Smart Automation R25.png' : (local?.mainImage || p.imageUrls?.[0] || image);
+
+            return {
+              id: p.id,
+              name,
+              code: local?.code || p.code || `UVL-${p.id}`,
+              category: local?.category || categoryMap[p.category?.toLowerCase()] || p.category || 'Rèm vải',
+              room: local?.room || p.roomType || 'Phòng khách',
+              style: local?.style || p.style || 'Hiện đại',
+              colors: local?.colors || (Array.isArray(p.colors) && p.colors.length > 0
+                ? p.colors.map((c) => (typeof c === 'string' ? c : c.hexCode || '#c8a87d'))
+                : ['#e9d8c2', '#c5a27d']),
+              colorNames: local?.colorNames || [],
+              price,
+              oldPrice,
+              rating: local?.rating || (p.rating ? String(p.rating) : '5.0'),
+              reviews: local?.reviews || p.reviewsCount || 12,
+              badge: local?.badge || p.badge || (p.isFeatured ? 'Nổi bật' : ''),
+              image,
+              mainImage,
+              subImages: local?.subImages || [],
+              description: local?.description || p.description,
+              fullDescription: local?.fullDescription || p.fullDescription,
+              highlights: local?.highlights || [],
+              features: local?.features || [],
+              material: local?.material || p.material,
+              lightBlocking: local?.lightBlocking || p.lightBlocking,
+              fabricWidth: local?.fabricWidth || p.fabricWidth,
+              origin: local?.origin || p.origin,
+              warranty: local?.warranty || p.warranty
+            };
+          });
           if (mapped.some((p) => p.category === 'Rèm cầu vồng' || p.category === 'Thanh rèm' || p.category === 'Rèm cuốn')) {
             setProductsList(mapped);
           }
