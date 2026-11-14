@@ -358,28 +358,12 @@ export function StudioPage({
     });
   }, [activeStudioFilter, aiDiagnosis]);
 
-  const currentItemsPerPage = activeStudioFilter === 'Tất cả' ? 5 : 1;
-  const totalCurtainPages = Math.max(1, Math.ceil(filteredCurtainTypes.length / currentItemsPerPage));
+  const totalCurtainPages = Math.max(1, Math.ceil(filteredCurtainTypes.length / ITEMS_PER_PAGE));
 
-  // Reset or sync to active product's page on filter change
+  // Reset to page 1 on filter change
   useEffect(() => {
-    const foundIdx = filteredCurtainTypes.findIndex((t) => t.id === activeType);
-    if (foundIdx !== -1) {
-      setCurtainPage(Math.floor(foundIdx / currentItemsPerPage) + 1);
-    } else {
-      setCurtainPage(1);
-    }
+    setCurtainPage(1);
   }, [activeStudioFilter]);
-
-  // When activeType changes and we are in 1-item-per-page mode, automatically flip to that product's page
-  useEffect(() => {
-    if (currentItemsPerPage === 1 && activeType) {
-      const foundIdx = filteredCurtainTypes.findIndex((t) => t.id === activeType);
-      if (foundIdx !== -1) {
-        setCurtainPage(foundIdx + 1);
-      }
-    }
-  }, [activeType, filteredCurtainTypes, currentItemsPerPage]);
 
   useEffect(() => {
     if (curtainPage > totalCurtainPages) {
@@ -388,9 +372,9 @@ export function StudioPage({
   }, [totalCurtainPages, curtainPage]);
 
   const paginatedCurtainTypes = useMemo(() => {
-    const startIdx = (curtainPage - 1) * currentItemsPerPage;
-    return filteredCurtainTypes.slice(startIdx, startIdx + currentItemsPerPage);
-  }, [filteredCurtainTypes, curtainPage, currentItemsPerPage]);
+    const startIdx = (curtainPage - 1) * ITEMS_PER_PAGE;
+    return filteredCurtainTypes.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+  }, [filteredCurtainTypes, curtainPage]);
 
   // Automatically reset curtain to 0% (closed) whenever switching to another curtain model
   useEffect(() => {
@@ -1261,7 +1245,7 @@ export function StudioPage({
               ))}
             </div>
 
-            <div className={`panel3-card-list ${currentItemsPerPage === 1 ? 'single-item-mode' : ''}`}>
+            <div className="panel3-card-list">
               {paginatedCurtainTypes.map((item) => {
                 const isSelected = activeType === item.id;
                 return (
@@ -1280,20 +1264,7 @@ export function StudioPage({
                     </div>
                     <div className="panel3-card-info">
                       <strong>{item.name}</strong>
-                      {currentItemsPerPage === 1 && item.slogan && (
-                        <div className="panel3-card-slogan">{item.slogan}</div>
-                      )}
                       <small>{item.desc}</small>
-                      {currentItemsPerPage === 1 && item.features && item.features.length > 0 && (
-                        <ul className="panel3-card-features">
-                          {item.features.slice(0, 3).map((feat, fIdx) => (
-                            <li key={fIdx}>
-                              <CheckCircle2 size={11} color="#C8A87D" />
-                              <span>{feat}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
                       <div className="panel3-card-price">{item.priceDisplay}</div>
                     </div>
                     <button
@@ -1307,49 +1278,47 @@ export function StudioPage({
                         setMobileActiveTab('preview');
                       }}
                     >
-                      {isSelected ? 'Đã chọn' : currentItemsPerPage === 1 ? 'Chọn mẫu này' : 'Chọn'}
+                      {isSelected ? 'Đã chọn' : 'Chọn'}
                     </button>
                   </div>
                 );
               })}
             </div>
 
-            {totalCurtainPages > 1 && (
-              <div className="panel3-pagination">
-                <button
-                  type="button"
-                  className="panel3-page-btn nav-btn"
-                  disabled={curtainPage === 1}
-                  onClick={() => setCurtainPage((p) => Math.max(1, p - 1))}
-                  title="Trang trước"
-                >
-                  <ChevronLeft size={14} />
-                </button>
+            <div className="panel3-pagination">
+              <button
+                type="button"
+                className="panel3-page-btn nav-btn"
+                disabled={curtainPage === 1}
+                onClick={() => setCurtainPage((p) => Math.max(1, p - 1))}
+                title="Trang trước"
+              >
+                <ChevronLeft size={14} />
+              </button>
 
-                <div className="panel3-page-numbers">
-                  {Array.from({ length: totalCurtainPages }, (_, i) => i + 1).map((pageNum) => (
-                    <button
-                      key={pageNum}
-                      type="button"
-                      className={`panel3-page-btn num-btn ${curtainPage === pageNum ? 'active' : ''}`}
-                      onClick={() => setCurtainPage(pageNum)}
-                    >
-                      {pageNum}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  className="panel3-page-btn nav-btn"
-                  disabled={curtainPage === totalCurtainPages}
-                  onClick={() => setCurtainPage((p) => Math.min(totalCurtainPages, p + 1))}
-                  title="Trang sau"
-                >
-                  <ChevronRight size={14} />
-                </button>
+              <div className="panel3-page-numbers">
+                {Array.from({ length: totalCurtainPages }, (_, i) => i + 1).map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    type="button"
+                    className={`panel3-page-btn num-btn ${curtainPage === pageNum ? 'active' : ''}`}
+                    onClick={() => setCurtainPage(pageNum)}
+                  >
+                    {pageNum}
+                  </button>
+                ))}
               </div>
-            )}
+
+              <button
+                type="button"
+                className="panel3-page-btn nav-btn"
+                disabled={curtainPage === totalCurtainPages}
+                onClick={() => setCurtainPage((p) => Math.min(totalCurtainPages, p + 1))}
+                title="Trang sau"
+              >
+                <ChevronRight size={14} />
+              </button>
+            </div>
           </div>
 
           <a
