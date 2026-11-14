@@ -533,6 +533,8 @@ export default function App() {
           if (matchedFabric) {
             if (matchedFabric.category === 'Rèm cuốn' || matchedFabric.isRoller || matchedFabric.id.startsWith('roller-')) {
               setActiveType('roller-officepro');
+            } else if (matchedFabric.category === 'Rèm cầu vồng' || matchedFabric.isRainbow || matchedFabric.id.startsWith('rainbow-')) {
+              setActiveType('rainbow-modernstripe');
             } else {
               setActiveType('sfold-luxury');
             }

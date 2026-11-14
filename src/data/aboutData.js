@@ -1,5 +1,5 @@
 export const aboutStory = {
-  eyebrow: "1.5.1 · GIỚI THIỆU THƯƠNG HIỆU",
+  eyebrow: " GIỚI THIỆU THƯƠNG HIỆU",
   sectionCode: "1.5.1",
   title: "Mô tả sản phẩm và dịch vụ",
   quote: "A Beautiful Space, A Better You.",
@@ -34,7 +34,7 @@ export const aboutMissionVision = {
     sectionCode: "1.5.2",
     tag: "TẦM NHÌN",
     subTag: "Vision",
-    title: "Tầm nhìn (Vision)",
+    title: "Tầm nhìn",
     highlight: "Nền tảng hệ sinh thái nội thất thông minh hàng đầu Đông Nam Á",
     content: "UniVeloria hướng tới trở thành nền tảng hệ sinh thái nội thất thông minh hàng đầu Đông Nam Á, ứng dụng AI và 3D để giúp khách hàng hoàn thiện không gian sống theo nhu cầu, phong cách và cá tính riêng. Thương hiệu hướng đến việc biến công nghệ thành công cụ hỗ trợ khách hàng đưa ra quyết định nội thất dễ dàng và tự tin hơn."
   },
@@ -42,7 +42,7 @@ export const aboutMissionVision = {
     sectionCode: "1.5.3",
     tag: "SỨ MỆNH",
     subTag: "Mission",
-    title: "Sứ mệnh (Mission)",
+    title: "Sứ mệnh",
     highlight: "Giảm rào cản trực quan trong mua sắm nội thất",
     content: "UniVeloria hướng tới giảm rào cản trực quan trong quá trình mua sắm nội thất bằng cách kết hợp AI hỗ trợ tư vấn với công nghệ 3D giúp khách hàng xem trước phương án trong chính không gian của mình. Qua đó, thương hiệu giúp khách hàng giảm sự phụ thuộc vào tưởng tượng, lựa chọn sản phẩm phù hợp hơn và hạn chế cảm giác hối tiếc sau khi mua."
   }
@@ -89,9 +89,9 @@ export const aboutCoreValues = [
 
 // Backward-compatible exports
 export const aboutValues = [
-  { icon: "diamond", title: "1.5.3. Sứ mệnh (Mission)", text: aboutMissionVision.mission.content },
-  { icon: "eye", title: "1.5.2. Tầm nhìn (Vision)", text: aboutMissionVision.vision.content },
-  { icon: "heart", title: "1.5.4. Giá trị cốt lõi (Core Values)", text: "Trực quan hóa trước – Quyết định sau (See Before You Buy)\nCá nhân hóa thực sự (True Personalization)\nLiền mạch từ Cảm hứng đến Lắp đặt (Seamless End-to-End)\nTự nâng tầm theo Dữ liệu (Data-Driven Elevation)" }
+  { icon: "diamond", title: " Sứ mệnh (Mission)", text: aboutMissionVision.mission.content },
+  { icon: "eye", title: " Tầm nhìn (Vision)", text: aboutMissionVision.vision.content },
+  { icon: "heart", title: " Giá trị cốt lõi", text: "Trực quan hóa trước – Quyết định sau (See Before You Buy)\nCá nhân hóa thực sự (True Personalization)\nLiền mạch từ Cảm hứng đến Lắp đặt (Seamless End-to-End)\nTự nâng tầm theo Dữ liệu (Data-Driven Elevation)" }
 ];
 
 export const aboutReasons = [

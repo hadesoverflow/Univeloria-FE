@@ -106,6 +106,111 @@ export const curtainTypes = [
       "Khả năng chống thấm nước vượt trội, hạn chế bám bụi, dễ lau chùi",
       "Hệ thống cuốn hiện đại, vận hành êm ái và bền bỉ"
     ]
+  },
+  {
+    id: "rainbow-modernstripe",
+    price: 1350000,
+    priceDisplay: "Từ 1.350.000đ / m²",
+    name: "Rèm Cầu Vồng ModernStripe",
+    shortName: "ModernStripe",
+    category: "Rèm cầu vồng",
+    slogan: "Hiện đại – Linh hoạt – Tinh tế",
+    desc: "Thiết kế hai lớp sọc xen kẽ, dễ dàng điều chỉnh ánh sáng, mang đến không gian sống hiện đại và thoải mái.",
+    colors: ["#f3ebe1", "#d0c3b5", "#b1a293", "#5c544d", "#ffffff"],
+    thumb: "/assets/curtains/curtain-rainbow-modernstripe.jpg",
+    model3dUrl: "/models/curtains/curtain-rainbow-modernstripe.glb",
+    style: "Rèm cầu vồng",
+    isRainbow: true,
+    features: [
+      "Điều chỉnh ánh sáng linh hoạt giữa lấy sáng và riêng tư",
+      "Đảm bảo sự riêng tư, cản sáng chống chói hiệu quả",
+      "Thiết kế hai lớp sọc hiện đại, phong cách Scandinavian tinh tế",
+      "Vận hành êm ái, cơ chế cuốn mượt mà với độ bền ổn định"
+    ]
+  },
+  {
+    id: "rainbow-nordicray",
+    price: 1550000,
+    priceDisplay: "Từ 1.550.000đ / m²",
+    name: "Rèm Cầu Vồng NordicRay",
+    shortName: "NordicRay",
+    category: "Rèm cầu vồng",
+    slogan: "Ánh sáng linh hoạt - Cho không gian thư giãn",
+    desc: "Thiết kế hai lớp vải xen kẽ hiện đại, điều chỉnh ánh sáng linh hoạt, mang lại sự riêng tư và thoáng sáng cho phòng ngủ.",
+    colors: ["#cbae92", "#f7e9de", "#bb8e61", "#8a5832", "#ded0b6"],
+    thumb: "/assets/curtains/curtain-rainbow-nordicray.jpg",
+    model3dUrl: "/models/curtains/curtain-rainbow-nordicray.glb",
+    style: "Rèm cầu vồng",
+    isRainbow: true,
+    features: [
+      "Ánh sáng linh hoạt, dễ dàng chuyển đổi lấy sáng tự nhiên",
+      "Đảm bảo sự riêng tư tuyệt đối cho phòng ngủ và phòng làm việc",
+      "Chất liệu cao cấp dệt tinh tế, bền màu, độ bền cao",
+      "Vận hành êm ái, cơ chế cuốn mượt mà, dễ sử dụng và bền bỉ"
+    ]
+  },
+  {
+    id: "rainbow-sunnyview",
+    price: 1250000,
+    priceDisplay: "Từ 1.250.000đ / m²",
+    name: "Rèm Cầu Vồng SunnyView",
+    shortName: "SunnyView",
+    category: "Rèm cầu vồng",
+    slogan: "Ánh sáng tự nhiên, không gian ấm áp",
+    desc: "Thiết kế hiện đại, linh hoạt điều chỉnh ánh sáng, tạo không gian sống thoáng sáng và đầy cảm hứng.",
+    colors: ["#c8af8d", "#f5e8d8", "#9d8062", "#484421", "#e8ded1"],
+    thumb: "/assets/curtains/curtain-rainbow-sunnyview.jpg",
+    model3dUrl: "/models/curtains/curtain-rainbow-sunnyview.glb",
+    style: "Rèm cầu vồng",
+    isRainbow: true,
+    features: [
+      "Ánh sáng tự nhiên ngập tràn, tạo không gian sống ấm áp",
+      "Hiệu ứng ánh sáng đa tầng, điều chỉnh độ sáng dễ dàng",
+      "Chất liệu cao cấp bền màu, dệt mịn, độ bền cao",
+      "Vận hành êm ái, cơ chế cuốn mượt mà bền bỉ theo thời gian"
+    ]
+  },
+  {
+    id: "rainbow-rivere",
+    price: 1150000,
+    priceDisplay: "Từ 1.150.000đ / m²",
+    name: "Rèm Cầu Vồng River.E",
+    shortName: "River.E",
+    category: "Rèm cầu vồng",
+    slogan: "Hiện Đại – Bền Bỉ – Đa Dạng Màu Sắc",
+    desc: "Dòng rèm cầu vồng River.E với chất liệu polyester cao cấp, điều chỉnh ánh sáng linh hoạt, phù hợp cho nhiều không gian nhà ở và văn phòng.",
+    colors: ["#7cb9e8", "#dfcaa7", "#c2bcaf", "#7d8387", "#3e586d", "#54463d", "#6d7671", "#6b7a8d", "#9a7457", "#2c3b47"],
+    thumb: "/assets/curtains/curtain-rainbow-rivere.jpg",
+    model3dUrl: "/models/curtains/curtain-rainbow-rivere.glb",
+    style: "Rèm cầu vồng",
+    isRainbow: true,
+    features: [
+      "Bộ sưu tập 10 mã màu đa dạng (R 101 đến R 110) dễ dàng phối nội thất",
+      "Chất liệu polyester cao cấp bề mặt mịn, dệt chắc, độ bền cao",
+      "Cấu trúc 2 lớp điều chỉnh ánh sáng linh hoạt, chống nắng và chống tia UV",
+      "Vận hành êm ái, cơ chế cuốn mượt mà, bền bỉ và dễ sử dụng"
+    ]
+  },
+  {
+    id: "rainbow-goldenweave",
+    price: 1450000,
+    priceDisplay: "Từ 1.450.000đ / m²",
+    name: "Rèm Cầu Vồng Dệt Sợi GoldenWeave",
+    shortName: "GoldenWeave",
+    category: "Rèm cầu vồng",
+    slogan: "Vẻ đẹp tự nhiên, ánh sắc ấm áp",
+    desc: "Rèm cầu vồng dệt sợi cao cấp, kết hợp độ thoáng sáng linh hoạt và chất cảm vải dệt tinh tế, mang đến không gian sang trọng, ấm cúng.",
+    colors: ["#cfb384", "#a88958", "#876337", "#5a4225", "#ded0b6"],
+    thumb: "/assets/curtains/curtain-rainbow-goldenweave.jpg",
+    model3dUrl: "/models/curtains/curtain-rainbow-goldenweave.glb",
+    style: "Rèm cầu vồng",
+    isRainbow: true,
+    features: [
+      "Bề mặt vân dệt sợi tự nhiên cao cấp, tinh tế và độ bền vượt trội",
+      "Điều sáng linh hoạt, dễ dàng chuyển đổi giữa lấy sáng và che chắn",
+      "Đảm bảo sự riêng tư, mang lại không gian sang trọng và ấm áp",
+      "Dây kéo chuỗi hạt ánh kim mạ vàng sang trọng, vận hành êm ái"
+    ]
   }
 ];
 
@@ -577,5 +682,6 @@ export const fabricSamples = [
 export const studioStyleFilters = [
   "Tất cả",
   "Rèm vải",
-  "Rèm cuốn"
+  "Rèm cuốn",
+  "Rèm cầu vồng"
 ];

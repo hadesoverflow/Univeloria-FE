@@ -169,111 +169,218 @@ export const productsData = [
   },
 
   // ==========================================
-  // 2. RÈM CẦU VỒNG (4 SẢN PHẨM)
+  // 2. RÈM CẦU VỒNG (5 SẢN PHẨM CHÍNH THỨC)
   // ==========================================
   {
     id: 7,
     name: "Rèm cầu vồng GoldenWeave",
     code: "UVL-CV-GW01",
     category: "Rèm cầu vồng",
-    room: "Phòng khách",
-    style: "Hiện đại",
-    colors: ["#f8eedc", "#dbb27e", "#bfb781", "#845e33"],
-    colorNames: ["Vàng kem ánh kim", "Nâu caramel", "Vàng mật ong", "Nâu hạt dẻ"],
+    room: "Phòng khách / Biệt thự",
+    style: "Tự nhiên & Sang trọng",
+    slogan: "Vẻ đẹp tự nhiên, ánh sắc ấm áp",
+    colors: ["#cfb384", "#a88958", "#876337", "#5a4225", "#ded0b6"],
+    colorNames: ["Vàng tơ dệt óng", "Sợi óng hổ phách", "Nâu vàng gỗ ấm", "Gỗ teak sẫm", "Kem dệt ánh kim"],
     price: 1450000,
     oldPrice: 1750000,
     rating: "4.9",
     reviews: 115,
     badge: "Bán chạy",
     unit: "m² hoàn thiện",
-    image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng GoldenWeave.png",
-    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng GoldenWeave.png",
-    subImages: [],
-    description: "Dải nan vải đan sợi vàng óng ánh kết hợp lớp lưới xuyên sáng cao cấp Hàn Quốc, cho phép xoay lật điều chỉnh ánh sáng linh hoạt 180 độ chỉ với một thao tác kéo.",
-    fullDescription: "Rèm cầu vồng GoldenWeave là đỉnh cao của sự tiện ích và phong cách. Sự đan xen nhịp nhàng giữa dải vải cản sáng dệt sợi vàng óng ánh và dải lưới voan cao cấp tạo nên khả năng lấy sáng biến hóa đa dạng: từ cản sáng tuyệt đối khi so le, đến đón gió và ánh sáng dịu êm khi mở đều.",
-    material: "100% Polyester Hàn Quốc phủ Nano chống bám bụi",
-    lightBlocking: "Cản sáng 85% - 95%, điều tiết vi khí hậu",
+    image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng GoldenWeave.jpg",
+    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng GoldenWeave.jpg",
+    subImages: [
+      "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng GoldenWeave.jpg"
+    ],
+    description: "Rèm cầu vồng dệt sợi cao cấp, kết hợp độ thoáng sáng linh hoạt và chất cảm vải dệt tinh tế, mang đến không gian sang trọng, ấm cúng.",
+    fullDescription: "Rèm cầu vồng dệt sợi GoldenWeave là sự kết tinh giữa chất liệu dệt sợi tự nhiên cao cấp và công nghệ rèm cầu vồng hai lớp thông minh. Bề mặt vân dệt nổi sống động tạo chiều sâu thị giác ấm áp, kết hợp dải voan lưới trong suốt cho phép chuyển đổi mượt mà giữa không gian chan hòa ánh sáng và sự riêng tư tuyệt đối.",
+    highlights: [
+      { title: "Bề mặt dệt cao cấp", desc: "Vân dệt tự nhiên tinh tế, độ bền cao" },
+      { title: "Điều chỉnh ánh sáng linh hoạt", desc: "Dễ dàng chuyển đổi giữa lấy sáng và che chắn" },
+      { title: "Đảm bảo sự riêng tư", desc: "Không gian ấm áp, an tâm nghỉ ngơi" },
+      { title: "Không gian ấm áp, sang trọng", desc: "Nâng tầm đẳng cấp kiến trúc nội thất" }
+    ],
+    features: [
+      "1. Sợi dệt tinh tế: Bề mặt vân dệt tự nhiên, độ bền cao",
+      "2. Điều sáng linh hoạt: Dễ dàng chuyển đổi giữa lấy sáng và che chắn",
+      "3. Vận hành êm ái: Cơ chế cuốn mượt mà, bền bỉ theo thời gian"
+    ],
+    material: "Sợi dệt tự nhiên kết hợp Polyester cao cấp chống tia UV",
+    lightBlocking: "Cản sáng 85% - 95%, điều tiết ánh sáng linh hoạt",
     fabricWidth: "280cm",
-    origin: "Nhập khẩu nguyên bộ Hàn Quốc",
-    warranty: "Bảo hành 3 năm hệ thống phụ kiện"
+    origin: "UniVeloria Chính Hãng",
+    warranty: "Bảo hành 3 năm chính hãng"
   },
   {
     id: 8,
     name: "Rèm cầu vồng ModernStripe",
     code: "UVL-CV-MS02",
     category: "Rèm cầu vồng",
-    room: "Văn phòng",
-    style: "Tối giản",
-    colors: ["#f3ebe1", "#d0c3b5", "#b1a293", "#5c544d"],
-    colorNames: ["Trắng sữa", "Be khói", "Ghi xám trung tính", "Xám đậm graphite"],
+    room: "Phòng khách / Văn phòng",
+    style: "Hiện đại & Tối giản",
+    slogan: "Hiện đại – Linh hoạt – Tinh tế",
+    colors: ["#f3ebe1", "#d0c3b5", "#b1a293", "#5c544d", "#ffffff"],
+    colorNames: ["Trắng sữa tinh khiết", "Be khói thanh lịch", "Ghi xám trung tính", "Xám đậm graphite", "Trắng tuyết đón sáng"],
     price: 1350000,
-    oldPrice: null,
+    oldPrice: 1550000,
     rating: "4.8",
     reviews: 67,
-    badge: "",
+    badge: "Mới",
     unit: "m² hoàn thiện",
-    image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng ModernStripe.png",
-    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng ModernStripe.png",
-    subImages: [],
-    description: "Nan rèm bản rộng phong cách Scandinavian đương đại, sọc ngang thanh thoát giúp cơi nới không gian cửa sổ phòng làm việc và căn hộ hiện đại.",
-    fullDescription: "Thiết kế nan rèm bản lớn 10cm tạo cảm giác không gian rộng mở và thoáng đãng. Hệ máng rèm nhôm định hình nguyên khối sơn tĩnh điện bóng mịn, bộ cuộn trợ lực vận hành êm ái không gây ồn. Chống lóa màn hình tối ưu cho không gian làm việc chuyên nghiệp.",
+    image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng ModernStripe.jpg",
+    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng ModernStripe.jpg",
+    subImages: [
+      "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng ModernStripe.jpg"
+    ],
+    description: "Thiết kế hai lớp sọc xen kẽ, dễ dàng điều chỉnh ánh sáng, mang đến không gian sống hiện đại và thoải mái.",
+    fullDescription: "Rèm cầu vồng ModernStripe mang phong cách Scandinavian đương đại với các dải sọc vải cản sáng và lưới voan xen kẽ nhau nhịp nhàng. Cơ chế cuốn trợ lực mượt mà cho phép người dùng điều chỉnh tỷ lệ ánh sáng tự nhiên đi vào phòng một cách chính xác, chống chói lóa màn hình tối ưu cho phòng làm việc và phòng khách hiện đại.",
+    highlights: [
+      { title: "Điều chỉnh ánh sáng linh hoạt", desc: "Dễ dàng chuyển đổi giữa thoáng sáng và riêng tư" },
+      { title: "Đảm bảo riêng tư", desc: "Bảo vệ tối đa không gian cá nhân của gia đình" },
+      { title: "Thiết kế hiện đại", desc: "Phong cách sọc ngang thanh thoát, cơi nới không gian" },
+      { title: "Phù hợp nhiều không gian", desc: "Lý tưởng cho phòng khách, phòng ngủ, văn phòng" }
+    ],
+    features: [
+      "1. Chất liệu cao cấp: Dệt tinh tế, bền màu, độ bền cao",
+      "2. Điều chỉnh ánh sáng: Dễ dàng chuyển đổi giữa thoáng sáng và riêng tư",
+      "3. Vận hành êm ái: Cơ chế cuốn mượt mà, độ bền ổn định"
+    ],
     material: "Sợi tổng hợp dệt công nghệ cao, hộp rèm nhôm sơn tĩnh điện",
     lightBlocking: "Cản sáng 90%, chống chói màn hình máy tính",
     fabricWidth: "280cm",
-    origin: "Nhập khẩu chính ngạch Hàn Quốc",
-    warranty: "Bảo hành 3 năm"
+    origin: "UniVeloria Chính Hãng",
+    warranty: "Bảo hành 3 năm chính hãng"
   },
   {
     id: 9,
     name: "Rèm cầu vồng NordicRay",
     code: "UVL-CV-NR03",
     category: "Rèm cầu vồng",
-    room: "Phòng ngủ",
-    style: "Hiện đại",
-    colors: ["#f7e9de", "#cbae92", "#bb8e61", "#8a5832"],
-    colorNames: ["Màu cát Bắc Âu", "Nâu sữa Latte", "Cam đất nung", "Gỗ óc chó"],
+    room: "Phòng ngủ / Phòng làm việc",
+    style: "Hiện đại & Tinh tế",
+    slogan: "Ánh sáng linh hoạt - Cho không gian thư giãn",
+    colors: ["#cbae92", "#f7e9de", "#bb8e61", "#8a5832", "#ded0b6"],
+    colorNames: ["Nâu sữa Latte", "Cát Bắc Âu", "Cam đất nung", "Gỗ óc chó", "Kem cát dịu nhẹ"],
     price: 1550000,
     oldPrice: 1800000,
     rating: "4.9",
     reviews: 93,
     badge: "Nổi bật",
     unit: "m² hoàn thiện",
-    image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng NordicRay.png",
-    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng NordicRay.png",
-    subImages: [],
-    description: "Vân dệt đa tầng kiểu Bắc Âu cách điệu, ngăn chặn ánh nắng gay gắt mà vẫn giữ được nguồn sáng tán xạ tự nhiên dịu êm cho phòng ngủ.",
-    fullDescription: "Rèm cầu vồng NordicRay sở hữu lớp vải dệt mật độ cao kết hợp sợi kháng tia UV chuyên dụng, ngăn ngừa tới 99% tia cực tím gây hại đồ gỗ nội thất. Tông màu Bắc Âu ấm áp mang đến cảm giác thư thái, dễ chịu cho phòng ngủ gia đình.",
-    material: "Vải dệt 3 lớp cản sáng chống tia cực tím",
+    image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng NordicRay.jpg",
+    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng NordicRay.jpg",
+    subImages: [
+      "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng NordicRay.jpg"
+    ],
+    description: "Thiết kế hai lớp vải xen kẽ hiện đại, điều chỉnh ánh sáng linh hoạt, mang lại sự riêng tư và thoáng sáng cho phòng ngủ.",
+    fullDescription: "Rèm cầu vồng NordicRay sở hữu lớp vải dệt mật độ cao kết hợp sợi kháng tia UV chuyên dụng, ngăn ngừa tới 99% tia cực tím gây hại cho da và đồ gỗ nội thất. Tông màu Bắc Âu ấm áp và dải vân dệt tinh tế mang đến nguồn sáng tán xạ êm dịu, tạo cảm giác an tâm, thư thái tuyệt đối cho không gian nghỉ ngơi.",
+    highlights: [
+      { title: "Điều chỉnh ánh sáng linh hoạt", desc: "Linh hoạt giữa thoáng sáng và riêng tư" },
+      { title: "Đảm bảo sự riêng tư", desc: "Tạo sự thư thái tối đa cho phòng ngủ" },
+      { title: "Thiết kế hiện đại, tinh tế", desc: "Tông màu Bắc Âu ấm cúng, sang trọng" },
+      { title: "Phù hợp phòng ngủ, phòng làm việc", desc: "Tạo nguồn sáng tán xạ tự nhiên dịu êm" }
+    ],
+    features: [
+      "1. Chất liệu cao cấp: Dệt tinh tế, bền màu, độ bền cao",
+      "2. Điều chỉnh ánh sáng: Linh hoạt giữa thoáng sáng và riêng tư",
+      "3. Vận hành êm ái: Cơ chế cuốn mượt mà, dễ sử dụng, bền bỉ"
+    ],
+    material: "Vải dệt 3 lớp cản sáng chống tia cực tím & sợi dệt kháng bụi",
     lightBlocking: "Cản sáng 95% Blackout",
     fabricWidth: "280cm",
-    origin: "Nhập khẩu Hàn Quốc",
-    warranty: "Bảo hành 3 năm"
+    origin: "UniVeloria Chính Hãng",
+    warranty: "Bảo hành 3 năm chính hãng"
   },
   {
     id: 10,
     name: "Rèm cầu vồng SunnyView",
     code: "UVL-CV-SV04",
     category: "Rèm cầu vồng",
-    room: "Phòng ăn",
-    style: "Tự nhiên",
-    colors: ["#f5e8d8", "#c8af8d", "#9d8062", "#484421"],
-    colorNames: ["Màu nắng mai", "Vàng champagne", "Nâu ấm gỗ sồi", "Xanh rêu đậm"],
+    room: "Phòng khách / Phòng ăn",
+    style: "Tự nhiên & Ấm áp",
+    slogan: "Ánh sáng tự nhiên, không gian ấm áp",
+    colors: ["#c8af8d", "#f5e8d8", "#9d8062", "#484421", "#e8ded1"],
+    colorNames: ["Vàng champagne", "Màu nắng mai", "Nâu ấm gỗ sồi", "Xanh rêu đậm", "Kem sáng tự nhiên"],
     price: 1250000,
-    oldPrice: null,
+    oldPrice: 1450000,
     rating: "4.7",
     reviews: 49,
-    badge: "",
+    badge: "Thoáng đãng",
     unit: "m² hoàn thiện",
-    image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng SunnyView.png",
-    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng SunnyView.png",
-    subImages: [],
-    description: "Tối ưu góc nhìn toàn cảnh ra ban công và vườn cây xanh. Lớp lưới siêu bền chịu nhiệt tốt, không co ngót dưới ánh nắng mặt trời trực tiếp.",
-    fullDescription: "Được thiết kế với tỉ lệ dải lưới voan rộng hơn, SunnyView mang lại tầm nhìn thoáng đãng ngắm trọn cảnh sắc thiên nhiên ngoài trời mà bên ngoài không thể nhìn thấy bên trong. Phù hợp cho khung cửa sổ phòng ăn, phòng đọc sách hoặc căn hộ chung cư hướng đông.",
+    image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng SunnyView.jpg",
+    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng SunnyView.jpg",
+    subImages: [
+      "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng SunnyView.jpg"
+    ],
+    description: "Thiết kế hiện đại, linh hoạt điều chỉnh ánh sáng, tạo không gian sống thoáng sáng và đầy cảm hứng.",
+    fullDescription: "Được thiết kế nhằm tối ưu hóa ánh sáng thiên nhiên, SunnyView đem đến góc nhìn thoáng đạt rộng mở nhìn ra ban công và vườn cây ngoài trời. Khi chuyển sang chế độ đón nắng, các dải lưới siêu bền cho phép luồng ánh sáng ấm áp lan tỏa khắp gian phòng mà không gây chói gắt.",
+    highlights: [
+      { title: "Điều chỉnh ánh sáng linh hoạt", desc: "Đón trọn nguồn sáng tự nhiên ấm áp" },
+      { title: "Đảm bảo riêng tư", desc: "Bảo vệ riêng tư kín đáo khi cần" },
+      { title: "Thiết kế hiện đại, tinh tế", desc: "Tạo không gian sống thoáng đãng, cảm hứng" },
+      { title: "Phù hợp nhiều không gian", desc: "Hoàn hảo cho phòng khách, phòng ăn, phòng đọc sách" }
+    ],
+    features: [
+      "1. Chất liệu cao cấp: Bền màu, dệt mịn, độ bền cao",
+      "2. Hiệu ứng ánh sáng: Dễ dàng điều chỉnh độ sáng theo nhu cầu",
+      "3. Vận hành êm ái: Cơ chế cuốn mượt mà, bền bỉ theo thời gian"
+    ],
     material: "Vải sợi dệt cản sáng Hàn Quốc & lưới Polyethylene độ bền cao",
     lightBlocking: "Lọc sáng 80%, cản tia UV 95%",
     fabricWidth: "280cm",
-    origin: "Hàn Quốc",
-    warranty: "Bảo hành 3 năm"
+    origin: "UniVeloria Chính Hãng",
+    warranty: "Bảo hành 3 năm chính hãng"
+  },
+  {
+    id: 11,
+    name: "Rèm Cầu Vồng River.E",
+    code: "UVL-CV-RE05",
+    category: "Rèm cầu vồng",
+    room: "Phòng khách / Văn phòng / Phòng ngủ",
+    style: "Hiện đại & Bền bỉ",
+    slogan: "Hiện Đại – Bền Bỉ – Đa Dạng Màu Sắc",
+    colors: ["#7cb9e8", "#dfcaa7", "#c2bcaf", "#7d8387", "#3e586d", "#54463d", "#6d7671", "#6b7a8d", "#9a7457", "#2c3b47"],
+    colorNames: [
+      "R 101 - Xanh dương nhạt",
+      "R 102 - Vàng kem cát",
+      "R 103 - Be xám nhạt",
+      "R 104 - Xám ghi sắc nét",
+      "R 105 - Xanh phiến đậm",
+      "R 106 - Nâu đất ấm",
+      "R 107 - Xám rêu",
+      "R 108 - Xanh xám khói",
+      "R 109 - Nâu caramel",
+      "R 110 - Xanh than đậm"
+    ],
+    price: 1150000,
+    oldPrice: 1350000,
+    rating: "4.9",
+    reviews: 88,
+    badge: "10 Màu",
+    unit: "m² hoàn thiện",
+    image: "/product/Rèm/Rèm Cầu Vòng/Rèm Cầu Vồng River.E.jpg",
+    mainImage: "/product/Rèm/Rèm Cầu Vòng/Rèm Cầu Vồng River.E.jpg",
+    subImages: [
+      "/product/Rèm/Rèm Cầu Vòng/Rèm Cầu Vồng River.E.jpg"
+    ],
+    description: "Dòng rèm cầu vồng River.E với chất liệu polyester cao cấp, điều chỉnh ánh sáng linh hoạt, phù hợp cho nhiều không gian nhà ở và văn phòng.",
+    fullDescription: "Rèm Cầu Vồng River.E là dòng sản phẩm rèm cầu vồng thế hệ mới với bộ sưu tập 10 mã màu phong phú (R 101 đến R 110). Chất liệu polyester cao cấp dệt chắc, bề mặt dệt mịn chống bám bụi và chống tia UV hiệu quả. Cấu trúc 2 lớp thông minh giúp điều chỉnh ánh sáng linh hoạt, phù hợp hoàn hảo cho cả nhà ở hiện đại và không gian làm việc chuyên nghiệp.",
+    highlights: [
+      { title: "Điều chỉnh ánh sáng linh hoạt", desc: "Chuyển đổi êm ái giữa lấy sáng và riêng tư" },
+      { title: "Độ bền cao, ít bám bụi", desc: "Chất liệu polyester cao cấp chống tĩnh điện" },
+      { title: "Chống nắng, chống UV", desc: "Bảo vệ sức khỏe và tuổi thọ nội thất" },
+      { title: "Phù hợp nhiều không gian", desc: "Dễ dàng phối hợp cho gia đình và văn phòng" }
+    ],
+    features: [
+      "1. Chất liệu polyester: Bề mặt mịn, dệt chắc, độ bền cao",
+      "2. Cấu trúc 2 lớp: Điều chỉnh ánh sáng, đảm bảo riêng tư",
+      "3. Vận hành êm ái: Cơ chế cuốn mượt mà, bền bỉ, dễ sử dụng"
+    ],
+    material: "100% Polyester dệt chắc, chống bám bụi và chống tia UV",
+    lightBlocking: "Cản sáng 90% - 95%, chống nắng cách nhiệt",
+    fabricWidth: "280cm",
+    origin: "UniVeloria Chính Hãng",
+    warranty: "Bảo hành 3 năm chính hãng"
   },
 
   // ==========================================
@@ -668,16 +775,16 @@ export const productsData = [
 ];
 
 export const productCategories = [
-  { id: "Tất cả", title: "Tất cả sản phẩm", subtitle: "20 thiết kế cao cấp", image: "/product/Rèm/Rèm Vải/Rèm Hai Lớp S-Fold Định Hình Cao Cấp.png" },
+  { id: "Tất cả", title: "Tất cả sản phẩm", subtitle: "21 thiết kế cao cấp", image: "/product/Rèm/Rèm Vải/Rèm Hai Lớp S-Fold Định Hình Cao Cấp.png" },
   { id: "Rèm vải", title: "Rèm vải cao cấp", subtitle: "Sang trọng, tinh tế", image: "/product/Rèm/Rèm Vải/Rèm Hai Lớp Thêu Lá Cao Cấp.png" },
-  { id: "Rèm cầu vồng", title: "Rèm cầu vồng", subtitle: "Hiện đại, linh hoạt", image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng GoldenWeave.png" },
+  { id: "Rèm cầu vồng", title: "Rèm cầu vồng", subtitle: "Hiện đại, linh hoạt", image: "/product/Rèm/Rèm Cầu Vòng/Rèm cầu vồng ModernStripe.jpg" },
   { id: "Rèm cuốn", title: "Rèm cuốn chống nắng", subtitle: "Gọn gàng, đa năng", image: "/product/Rèm/Rèm Cuốn/Mẫu Rèm Cuốn Moon.png" },
   { id: "Thanh rèm", title: "Thanh rèm thông minh", subtitle: "Êm ái, hiện đại", image: "/product/Thanh Rèm/UniVeloria Motion A25 Pro.png" }
 ];
 
 export const productCurtainTypes = [
   { name: "Rèm vải", count: 6 },
-  { name: "Rèm cầu vồng", count: 4 },
+  { name: "Rèm cầu vồng", count: 5 },
   { name: "Rèm cuốn", count: 8 },
   { name: "Thanh rèm", count: 2 }
 ];

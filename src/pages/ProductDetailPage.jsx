@@ -558,6 +558,16 @@ export function ProductDetailPage({
                     else if (product?.name?.includes('OfficePro')) targetStudioId = 'roller-officepro';
                     else if (product?.name?.includes('LivingLite')) targetStudioId = 'roller-livinglite';
                     else if (product?.name?.includes('CoastalLite')) targetStudioId = 'roller-coastallite';
+                else if (product?.name?.includes('ModernStripe')) targetStudioId = 'rainbow-modernstripe';
+                else if (product?.name?.includes('NordicRay')) targetStudioId = 'rainbow-nordicray';
+                else if (product?.name?.includes('SunnyView')) targetStudioId = 'rainbow-sunnyview';
+                else if (product?.name?.includes('River.E') || product?.name?.includes('River')) targetStudioId = 'rainbow-rivere';
+                else if (product?.name?.includes('GoldenWeave')) targetStudioId = 'rainbow-goldenweave';
+                    else if (product?.name?.includes('ModernStripe')) targetStudioId = 'rainbow-modernstripe';
+                    else if (product?.name?.includes('NordicRay')) targetStudioId = 'rainbow-nordicray';
+                    else if (product?.name?.includes('SunnyView')) targetStudioId = 'rainbow-sunnyview';
+                    else if (product?.name?.includes('River.E') || product?.name?.includes('River')) targetStudioId = 'rainbow-rivere';
+                    else if (product?.name?.includes('GoldenWeave')) targetStudioId = 'rainbow-goldenweave';
                     navigateTo('studio', targetStudioId);
                   }}
                 >
@@ -1459,6 +1469,11 @@ export function ProductDetailPage({
                 else if (product?.name?.includes('OfficePro')) targetStudioId = 'roller-officepro';
                 else if (product?.name?.includes('LivingLite')) targetStudioId = 'roller-livinglite';
                 else if (product?.name?.includes('CoastalLite')) targetStudioId = 'roller-coastallite';
+                else if (product?.name?.includes('ModernStripe')) targetStudioId = 'rainbow-modernstripe';
+                else if (product?.name?.includes('NordicRay')) targetStudioId = 'rainbow-nordicray';
+                else if (product?.name?.includes('SunnyView')) targetStudioId = 'rainbow-sunnyview';
+                else if (product?.name?.includes('River.E') || product?.name?.includes('River')) targetStudioId = 'rainbow-rivere';
+                else if (product?.name?.includes('GoldenWeave')) targetStudioId = 'rainbow-goldenweave';
                 navigateTo('studio', targetStudioId);
               }}
             >

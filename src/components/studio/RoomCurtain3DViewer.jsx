@@ -990,6 +990,108 @@ function applyRollerFabricMaterial(mesh, fabricId, colorHex) {
   }
 }
 
+// Texture cache for rainbow zebra textures
+const rainbowTextureCache = new Map();
+
+function createRainbowZebraTexture(colorHex, stripeStyle = 'standard', isBackLayer = false) {
+  const cacheKey = `${colorHex}_${stripeStyle}_${isBackLayer ? 'back' : 'front'}`;
+  if (rainbowTextureCache.has(cacheKey)) {
+    return rainbowTextureCache.get(cacheKey);
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  const cycleHeight = 64; // 8 cycles over 512px
+  const solidHeight = stripeStyle === 'wide' ? 42 : 38; // ~60% solid fabric band, ~40% sheer mesh
+  const sheerHeight = cycleHeight - solidHeight;
+  const offset = isBackLayer ? Math.floor(cycleHeight * 0.45) : 0;
+
+  // Background clear
+  ctx.clearRect(0, 0, 512, 512);
+
+  for (let y = 0; y < 512; y += cycleHeight) {
+    const startY = (y + offset) % 512;
+
+    // 1. Solid Fabric Band
+    ctx.save();
+    ctx.fillStyle = colorHex || '#cbae92';
+    ctx.fillRect(0, startY, 512, solidHeight);
+
+    // Micro horizontal & vertical fabric weave grain
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    for (let py = startY; py < startY + solidHeight; py += 3) {
+      ctx.fillRect(0, py, 512, 1);
+    }
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+    for (let px = 0; px < 512; px += 4) {
+      ctx.fillRect(px, startY, 1, solidHeight);
+    }
+
+    // Top & bottom subtle drop shadow along stripe edge for 3D depth
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+    ctx.fillRect(0, startY + solidHeight - 2, 512, 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.fillRect(0, startY, 512, 1.5);
+    ctx.restore();
+
+    // 2. Sheer Mesh / Voile Band (Transparent Netting)
+    const sheerStartY = (startY + solidHeight) % 512;
+
+    // Translucent sheer voile background
+    ctx.fillStyle = 'rgba(248, 248, 250, 0.22)';
+    ctx.fillRect(0, sheerStartY, 512, sheerHeight);
+
+    // Fine delicate mesh netting grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+    ctx.lineWidth = 1;
+    for (let mx = 0; mx < 512; mx += 8) {
+      ctx.beginPath();
+      ctx.moveTo(mx, sheerStartY);
+      ctx.lineTo(mx, sheerStartY + sheerHeight);
+      ctx.stroke();
+    }
+    for (let my = sheerStartY; my < sheerStartY + sheerHeight; my += 6) {
+      ctx.beginPath();
+      ctx.moveTo(0, my);
+      ctx.lineTo(512, my);
+      ctx.stroke();
+    }
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(1, 2.5); // Repeats vertically along full 2.5m drop
+  texture.needsUpdate = true;
+
+  rainbowTextureCache.set(cacheKey, texture);
+  return texture;
+}
+
+function applyRainbowFabricMaterial(mesh, colorHex, isBackLayer = false, stripeStyle = 'standard') {
+  if (!mesh) return;
+  const tex = createRainbowZebraTexture(colorHex, stripeStyle, isBackLayer);
+
+  if (mesh.material && mesh.material.isMeshStandardMaterial && mesh.material.map === tex) {
+    mesh.material.needsUpdate = true;
+  } else {
+    mesh.material = new THREE.MeshStandardMaterial({
+      map: tex,
+      transparent: true,
+      alphaTest: 0.015,
+      opacity: isBackLayer ? 0.92 : 0.98,
+      roughness: 0.75,
+      metalness: 0.02,
+      side: THREE.DoubleSide,
+      depthWrite: true
+    });
+    mesh.material.needsUpdate = true;
+  }
+}
+
 export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   roomImage,
   hasUploaded = false,
@@ -1042,6 +1144,12 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
   const customPvcWrapRef = useRef(null);
   const customPvcBottomRollerRef = useRef(null);
   const customPvcTopHemRef = useRef(null);
+  const customRainbowFrontFabricRef = useRef(null);
+  const customRainbowBackFabricRef = useRef(null);
+  const customRainbowBottomBarRef = useRef(null);
+  const customRainbowTopTubeRef = useRef(null);
+  const customRainbowPullChainRef = useRef(null);
+  const customRainbowTopHoodRef = useRef(null);
   const studioColorRef = useRef(studioColor);
   studioColorRef.current = studioColor;
   const activeFabricIdRef = useRef(activeFabricId);
@@ -1082,7 +1190,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       if (railingMeshRef.current) railingMeshRef.current.visible = true;
       if (railingTopBarRef.current) railingTopBarRef.current.visible = true;
       if (balconyFrameGroupRef.current) {
-        balconyFrameGroupRef.current.visible = (curtainType?.id !== 'roller-triptych' && curtainType?.id !== 'roller-quad' && curtainType?.id !== 'honeycomb' && curtainType?.id !== 'roman-linen' && !curtainType?.isPvc && curtainType?.id !== 'roller-linen' && !curtainType?.isRoller);
+        balconyFrameGroupRef.current.visible = (curtainType?.id !== 'roller-triptych' && curtainType?.id !== 'roller-quad' && curtainType?.id !== 'honeycomb' && curtainType?.id !== 'roman-linen' && !curtainType?.isPvc && curtainType?.id !== 'roller-linen' && !curtainType?.isRoller && !curtainType?.isRainbow);
       }
       if (wallMeshesRef.current) {
         wallMeshesRef.current.forEach((mesh) => {
@@ -1494,7 +1602,35 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
           customPvcBottomRollerRef.current.position.z += (0.05 - customPvcBottomRollerRef.current.position.z) * 0.1;
         }
       }
-        if (customRollerFabricRef.current) {
+
+    // 0B. For Rainbow / Zebra Blinds (Rèm Cầu Vồng 2 Lớp Sọc)
+    if (customRainbowFrontFabricRef.current) {
+      if (genericAssemblyRef.current) genericAssemblyRef.current.visible = false;
+      const unrollProgress = Math.max(0.015, 1.0 - ratio * 0.985);
+      const fullFabricH = 2.50;
+      const currentH = fullFabricH * unrollProgress;
+
+      customRainbowFrontFabricRef.current.scale.y = unrollProgress;
+      customRainbowFrontFabricRef.current.position.y = 1.26 - currentH * 0.5;
+      customRainbowFrontFabricRef.current.visible = true;
+
+      if (customRainbowBackFabricRef.current) {
+        customRainbowBackFabricRef.current.scale.y = unrollProgress;
+        customRainbowBackFabricRef.current.position.y = 1.26 - currentH * 0.5;
+        customRainbowBackFabricRef.current.visible = true;
+      }
+
+      if (customRainbowBottomBarRef.current) {
+        customRainbowBottomBarRef.current.position.y = 1.26 - currentH;
+        customRainbowBottomBarRef.current.visible = true;
+      }
+      if (customRainbowTopTubeRef.current) {
+        customRainbowTopTubeRef.current.rotation.x = -ratio * Math.PI * 8.0;
+      }
+      return;
+    }
+
+    if (customRollerFabricRef.current) {
       if (genericAssemblyRef.current) genericAssemblyRef.current.visible = false;
       // ratio = 0.0: Hạ rèm hết cỡ cản sáng (0% cuộn) - Phủ bì 100% full cửa sổ
       // ratio = 1.0: Cuộn tròn 100% quanh thanh cố định trên đỉnh
@@ -1562,7 +1698,7 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     if (!sceneRef.current || !customModelGroupRef.current || !genericAssemblyRef.current) return;
 
     if (balconyFrameGroupRef.current) {
-      balconyFrameGroupRef.current.visible = !hasUploaded && (curtainType?.id !== 'roller-triptych' && curtainType?.id !== 'roller-quad' && curtainType?.id !== 'honeycomb' && curtainType?.id !== 'roman-linen' && !curtainType?.isPvc && curtainType?.id !== 'roller-linen' && !curtainType?.isRoller);
+      balconyFrameGroupRef.current.visible = !hasUploaded && (curtainType?.id !== 'roller-triptych' && curtainType?.id !== 'roller-quad' && curtainType?.id !== 'honeycomb' && curtainType?.id !== 'roman-linen' && !curtainType?.isPvc && curtainType?.id !== 'roller-linen' && !curtainType?.isRoller && !curtainType?.isRainbow);
     }
 
     if (curtainType?.model3dUrl) {
@@ -1581,6 +1717,12 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       customRollerTopTubeRef.current = null;
       customRollerWrapRef.current = null;
       customRollerPullChainRef.current = null;
+      customRainbowFrontFabricRef.current = null;
+      customRainbowBackFabricRef.current = null;
+      customRainbowBottomBarRef.current = null;
+      customRainbowTopTubeRef.current = null;
+      customRainbowPullChainRef.current = null;
+      customRainbowTopHoodRef.current = null;
       customTriptychRef.current = { fabrics: [], bottomBars: [], topTubes: [] };
       customHoneycombFabricRef.current = null;
       customRomanFoldingGroupRef.current = null;
@@ -1681,9 +1823,23 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
                 customRollerWrapRef.current = child;
                 applyRollerFabricMaterial(child, activeFabricIdRef.current, studioColorRef.current);
               } else if (child.name === 'RollerPullChain') {
-              customRollerPullChainRef.current = child;
-            } else if (child.name === 'RollerTopTube') {
+                customRollerPullChainRef.current = child;
+              } else if (child.name === 'RollerTopTube') {
                 customRollerTopTubeRef.current = child;
+              } else if (child.name === 'RainbowFrontFabric') {
+                customRainbowFrontFabricRef.current = child;
+                applyRainbowFabricMaterial(child, studioColorRef.current, false, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+              } else if (child.name === 'RainbowBackFabric') {
+                customRainbowBackFabricRef.current = child;
+                applyRainbowFabricMaterial(child, studioColorRef.current, true, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+              } else if (child.name === 'RainbowBottomBar') {
+                customRainbowBottomBarRef.current = child;
+              } else if (child.name === 'RainbowTopTube') {
+                customRainbowTopTubeRef.current = child;
+              } else if (child.name === 'RainbowPullChain') {
+                customRainbowPullChainRef.current = child;
+              } else if (child.name === 'RainbowTopHood') {
+                customRainbowTopHoodRef.current = child;
               } else if (child.name.startsWith('RollerFabric_')) {
                 const panelId = child.name.split('_')[1];
                 let texUrl = '/assets/curtains/triptych-left-texture.jpg';
@@ -1815,6 +1971,12 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
           if (customRollerWrapRef.current) {
             applyRollerFabricMaterial(customRollerWrapRef.current, activeFabricIdRef.current, studioColorRef.current);
           }
+          if (customRainbowFrontFabricRef.current) {
+            applyRainbowFabricMaterial(customRainbowFrontFabricRef.current, studioColorRef.current, false, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+          }
+          if (customRainbowBackFabricRef.current) {
+            applyRainbowFabricMaterial(customRainbowBackFabricRef.current, studioColorRef.current, true, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+          }
           customTriptychRef.current?.fabrics?.forEach((f) => { if (f?.material?.color) f.material.color.set(initTargetColor); });
           customHoneycombEdgesRef.current.forEach((e) => { if (e?.material?.color) e.material.color.set(initTargetColor); });
           if (customHoneycombFabricRef.current?.material?.color) customHoneycombFabricRef.current.material.color.set(initTargetColor);
@@ -1901,6 +2063,12 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     }
     if (customRollerFabricRef.current) {
       applyRollerFabricMaterial(customRollerFabricRef.current, activeFabricId, studioColor);
+    }
+    if (customRainbowFrontFabricRef.current) {
+      applyRainbowFabricMaterial(customRainbowFrontFabricRef.current, studioColor, false, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+    }
+    if (customRainbowBackFabricRef.current) {
+      applyRainbowFabricMaterial(customRainbowBackFabricRef.current, studioColor, true, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
     }
     if (customTriptychRef.current && customTriptychRef.current.fabrics.length > 0) {
       customTriptychRef.current.fabrics.forEach((f) => {
@@ -2182,8 +2350,8 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
     glassMesh.position.set(0, actualCenterY, -0.17);
     balconyFrameGroup.add(glassMesh);
 
-    // Explicitly hide balcony frame if current curtain is 3-window triptych
-    balconyFrameGroup.visible = !hasUploaded && (curtainType?.id !== 'roller-triptych' && curtainType?.id !== 'roller-quad' && curtainType?.id !== 'honeycomb' && curtainType?.id !== 'roman-linen' && !curtainType?.isPvc && curtainType?.id !== 'roller-linen' && !curtainType?.isRoller);
+    // Explicitly hide balcony frame if current curtain is 3-window triptych or roller / rainbow
+    balconyFrameGroup.visible = !hasUploaded && (curtainType?.id !== 'roller-triptych' && curtainType?.id !== 'roller-quad' && curtainType?.id !== 'honeycomb' && curtainType?.id !== 'roman-linen' && !curtainType?.isPvc && curtainType?.id !== 'roller-linen' && !curtainType?.isRoller && !curtainType?.isRainbow);
 
     // 5E. Exterior Penthouse Terrace Balcony (Seen when orbiting 360° to the back!)
     const balconyGeo = new THREE.PlaneGeometry(16, 8);

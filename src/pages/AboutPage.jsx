@@ -169,8 +169,8 @@ export function AboutPage({ navigateTo }) {
       <section className="core-values-section" id="core-values">
         <div className="cv-container">
           <div className="core-values-header">
-            <div className="eyebrow">1.5.4 · GIÁ TRỊ CỐT LÕI <span /></div>
-            <h2>Giá Trị Cốt Lõi (Core Values)</h2>
+            <div className="eyebrow"> GIÁ TRỊ CỐT LÕI <span /></div>
+            <h2>Giá Trị Cốt Lõi</h2>
             <p>Nguyên tắc nền tảng định hình từng giải pháp, thuật toán AI và trải nghiệm khách hàng tại UniVeloria</p>
           </div>
 
