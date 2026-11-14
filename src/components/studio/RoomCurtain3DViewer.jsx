@@ -283,7 +283,10 @@ function createElogi1198TwillTexture(baseColorHex, isBump = false) {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(18, 18);
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 8;
+  texture.repeat.set(8, 8);
   return texture;
 }
 
@@ -333,7 +336,10 @@ function createElogi1206VelvetTexture(baseColorHex, isBump = false) {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(28, 28);
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 8;
+  texture.repeat.set(10, 10);
   return texture;
 }
 
@@ -423,7 +429,10 @@ function createElogi1230SlubLinenTexture(baseColorHex, isBump = false) {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(15, 15);
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 8;
+  texture.repeat.set(6, 6);
   return texture;
 }
 
@@ -438,21 +447,21 @@ function applyDrapeFabricMaterial(mesh, fabricId, colorHex) {
     bumpTex = createElogi1198TwillTexture(colorHex, true);
     roughness = 0.78;
     metalness = 0.02;
-    bumpScale = 0.08;
+    bumpScale = 0.18;
   } else if (fabricId === 'elogi-1206-1') {
     // Êm mịn như lụa nhung
     mapTex = createElogi1206VelvetTexture(colorHex, false);
     bumpTex = createElogi1206VelvetTexture(colorHex, true);
     roughness = 0.58;
     metalness = 0.06;
-    bumpScale = 0.02;
+    bumpScale = 0.04;
   } else {
     // elogi-1230-1: Vải Eco-friendly vân dệt hạt sắc nét
     mapTex = createElogi1230SlubLinenTexture(colorHex, false);
     bumpTex = createElogi1230SlubLinenTexture(colorHex, true);
     roughness = 0.94;
     metalness = 0.01;
-    bumpScale = 0.16;
+    bumpScale = 0.32;
   }
 
   if (mesh.material?.map && mesh.material.map !== mapTex) {
@@ -463,7 +472,7 @@ function applyDrapeFabricMaterial(mesh, fabricId, colorHex) {
   }
 
   mesh.material = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(colorHex),
+    color: new THREE.Color(0xffffff),
     map: mapTex,
     bumpMap: bumpTex,
     bumpScale: bumpScale,
@@ -493,45 +502,57 @@ function createHarmonyRibbedTexture(baseColorHex, isBump = false) {
     ctx.fillRect(0, 0, 512, 512);
   }
 
-  // Draw vertical ribbed cords (gân dọc định hình thẳng tắp)
-  const ribSpacing = 8;
-  const numRibs = 512 / ribSpacing;
+  // 10 prominent vertical corded ribs per tile (repeat 6 times -> ~60 distinct ribs across 3.54m curtain)
+  const numRibs = 10;
+  const ribStep = 512 / numRibs; // 51.2px per rib
 
   for (let i = 0; i < numRibs; i++) {
-    const x = i * ribSpacing;
+    const startX = i * ribStep;
+    const ribWidth = ribStep * 0.72; // ~37px rib body
+    const grooveWidth = ribStep - ribWidth; // ~14px groove
 
-    // Left ridge highlight
-    ctx.beginPath();
-    ctx.moveTo(x + 1, 0);
-    ctx.lineTo(x + 1, 512);
-    ctx.lineWidth = 2.2;
-    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.55)' : 'rgba(255, 255, 255, 0.22)';
-    ctx.stroke();
+    // Shading gradient across each cylindrical rib
+    const ribGrad = ctx.createLinearGradient(startX, 0, startX + ribWidth, 0);
+    if (isBump) {
+      ribGrad.addColorStop(0.0, '#303030'); // deep shadow edge
+      ribGrad.addColorStop(0.25, '#d0d0d0'); // rising flank
+      ribGrad.addColorStop(0.5, '#ffffff'); // bright crest highlight
+      ribGrad.addColorStop(0.8, '#b0b0b0'); // falling flank
+      ribGrad.addColorStop(1.0, '#1a1a1a'); // dark groove
+    } else {
+      ribGrad.addColorStop(0.0, 'rgba(0, 0, 0, 0.40)');
+      ribGrad.addColorStop(0.25, 'rgba(255, 255, 255, 0.20)');
+      ribGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.45)');
+      ribGrad.addColorStop(0.8, 'rgba(0, 0, 0, 0.15)');
+      ribGrad.addColorStop(1.0, 'rgba(0, 0, 0, 0.60)');
+    }
 
-    // Center crown
-    ctx.beginPath();
-    ctx.moveTo(x + 3, 0);
-    ctx.lineTo(x + 3, 512);
-    ctx.lineWidth = 1.6;
-    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.28)' : 'rgba(255, 255, 255, 0.12)';
-    ctx.stroke();
+    ctx.fillStyle = ribGrad;
+    ctx.fillRect(startX, 0, ribWidth, 512);
 
-    // Right crevice shadow (rãnh đổ bóng tạo độ sâu 3D cho gân dọc)
-    ctx.beginPath();
-    ctx.moveTo(x + 5, 0);
-    ctx.lineTo(x + 5, 512);
-    ctx.lineWidth = 2.0;
-    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.65)' : 'rgba(0, 0, 0, 0.25)';
-    ctx.stroke();
+    // Deep crevice groove between ribs
+    ctx.fillStyle = isBump ? '#101010' : 'rgba(0, 0, 0, 0.65)';
+    ctx.fillRect(startX + ribWidth, 0, grooveWidth, 512);
+
+    // Inner fine vertical micro-cords within each rib
+    for (let c = 1; c <= 3; c++) {
+      const cx = startX + (ribWidth / 4) * c;
+      ctx.beginPath();
+      ctx.moveTo(cx, 0);
+      ctx.lineTo(cx, 512);
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.18)';
+      ctx.stroke();
+    }
   }
 
-  // Subtle horizontal weft binder threads
-  for (let y = 0; y < 512; y += 6) {
+  // Cross binder thread lines
+  for (let y = 0; y < 512; y += 12) {
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(512, y);
     ctx.lineWidth = 0.8;
-    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.08)';
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.12)';
     ctx.stroke();
   }
 
@@ -539,7 +560,10 @@ function createHarmonyRibbedTexture(baseColorHex, isBump = false) {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(22, 22);
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 8;
+  texture.repeat.set(6, 4);
   return texture;
 }
 
@@ -558,67 +582,67 @@ function createMelangeTexture(baseColorHex, isBump = false) {
     ctx.fillRect(0, 0, 512, 512);
   }
 
-  // Cross-weave base grid (warp & weft)
-  const spacing = 4;
-  for (let x = 0; x < 512; x += spacing) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, 512);
-    ctx.lineWidth = 1.0;
-    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.10)';
-    ctx.stroke();
-  }
-  for (let y = 0; y < 512; y += spacing) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(512, y);
-    ctx.lineWidth = 1.0;
-    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.22)' : 'rgba(0, 0, 0, 0.12)';
-    ctx.stroke();
+  // Distinct checkerboard weave grid (32x32 cells)
+  const cellSize = 16;
+  for (let y = 0; y < 512; y += cellSize) {
+    for (let x = 0; x < 512; x += cellSize) {
+      const isAlt = ((x / cellSize) + (y / cellSize)) % 2 === 0;
+
+      // Checkerboard warp & weft alternation
+      if (isBump) {
+        ctx.fillStyle = isAlt ? '#b5b5b5' : '#4d4d4d';
+        ctx.fillRect(x, y, cellSize - 2, cellSize - 2);
+      } else {
+        ctx.fillStyle = isAlt ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 0, 0, 0.22)';
+        ctx.fillRect(x, y, cellSize - 2, cellSize - 2);
+      }
+
+      // Border groove
+      ctx.strokeStyle = isBump ? '#202020' : 'rgba(0, 0, 0, 0.40)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(x, y, cellSize, cellSize);
+    }
   }
 
-  // Spun heathered fiber slurs (sợi xước hoa râm đa sắc tố)
-  const imgData = ctx.getImageData(0, 0, 512, 512);
-  const data = imgData.data;
-
-  let seed = 1337;
+  // Abundant multi-tone heathered fiber flecks (lấm tấm hoa râm xước 2 tông sáng/tối)
+  let seed = 9182;
   function rnd() {
     seed = (seed * 16807) % 2147483647;
     return (seed - 1) / 2147483646;
   }
 
-  for (let k = 0; k < 2400; k++) {
-    const rx = Math.floor(rnd() * 508);
-    const ry = Math.floor(rnd() * 508);
+  for (let k = 0; k < 1200; k++) {
+    const fx = Math.floor(rnd() * 500) + 4;
+    const fy = Math.floor(rnd() * 500) + 4;
+    const fLen = 6 + Math.floor(rnd() * 12);
     const isLight = rnd() > 0.45;
     const isHoriz = rnd() > 0.5;
-    const len = 3 + Math.floor(rnd() * 4);
-    const val = isLight ? (40 + rnd() * 45) : (-40 - rnd() * 45);
 
-    for (let l = 0; l < len; l++) {
-      const px = isHoriz ? rx + l : rx;
-      const py = isHoriz ? ry : ry + l;
-      if (px < 512 && py < 512) {
-        const idx = (py * 512 + px) * 4;
-        if (isBump) {
-          data[idx] = Math.max(0, Math.min(255, data[idx] + val * 0.8));
-          data[idx + 1] = Math.max(0, Math.min(255, data[idx + 1] + val * 0.8));
-          data[idx + 2] = Math.max(0, Math.min(255, data[idx + 2] + val * 0.8));
-        } else {
-          data[idx] = Math.max(0, Math.min(255, data[idx] + val * 0.5));
-          data[idx + 1] = Math.max(0, Math.min(255, data[idx + 1] + val * 0.5));
-          data[idx + 2] = Math.max(0, Math.min(255, data[idx + 2] + val * 0.5));
-        }
-      }
+    ctx.beginPath();
+    if (isHoriz) {
+      ctx.moveTo(fx, fy);
+      ctx.lineTo(fx + fLen, fy);
+    } else {
+      ctx.moveTo(fx, fy);
+      ctx.lineTo(fx, fy + fLen);
     }
+    ctx.lineWidth = 2.4;
+    if (isBump) {
+      ctx.strokeStyle = isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)';
+    } else {
+      ctx.strokeStyle = isLight ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.55)';
+    }
+    ctx.stroke();
   }
-  ctx.putImageData(imgData, 0, 0);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(18, 18);
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 8;
+  texture.repeat.set(8, 8);
   return texture;
 }
 
@@ -637,7 +661,7 @@ function createMoonMatteTexture(baseColorHex, isBump = false) {
     ctx.fillRect(0, 0, 512, 512);
   }
 
-  // Soft micro-pore texture (vân trứng mịn lì mờ đều đặn)
+  // Smooth uniform surface with ultra-delicate micro-sheen (trơn lì mờ như mặt trăng, không có gân thô)
   const imgData = ctx.getImageData(0, 0, 512, 512);
   const data = imgData.data;
 
@@ -648,16 +672,16 @@ function createMoonMatteTexture(baseColorHex, isBump = false) {
   }
 
   for (let i = 0; i < data.length; i += 4) {
-    const n = (rnd() - 0.5) * 14;
+    const n = (rnd() - 0.5) * 6; // Very low amplitude noise for silky smooth finish
     if (isBump) {
-      const b = Math.max(0, Math.min(255, 128 + n * 1.2));
+      const b = Math.max(0, Math.min(255, 128 + n * 0.4));
       data[i] = b;
       data[i + 1] = b;
       data[i + 2] = b;
     } else {
-      data[i] = Math.max(0, Math.min(255, data[i] + n * 0.35));
-      data[i + 1] = Math.max(0, Math.min(255, data[i] + n * 0.35));
-      data[i + 2] = Math.max(0, Math.min(255, data[i] + n * 0.35));
+      data[i] = Math.max(0, Math.min(255, data[i] + n * 0.2));
+      data[i + 1] = Math.max(0, Math.min(255, data[i] + n * 0.2));
+      data[i + 2] = Math.max(0, Math.min(255, data[i] + n * 0.2));
     }
   }
   ctx.putImageData(imgData, 0, 0);
@@ -666,11 +690,14 @@ function createMoonMatteTexture(baseColorHex, isBump = false) {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(10, 10);
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 8;
+  texture.repeat.set(4, 4);
   return texture;
 }
 
-// 4. Mẫu Rèm Cuốn Silvia: Vải dệt sợi mềm mại dày dặn (Soft woven linen texture)
+// 4. Mẫu Rèm Cuốn Silvia: Vải dệt sợi mềm mại dày dặn, thớ xước linen tự nhiên (Soft woven slub linen)
 function createSilviaSoftTexture(baseColorHex, isBump = false) {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
@@ -685,53 +712,78 @@ function createSilviaSoftTexture(baseColorHex, isBump = false) {
     ctx.fillRect(0, 0, 512, 512);
   }
 
-  // Soft organic textile weave (sợi đan mềm mại)
-  const threadSpacing = 6;
-  const numThreads = 512 / threadSpacing;
+  // Natural organic slub linen striations (thớ xước sợi lanh tự nhiên cả ngang lẫn dọc)
+  let seed = 3721;
+  function rnd() {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  }
 
-  for (let i = 0; i < numThreads; i++) {
-    const x = i * threadSpacing;
+  // Horizontal slub yarn striations
+  for (let y = 4; y < 508; y += 18 + Math.floor(rnd() * 14)) {
+    const lineW = 3.5 + rnd() * 4.0;
     ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, 512);
-    ctx.lineWidth = 2.0;
-    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.32)' : 'rgba(255, 255, 255, 0.16)';
+    ctx.moveTo(0, y);
+    ctx.bezierCurveTo(170, y + (rnd() - 0.5) * 6, 340, y + (rnd() - 0.5) * 6, 512, y);
+    ctx.lineWidth = lineW;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.65)' : 'rgba(255, 255, 255, 0.38)';
     ctx.stroke();
 
+    // Shadow underneath horizontal slub
     ctx.beginPath();
-    ctx.moveTo(x + 2, 0);
-    ctx.lineTo(x + 2, 512);
-    ctx.lineWidth = 1.0;
-    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.38)' : 'rgba(0, 0, 0, 0.14)';
+    ctx.moveTo(0, y + lineW * 0.8);
+    ctx.lineTo(512, y + lineW * 0.8);
+    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.65)' : 'rgba(0, 0, 0, 0.32)';
     ctx.stroke();
   }
 
-  for (let j = 0; j < numThreads; j++) {
-    const y = j * threadSpacing;
+  // Vertical warp yarn striations
+  for (let x = 4; x < 508; x += 18 + Math.floor(rnd() * 14)) {
+    const lineW = 3.0 + rnd() * 3.5;
     ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(512, y);
-    ctx.lineWidth = 2.0;
-    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.30)' : 'rgba(255, 255, 255, 0.15)';
+    ctx.moveTo(x, 0);
+    ctx.bezierCurveTo(x + (rnd() - 0.5) * 6, 170, x + (rnd() - 0.5) * 6, 340, x, 512);
+    ctx.lineWidth = lineW;
+    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.55)' : 'rgba(255, 255, 255, 0.32)';
     ctx.stroke();
 
+    // Shadow right of vertical slub
     ctx.beginPath();
-    ctx.moveTo(0, y + 2);
-    ctx.lineTo(512, y + 2);
-    ctx.lineWidth = 1.0;
-    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.36)' : 'rgba(0, 0, 0, 0.14)';
+    ctx.moveTo(x + lineW * 0.8, 0);
+    ctx.lineTo(x + lineW * 0.8, 512);
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.58)' : 'rgba(0, 0, 0, 0.28)';
     ctx.stroke();
+  }
+
+  // Organic slub knots (nốt dệt sần tự nhiên)
+  for (let k = 0; k < 60; k++) {
+    const kx = Math.floor(rnd() * 500) + 6;
+    const ky = Math.floor(rnd() * 500) + 6;
+    ctx.beginPath();
+    ctx.arc(kx, ky, 3.2, 0, Math.PI * 2);
+    ctx.fillStyle = isBump ? '#ffffff' : 'rgba(255, 255, 255, 0.50)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(kx + 1.5, ky + 1.5, 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = isBump ? '#1a1a1a' : 'rgba(0, 0, 0, 0.40)';
+    ctx.fill();
   }
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(16, 16);
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 8;
+  texture.repeat.set(6, 6);
   return texture;
 }
 
-// 5. Mẫu Rèm Cuốn Sunny: Vải dệt thô sợi canvas đan khít dày dặn (Heavy canvas weave)
+// 5. Mẫu Rèm Cuốn Sunny: Vải canvas dệt thô đan khít dày dặn (Heavy canvas basketweave)
 function createSunnyCanvasTexture(baseColorHex, isBump = false) {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
@@ -746,64 +798,87 @@ function createSunnyCanvasTexture(baseColorHex, isBump = false) {
     ctx.fillRect(0, 0, 512, 512);
   }
 
-  // Heavy rugged canvas basketweave with deep crevices
-  const step = 9;
-  const numSteps = 512 / step;
+  // Heavy square basketweave grid: 12 large woven yarn blocks across 512px
+  const blockSize = 512 / 12; // ~42.6px per block
 
-  for (let i = 0; i < numSteps; i++) {
-    const x = i * step;
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, 512);
-    ctx.lineWidth = 3.6;
-    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.65)' : 'rgba(255, 255, 255, 0.26)';
-    ctx.stroke();
+  for (let row = 0; row < 12; row++) {
+    for (let col = 0; col < 12; col++) {
+      const bx = col * blockSize;
+      const by = row * blockSize;
+      const isWarpRaised = (row + col) % 2 === 0;
 
-    ctx.beginPath();
-    ctx.moveTo(x + 3.2, 0);
-    ctx.lineTo(x + 3.2, 512);
-    ctx.lineWidth = 1.6;
-    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.32)';
-    ctx.stroke();
-  }
+      if (isWarpRaised) {
+        // Vertical yarn bundle raised
+        const grad = ctx.createLinearGradient(bx, by, bx + blockSize, by);
+        if (isBump) {
+          grad.addColorStop(0.0, '#101010'); // Deep crevice
+          grad.addColorStop(0.2, '#c0c0c0');
+          grad.addColorStop(0.5, '#ffffff'); // Raised crown
+          grad.addColorStop(0.8, '#a0a0a0');
+          grad.addColorStop(1.0, '#101010'); // Deep crevice
+        } else {
+          grad.addColorStop(0.0, 'rgba(0, 0, 0, 0.65)');
+          grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.25)');
+          grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.55)');
+          grad.addColorStop(0.8, 'rgba(0, 0, 0, 0.20)');
+          grad.addColorStop(1.0, 'rgba(0, 0, 0, 0.70)');
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(bx + 1, by + 1, blockSize - 2, blockSize - 2);
 
-  for (let j = 0; j < numSteps; j++) {
-    const y = j * step;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(512, y);
-    ctx.lineWidth = 3.6;
-    ctx.strokeStyle = isBump ? 'rgba(255, 255, 255, 0.60)' : 'rgba(255, 255, 255, 0.24)';
-    ctx.stroke();
+        // Sub-strands inside bundle
+        for (let s = 1; s <= 2; s++) {
+          ctx.beginPath();
+          ctx.moveTo(bx + (blockSize / 3) * s, by);
+          ctx.lineTo(bx + (blockSize / 3) * s, by + blockSize);
+          ctx.lineWidth = 1.4;
+          ctx.strokeStyle = isBump ? '#202020' : 'rgba(0, 0, 0, 0.35)';
+          ctx.stroke();
+        }
+      } else {
+        // Horizontal yarn bundle raised
+        const grad = ctx.createLinearGradient(bx, by, bx, by + blockSize);
+        if (isBump) {
+          grad.addColorStop(0.0, '#101010'); // Deep crevice
+          grad.addColorStop(0.2, '#c0c0c0');
+          grad.addColorStop(0.5, '#ffffff'); // Raised crown
+          grad.addColorStop(0.8, '#a0a0a0');
+          grad.addColorStop(1.0, '#101010'); // Deep crevice
+        } else {
+          grad.addColorStop(0.0, 'rgba(0, 0, 0, 0.65)');
+          grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.25)');
+          grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.55)');
+          grad.addColorStop(0.8, 'rgba(0, 0, 0, 0.20)');
+          grad.addColorStop(1.0, 'rgba(0, 0, 0, 0.70)');
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(bx + 1, by + 1, blockSize - 2, blockSize - 2);
 
-    ctx.beginPath();
-    ctx.moveTo(0, y + 3.2);
-    ctx.lineTo(512, y + 3.2);
-    ctx.lineWidth = 1.6;
-    ctx.strokeStyle = isBump ? 'rgba(0, 0, 0, 0.78)' : 'rgba(0, 0, 0, 0.34)';
-    ctx.stroke();
-  }
+        // Sub-strands inside bundle
+        for (let s = 1; s <= 2; s++) {
+          ctx.beginPath();
+          ctx.moveTo(bx, by + (blockSize / 3) * s);
+          ctx.lineTo(bx + blockSize, by + (blockSize / 3) * s);
+          ctx.lineWidth = 1.4;
+          ctx.strokeStyle = isBump ? '#202020' : 'rgba(0, 0, 0, 0.35)';
+          ctx.stroke();
+        }
+      }
 
-  // Tactile knots & slub fibers
-  for (let k = 0; k < 60; k++) {
-    const kx = ((k * 157) % 500) + 6;
-    const ky = ((k * 223) % 500) + 6;
-    ctx.beginPath();
-    ctx.arc(kx, ky, 2.8, 0, Math.PI * 2);
-    ctx.fillStyle = isBump ? 'rgba(255, 255, 255, 0.75)' : 'rgba(255, 255, 255, 0.30)';
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(kx + 1.2, ky + 1.2, 1.4, 0, Math.PI * 2);
-    ctx.fillStyle = isBump ? 'rgba(0, 0, 0, 0.60)' : 'rgba(0, 0, 0, 0.22)';
-    ctx.fill();
+      // Deep crosshair pit at intersection corners
+      ctx.fillStyle = isBump ? '#000000' : 'rgba(0, 0, 0, 0.85)';
+      ctx.fillRect(bx - 1.5, by - 1.5, 3, 3);
+    }
   }
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(14, 14);
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 8;
+  texture.repeat.set(6, 6);
   return texture;
 }
 
@@ -815,40 +890,39 @@ function applyRollerFabricMaterial(mesh, fabricId, colorHex) {
   if (fabricId === 'roller-harmony-2' || fabricId === 'harmony-2') {
     mapTex = createHarmonyRibbedTexture(colorHex, false);
     bumpTex = createHarmonyRibbedTexture(colorHex, true);
-    roughness = 0.74;
+    roughness = 0.68;
     metalness = 0.02;
-    bumpScale = 0.12;
+    bumpScale = 0.38;
   } else if (fabricId === 'roller-malange-1' || fabricId === 'malange-1') {
     mapTex = createMelangeTexture(colorHex, false);
     bumpTex = createMelangeTexture(colorHex, true);
     roughness = 0.82;
     metalness = 0.01;
-    bumpScale = 0.09;
+    bumpScale = 0.28;
   } else if (fabricId === 'roller-moon' || fabricId === 'moon') {
     mapTex = createMoonMatteTexture(colorHex, false);
     bumpTex = createMoonMatteTexture(colorHex, true);
-    roughness = 0.58;
-    metalness = 0.03;
-    bumpScale = 0.018;
+    roughness = 0.42; // Satin eggshell reflection
+    metalness = 0.04;
+    bumpScale = 0.015;
   } else if (fabricId === 'roller-silvia' || fabricId === 'silvia') {
     mapTex = createSilviaSoftTexture(colorHex, false);
     bumpTex = createSilviaSoftTexture(colorHex, true);
-    roughness = 0.80;
-    metalness = 0.02;
-    bumpScale = 0.08;
+    roughness = 0.88;
+    metalness = 0.01;
+    bumpScale = 0.32;
   } else if (fabricId === 'roller-sunny' || fabricId === 'sunny') {
     mapTex = createSunnyCanvasTexture(colorHex, false);
     bumpTex = createSunnyCanvasTexture(colorHex, true);
-    roughness = 0.95;
+    roughness = 0.98;
     metalness = 0.01;
-    bumpScale = 0.20;
+    bumpScale = 0.52;
   } else {
-    // Default fallback to Harmony 2
     mapTex = createHarmonyRibbedTexture(colorHex, false);
     bumpTex = createHarmonyRibbedTexture(colorHex, true);
-    roughness = 0.74;
+    roughness = 0.68;
     metalness = 0.02;
-    bumpScale = 0.12;
+    bumpScale = 0.38;
   }
 
   if (mesh.material?.map && mesh.material.map !== mapTex) {
@@ -859,7 +933,7 @@ function applyRollerFabricMaterial(mesh, fabricId, colorHex) {
   }
 
   mesh.material = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(colorHex),
+    color: new THREE.Color(0xffffff), // Crucial fix: do not double-darken the painted canvas!
     map: mapTex,
     bumpMap: bumpTex,
     bumpScale: bumpScale,

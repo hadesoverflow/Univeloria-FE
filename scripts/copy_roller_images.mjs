@@ -45,3 +45,4 @@ for (const item of mappings) {
   }
 }
 console.log('Finished copying all 5 roller catalogue images.');
+

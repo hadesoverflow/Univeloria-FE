@@ -200,21 +200,14 @@ export function StudioPage({
   }, [availableFabricSamples, activeFabricId]);
 
   // Synchronize fabric sample when curtain type changes
+  const prevCurtainTypeIdRef = useRef(currentType?.id);
   useEffect(() => {
-    if (isRollerCurtain) {
-      if (!activeFabricId.startsWith('roller-')) {
-        const nextId = currentType?.defaultFabricId || 'roller-harmony-2';
-        setActiveFabricId(nextId);
-        const f = rollerCurtainSamples.find(item => item.id === nextId);
-        if (f) setStudioColor(f.defaultColor);
-      }
-    } else {
-      if (activeFabricId.startsWith('roller-')) {
-        const nextId = currentType?.defaultFabricId || 'elogi-1198-2';
-        setActiveFabricId(nextId);
-        const f = fabricCurtainSamples.find(item => item.id === nextId);
-        if (f) setStudioColor(f.defaultColor);
-      }
+    if (prevCurtainTypeIdRef.current !== currentType?.id) {
+      prevCurtainTypeIdRef.current = currentType?.id;
+      const nextId = currentType?.defaultFabricId || (isRollerCurtain ? 'roller-harmony-2' : 'elogi-1198-2');
+      setActiveFabricId(nextId);
+      const f = fabricSamples.find(item => item.id === nextId);
+      if (f) setStudioColor(f.defaultColor);
     }
   }, [currentType?.id, isRollerCurtain]);
 
