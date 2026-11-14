@@ -23660,6 +23660,69 @@ button:active:not(:disabled),
   text-decoration: underline !important;
 }
 
+/* Panel 3 Compact Pagination (Max 5 items/page) */
+.panel3-pagination {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  margin-top: 12px !important;
+  padding: 10px 0 6px !important;
+  border-top: 1px dashed rgba(23, 51, 82, 0.12) !important;
+}
+
+.panel3-page-numbers {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.panel3-page-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(23, 51, 82, 0.16) !important;
+  background: #FFFFFF !important;
+  color: #173352 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.panel3-page-btn.num-btn {
+  width: 30px !important;
+  height: 30px !important;
+  padding: 0 !important;
+}
+
+.panel3-page-btn.nav-btn {
+  width: 30px !important;
+  height: 30px !important;
+  padding: 0 !important;
+}
+
+.panel3-page-btn:hover:not(:disabled) {
+  border-color: #173352 !important;
+  background: #F4F0E8 !important;
+  transform: translateY(-1px) !important;
+}
+
+.panel3-page-btn.active {
+  background: #173352 !important;
+  color: #FEF3E3 !important;
+  border-color: #173352 !important;
+  box-shadow: 0 2px 8px rgba(23, 51, 82, 0.25) !important;
+}
+
+.panel3-page-btn:disabled {
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+  border-color: rgba(23, 51, 82, 0.08) !important;
+  background: #FAF9F6 !important;
+}
+
 /* ==========================================================================
    STUDIO 3D FULLSCREEN & UNIFIED SETTINGS (WHITE-NAVY THEME)
    ========================================================================== */

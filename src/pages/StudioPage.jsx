@@ -1221,7 +1221,7 @@ export function StudioPage({
             </div>
 
             <div className="panel3-card-list">
-              {filteredCurtainTypes.map((item) => {
+              {paginatedCurtainTypes.map((item) => {
                 const isSelected = activeType === item.id;
                 return (
                   <div
@@ -1259,6 +1259,43 @@ export function StudioPage({
                 );
               })}
             </div>
+
+            {totalCurtainPages > 1 && (
+              <div className="panel3-pagination">
+                <button
+                  type="button"
+                  className="panel3-page-btn nav-btn"
+                  disabled={curtainPage === 1}
+                  onClick={() => setCurtainPage((p) => Math.max(1, p - 1))}
+                  title="Trang trước"
+                >
+                  <ChevronLeft size={14} />
+                </button>
+
+                <div className="panel3-page-numbers">
+                  {Array.from({ length: totalCurtainPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      className={`panel3-page-btn num-btn ${curtainPage === pageNum ? 'active' : ''}`}
+                      onClick={() => setCurtainPage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  className="panel3-page-btn nav-btn"
+                  disabled={curtainPage === totalCurtainPages}
+                  onClick={() => setCurtainPage((p) => Math.min(totalCurtainPages, p + 1))}
+                  title="Trang sau"
+                >
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            )}
           </div>
 
           <a
