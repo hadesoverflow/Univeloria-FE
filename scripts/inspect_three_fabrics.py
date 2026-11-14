@@ -50,3 +50,4 @@ for name, fname in files.items():
     bot.save(os.path.join(out_dir, f"{name}_palette.png"))
 
 print("Extracted all crops successfully!")
+

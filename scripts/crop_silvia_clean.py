@@ -11,3 +11,4 @@ img = Image.open(os.path.join(folder, fname))
 clean_silv = img.crop((150, 190, 350, 340))
 clean_silv.save(os.path.join(out_dir, "clean_silvia.png"))
 print("Saved clean_silvia.png!")
+

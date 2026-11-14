@@ -29,3 +29,4 @@ s92_inner = img_s.crop((215, 220, 325, 295))
 s92_inner.save(os.path.join(out_dir, "s92_inner.png"))
 
 print("Cropped inners!")
+

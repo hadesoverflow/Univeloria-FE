@@ -81,3 +81,4 @@ for name, p in fabrics.items():
     cv2.imwrite(f"{out_dir}/tiled_{name}_2x2.png", tiled_albedo)
 
 print("Seamless textures generated!")
+

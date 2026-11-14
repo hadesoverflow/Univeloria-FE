@@ -29,3 +29,4 @@ s_patch = img_s.crop((195, 205, 340, 305))
 s_patch.save(os.path.join(out_dir, "s_patch_clean.png"))
 
 print("Saved clean patches!")
+

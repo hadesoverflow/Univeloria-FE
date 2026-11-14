@@ -30,3 +30,4 @@ for name, fname in all_files.items():
     c2.save(os.path.join(out_dir, f"{name}_droplet.png"))
 
 print("Cropped all 5 fabrics!")
+

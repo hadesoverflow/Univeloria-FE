@@ -42,3 +42,4 @@ sunny_crop = img_sunny.crop((235, 220, 325, 280))
 sunny_crop.save(os.path.join(out_dir, "clean_sunny.png"))
 
 print("Cropped all 5 clean swatches!")
+

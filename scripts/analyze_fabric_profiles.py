@@ -27,3 +27,4 @@ print(f"Sunny mean: {np.mean(s_img):.1f}, min: {np.min(s_img)}, max: {np.max(s_i
 s_prof_x = np.mean(s_img, axis=0)
 s_prof_y = np.mean(s_img, axis=1)
 print(f"Sunny std x: {np.std(s_prof_x):.2f}, std y: {np.std(s_prof_y):.2f}")
+

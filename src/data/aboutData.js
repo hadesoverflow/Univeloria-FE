@@ -1,7 +1,7 @@
 export const aboutStory = {
   eyebrow: "1.5.1 · GIỚI THIỆU THƯƠNG HIỆU",
   sectionCode: "1.5.1",
-  title: "1.5.1. Mô tả sản phẩm và dịch vụ",
+  title: "Mô tả sản phẩm và dịch vụ",
   quote: "A Beautiful Space, A Better You.",
   p1: "UniVeloria là nền tảng thương mại điện tử trong lĩnh vực nội thất và không gian sống, lấy rèm cửa custom làm sản phẩm cốt lõi và từng bước mở rộng sang các sản phẩm hỗ trợ hoàn thiện không gian. Điểm khác biệt của UniVeloria nằm ở việc kết hợp AI và công nghệ trực quan hóa 3D để hỗ trợ khách hàng lựa chọn sản phẩm phù hợp với chính căn phòng của mình.",
   p2: "Hệ sinh thái UniVeloria gồm bốn thành phần chính: VELORIA 3D Studio hỗ trợ trực quan hóa sản phẩm trong không gian; VELO AI Stylist tư vấn phong cách, màu sắc và sản phẩm phù hợp; Smart Order Platform hỗ trợ quá trình đặt rèm custom trực tuyến; và Eco-Tech Supply Chain kết nối việc đặt hàng với sản xuất, đo đạc và lắp đặt theo nhu cầu. Các thành phần này tạo thành một hành trình liền mạch từ tư vấn, xem trước phương án đến đặt hàng và hoàn thiện sản phẩm.",
@@ -32,17 +32,17 @@ export const aboutStory = {
 export const aboutMissionVision = {
   vision: {
     sectionCode: "1.5.2",
-    tag: "1.5.2 · TẦM NHÌN",
+    tag: "TẦM NHÌN",
     subTag: "Vision",
-    title: "1.5.2. Tầm nhìn (Vision)",
+    title: "Tầm nhìn (Vision)",
     highlight: "Nền tảng hệ sinh thái nội thất thông minh hàng đầu Đông Nam Á",
     content: "UniVeloria hướng tới trở thành nền tảng hệ sinh thái nội thất thông minh hàng đầu Đông Nam Á, ứng dụng AI và 3D để giúp khách hàng hoàn thiện không gian sống theo nhu cầu, phong cách và cá tính riêng. Thương hiệu hướng đến việc biến công nghệ thành công cụ hỗ trợ khách hàng đưa ra quyết định nội thất dễ dàng và tự tin hơn."
   },
   mission: {
     sectionCode: "1.5.3",
-    tag: "1.5.3 · SỨ MỆNH",
+    tag: "SỨ MỆNH",
     subTag: "Mission",
-    title: "1.5.3. Sứ mệnh (Mission)",
+    title: "Sứ mệnh (Mission)",
     highlight: "Giảm rào cản trực quan trong mua sắm nội thất",
     content: "UniVeloria hướng tới giảm rào cản trực quan trong quá trình mua sắm nội thất bằng cách kết hợp AI hỗ trợ tư vấn với công nghệ 3D giúp khách hàng xem trước phương án trong chính không gian của mình. Qua đó, thương hiệu giúp khách hàng giảm sự phụ thuộc vào tưởng tượng, lựa chọn sản phẩm phù hợp hơn và hạn chế cảm giác hối tiếc sau khi mua."
   }

@@ -124,3 +124,4 @@ s = gen_sunny()
 s.save(os.path.join(out_dir, "test_sunny_diffuse.png"))
 
 print("Generated all 3 test diffuse textures!")
+

@@ -15,3 +15,4 @@ for name, fname in all_files.items():
     img = Image.open(p)
     W, H = img.size
     print(f"{name}: orig size {W}x{H}")
+

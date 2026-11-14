@@ -118,7 +118,7 @@ export function AboutPage({ navigateTo }) {
       <section className="mission-vision-section" id="mission-vision">
         <div className="mv-container">
           <div className="mv-header">
-            <div className="eyebrow">1.5.2 & 1.5.3 · TẦM NHÌN & SỨ MỆNH <span /></div>
+            <div className="eyebrow"> TẦM NHÌN & SỨ MỆNH <span /></div>
             <h2>Tầm Nhìn & Sứ Mệnh</h2>
             <p>Định hướng chiến lược và kim chỉ nam trên hành trình ứng dụng công nghệ hoàn thiện không gian sống</p>
           </div>
@@ -170,7 +170,7 @@ export function AboutPage({ navigateTo }) {
         <div className="cv-container">
           <div className="core-values-header">
             <div className="eyebrow">1.5.4 · GIÁ TRỊ CỐT LÕI <span /></div>
-            <h2>1.5.4. Giá Trị Cốt Lõi (Core Values)</h2>
+            <h2>Giá Trị Cốt Lõi (Core Values)</h2>
             <p>Nguyên tắc nền tảng định hình từng giải pháp, thuật toán AI và trải nghiệm khách hàng tại UniVeloria</p>
           </div>
 

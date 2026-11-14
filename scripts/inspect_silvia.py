@@ -13,3 +13,4 @@ print(f"Silvia size: {W}x{H}")
 # Usually x: 80 to 320, y: 180 to 550
 img.crop((40, 160, 360, 360)).save(os.path.join(out_dir, "silvia_card_top.png"))
 img.crop((40, 360, 360, 560)).save(os.path.join(out_dir, "silvia_card_bot.png"))
+

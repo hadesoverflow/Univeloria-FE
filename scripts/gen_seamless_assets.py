@@ -88,3 +88,4 @@ for name, p in fabrics.items():
     print(f"Generated {name} textures: albedo & bump")
 
 print("All 5 fabric texture sets successfully exported to public/assets/curtains!")
+
