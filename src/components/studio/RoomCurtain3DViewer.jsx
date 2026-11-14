@@ -993,8 +993,9 @@ function applyRollerFabricMaterial(mesh, fabricId, colorHex) {
 // Texture cache for rainbow zebra textures
 const rainbowTextureCache = new Map();
 
-function createRainbowZebraTexture(colorHex, stripeStyle = 'standard') {
-  const cacheKey = `${colorHex}_${stripeStyle}`;
+function createRainbowZebraTexture(colorHex, fabricId = 'rainbow-brioni') {
+  const cleanId = (fabricId || '').toLowerCase();
+  const cacheKey = `${colorHex}_${cleanId}`;
   if (rainbowTextureCache.has(cacheKey)) {
     return rainbowTextureCache.get(cacheKey);
   }
@@ -1004,12 +1005,23 @@ function createRainbowZebraTexture(colorHex, stripeStyle = 'standard') {
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  const cycleHeight = 64; // 8 cycles over 512px (exact 12.5cm per stripe cycle on 2.5m drop)
-  const solidHeight = stripeStyle === 'wide' ? 42 : 38; // ~60% solid fabric band, ~40% sheer mesh
+  const cycleHeight = 64; // 8 cycles over 512px
+  let solidHeight = 40;
+  if (cleanId.includes('dragon')) solidHeight = 42;        // 95% blackout dense weave
+  else if (cleanId.includes('infiniti')) solidHeight = 42; // 90% blackout with dual border
+  else if (cleanId.includes('rivere')) solidHeight = 38;   // balanced 60/40
+  else if (cleanId.includes('brioni')) solidHeight = 41;   // 94% blackout woodgrain
+
   const sheerHeight = cycleHeight - solidHeight;
 
-  // Background clear
   ctx.clearRect(0, 0, 512, 512);
+
+  // Deterministic pseudo-random seed for consistent procedural slubs across render passes
+  let seed = 42;
+  const pseudoRandom = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
 
   for (let y = 0; y < 512; y += cycleHeight) {
     // 1. Solid Fabric Band
@@ -1017,32 +1029,97 @@ function createRainbowZebraTexture(colorHex, stripeStyle = 'standard') {
     ctx.fillStyle = colorHex || '#cbae92';
     ctx.fillRect(0, y, 512, solidHeight);
 
-    // Micro horizontal & vertical fabric weave grain
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    for (let py = y; py < y + solidHeight; py += 3) {
-      ctx.fillRect(0, py, 512, 1);
-    }
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
-    for (let px = 0; px < 512; px += 4) {
-      ctx.fillRect(px, y, 1, solidHeight);
+    if (cleanId.includes('brioni')) {
+      // 1A. Brioni.E Blackout: Vân Dệt Gỗ Sang Trọng (Woodgrain horizontal slub striations)
+      for (let py = y; py < y + solidHeight; py += 2.5) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+        ctx.fillRect(0, py, 512, 1);
+      }
+      for (let i = 0; i < 45; i++) {
+        const slubY = y + 2 + pseudoRandom() * (solidHeight - 4);
+        const slubX = pseudoRandom() * 512;
+        const slubW = 20 + pseudoRandom() * 110;
+        const isDark = pseudoRandom() > 0.45;
+        ctx.fillStyle = isDark ? 'rgba(0, 0, 0, 0.16)' : 'rgba(255, 255, 255, 0.15)';
+        ctx.fillRect(slubX, slubY, slubW, 1.2);
+        if (slubX + slubW > 512) {
+          ctx.fillRect(0, slubY, (slubX + slubW) - 512, 1.2);
+        }
+      }
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
+      ctx.fillRect(0, y, 512, 1.5);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(0, y + solidHeight - 2, 512, 2);
+
+    } else if (cleanId.includes('dragon')) {
+      // 1B. Dragon.E Blackout: Dệt Dày Phẳng Mịn (Dense Melange Cross-Weave 95% Blackout)
+      for (let py = y; py < y + solidHeight; py += 3) {
+        for (let px = 0; px < 512; px += 4) {
+          const shift = (Math.floor(py / 3) % 2) * 2;
+          const x = (px + shift) % 512;
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+          ctx.fillRect(x, py, 2, 1.5);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.10)';
+          ctx.fillRect((x + 2) % 512, py, 1.5, 1.5);
+        }
+      }
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+      ctx.fillRect(0, y, 512, 1.2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+      ctx.fillRect(0, y + solidHeight - 1.5, 512, 1.5);
+
+    } else if (cleanId.includes('infiniti')) {
+      // 1C. Infiniti.E Blackout: Viền Nẹp Sáng Mép Độc Quyền (Dual-Border Accent Trim)
+      for (let py = y + 4; py < y + solidHeight - 4; py += 2.5) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.10)';
+        ctx.fillRect(0, py, 512, 1);
+      }
+      for (let i = 0; i < 30; i++) {
+        const slubY = y + 4 + pseudoRandom() * (solidHeight - 8);
+        const slubX = pseudoRandom() * 512;
+        const slubW = 15 + pseudoRandom() * 80;
+        ctx.fillStyle = pseudoRandom() > 0.5 ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.14)';
+        ctx.fillRect(slubX, slubY, slubW, 1.2);
+        if (slubX + slubW > 512) ctx.fillRect(0, slubY, (slubX + slubW) - 512, 1.2);
+      }
+      // SIGNATURE DUAL-BORDER: Lighter contrasting accent bands along top and bottom edges!
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.42)';
+      ctx.fillRect(0, y, 512, 3);
+      ctx.fillStyle = 'rgba(200, 168, 125, 0.35)';
+      ctx.fillRect(0, y + 2.5, 512, 1);
+
+      ctx.fillStyle = 'rgba(200, 168, 125, 0.30)';
+      ctx.fillRect(0, y + solidHeight - 4, 512, 1);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.38)';
+      ctx.fillRect(0, y + solidHeight - 3, 512, 3);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.20)';
+      ctx.fillRect(0, y + solidHeight - 1, 512, 1);
+
+    } else {
+      // 1D. River.E / Standard: Vải Polyester Dệt Chắc Bề Mặt Mịn (Oxford Canvas Basketweave)
+      for (let py = y; py < y + solidHeight; py += 3) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+        ctx.fillRect(0, py, 512, 1);
+      }
+      for (let px = 0; px < 512; px += 4) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.fillRect(px, y, 1, solidHeight);
+      }
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+      ctx.fillRect(0, y, 512, 1.2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.fillRect(0, y + solidHeight - 1.5, 512, 1.5);
     }
 
-    // Top highlight & bottom drop shadow along stripe edge for rich 3D slat depth
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.14)';
-    ctx.fillRect(0, y + solidHeight - 2, 512, 2);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.fillRect(0, y, 512, 1.5);
     ctx.restore();
 
     // 2. Sheer Mesh / Voile Band (Transparent Netting)
     const sheerStartY = y + solidHeight;
-
-    // Translucent sheer voile background
     ctx.fillStyle = 'rgba(250, 250, 252, 0.22)';
     ctx.fillRect(0, sheerStartY, 512, sheerHeight);
 
     // Fine delicate mesh netting grid
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.60)';
     ctx.lineWidth = 1;
     for (let mx = 0; mx < 512; mx += 8) {
       ctx.beginPath();
@@ -1068,9 +1145,9 @@ function createRainbowZebraTexture(colorHex, stripeStyle = 'standard') {
   return texture;
 }
 
-function applyRainbowFabricMaterial(mesh, colorHex, isBackLayer = false, stripeStyle = 'standard') {
+function applyRainbowFabricMaterial(mesh, colorHex, isBackLayer = false, fabricId = 'rainbow-brioni') {
   if (!mesh) return;
-  const tex = createRainbowZebraTexture(colorHex, stripeStyle);
+  const tex = createRainbowZebraTexture(colorHex, fabricId);
 
   // Clone texture so front and back meshes have completely independent repeat and offset!
   const layerTex = tex.clone();
@@ -1873,10 +1950,10 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
                 customRollerTopTubeRef.current = child;
               } else if (child.name === 'RainbowFrontFabric') {
                 customRainbowFrontFabricRef.current = child;
-                applyRainbowFabricMaterial(child, studioColorRef.current, false, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+                applyRainbowFabricMaterial(child, studioColorRef.current, false, activeFabricIdRef.current || 'rainbow-brioni');
               } else if (child.name === 'RainbowBackFabric') {
                 customRainbowBackFabricRef.current = child;
-                applyRainbowFabricMaterial(child, studioColorRef.current, true, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+                applyRainbowFabricMaterial(child, studioColorRef.current, true, activeFabricIdRef.current || 'rainbow-brioni');
               } else if (child.name === 'RainbowBottomBar') {
                 customRainbowBottomBarRef.current = child;
               } else if (child.name === 'RainbowTopTube') {
@@ -2017,10 +2094,10 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
             applyRollerFabricMaterial(customRollerWrapRef.current, activeFabricIdRef.current, studioColorRef.current);
           }
           if (customRainbowFrontFabricRef.current) {
-            applyRainbowFabricMaterial(customRainbowFrontFabricRef.current, studioColorRef.current, false, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+            applyRainbowFabricMaterial(customRainbowFrontFabricRef.current, studioColorRef.current, false, activeFabricIdRef.current || 'rainbow-brioni');
           }
           if (customRainbowBackFabricRef.current) {
-            applyRainbowFabricMaterial(customRainbowBackFabricRef.current, studioColorRef.current, true, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+            applyRainbowFabricMaterial(customRainbowBackFabricRef.current, studioColorRef.current, true, activeFabricIdRef.current || 'rainbow-brioni');
           }
           customTriptychRef.current?.fabrics?.forEach((f) => { if (f?.material?.color) f.material.color.set(initTargetColor); });
           customHoneycombEdgesRef.current.forEach((e) => { if (e?.material?.color) e.material.color.set(initTargetColor); });
@@ -2111,10 +2188,10 @@ export const RoomCurtain3DViewer = forwardRef(function RoomCurtain3DViewer({
       applyRollerFabricMaterial(customRollerFabricRef.current, activeFabricId, studioColor);
     }
     if (customRainbowFrontFabricRef.current) {
-      applyRainbowFabricMaterial(customRainbowFrontFabricRef.current, studioColor, false, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+      applyRainbowFabricMaterial(customRainbowFrontFabricRef.current, studioColor, false, activeFabricId || 'rainbow-brioni');
     }
     if (customRainbowBackFabricRef.current) {
-      applyRainbowFabricMaterial(customRainbowBackFabricRef.current, studioColor, true, curtainType?.id === 'rainbow-modernstripe' ? 'wide' : 'standard');
+      applyRainbowFabricMaterial(customRainbowBackFabricRef.current, studioColor, true, activeFabricId || 'rainbow-brioni');
     }
     if (customRainbowFrontFabricRef.current || customRainbowBackFabricRef.current) {
       applyCurtainOpenRatio(openRatioRef.current || 0);

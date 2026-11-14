@@ -114,6 +114,7 @@ export const curtainTypes = [
     name: "Rèm Cầu Vồng ModernStripe",
     shortName: "ModernStripe",
     category: "Rèm cầu vồng",
+    defaultFabricId: "rainbow-brioni",
     slogan: "Hiện đại – Linh hoạt – Tinh tế",
     desc: "Thiết kế hai lớp sọc xen kẽ, dễ dàng điều chỉnh ánh sáng, mang đến không gian sống hiện đại và thoải mái.",
     colors: ["#f3ebe1", "#d0c3b5", "#b1a293", "#5c544d", "#ffffff"],
@@ -135,6 +136,7 @@ export const curtainTypes = [
     name: "Rèm Cầu Vồng NordicRay",
     shortName: "NordicRay",
     category: "Rèm cầu vồng",
+    defaultFabricId: "rainbow-dragon",
     slogan: "Ánh sáng linh hoạt - Cho không gian thư giãn",
     desc: "Thiết kế hai lớp vải xen kẽ hiện đại, điều chỉnh ánh sáng linh hoạt, mang lại sự riêng tư và thoáng sáng cho phòng ngủ.",
     colors: ["#cbae92", "#f7e9de", "#bb8e61", "#8a5832", "#ded0b6"],
@@ -156,6 +158,7 @@ export const curtainTypes = [
     name: "Rèm Cầu Vồng SunnyView",
     shortName: "SunnyView",
     category: "Rèm cầu vồng",
+    defaultFabricId: "rainbow-infiniti",
     slogan: "Ánh sáng tự nhiên, không gian ấm áp",
     desc: "Thiết kế hiện đại, linh hoạt điều chỉnh ánh sáng, tạo không gian sống thoáng sáng và đầy cảm hứng.",
     colors: ["#c8af8d", "#f5e8d8", "#9d8062", "#484421", "#e8ded1"],
@@ -177,6 +180,7 @@ export const curtainTypes = [
     name: "Rèm Cầu Vồng River.E",
     shortName: "River.E",
     category: "Rèm cầu vồng",
+    defaultFabricId: "rainbow-rivere",
     slogan: "Hiện Đại – Bền Bỉ – Đa Dạng Màu Sắc",
     desc: "Dòng rèm cầu vồng River.E với chất liệu polyester cao cấp, điều chỉnh ánh sáng linh hoạt, phù hợp cho nhiều không gian nhà ở và văn phòng.",
     colors: ["#7cb9e8", "#dfcaa7", "#c2bcaf", "#7d8387", "#3e586d", "#54463d", "#6d7671", "#6b7a8d", "#9a7457", "#2c3b47"],
@@ -198,6 +202,7 @@ export const curtainTypes = [
     name: "Rèm Cầu Vồng Dệt Sợi GoldenWeave",
     shortName: "GoldenWeave",
     category: "Rèm cầu vồng",
+    defaultFabricId: "rainbow-brioni",
     slogan: "Vẻ đẹp tự nhiên, ánh sắc ấm áp",
     desc: "Rèm cầu vồng dệt sợi cao cấp, kết hợp độ thoáng sáng linh hoạt và chất cảm vải dệt tinh tế, mang đến không gian sang trọng, ấm cúng.",
     colors: ["#cfb384", "#a88958", "#876337", "#5a4225", "#ded0b6"],
@@ -672,11 +677,259 @@ export const rollerCurtainSamples = [
 ];
 
 // =============================================================================
-// 2C. TỔNG HỢP TOÀN BỘ MẪU VẢI & MẪU RÈM (ALL SAMPLES)
+// 2C. MẪU RÈM CẦU VỒNG (4 MẪU CHÍNH HÃNG)
+// =============================================================================
+export const rainbowCurtainSamples = [
+  {
+    id: "rainbow-brioni",
+    name: "Mẫu rèm cầu vồng Brioni.E Blackout®",
+    shortName: "Brioni.E Blackout",
+    category: "Rèm cầu vồng",
+    isRainbow: true,
+    slogan: "Cản Sáng Tối Ưu – Vân Dệt Sang Trọng",
+    desc: "Rèm cầu vồng Brioni.E Blackout với chất liệu vân dệt tinh tế, khả năng cản sáng đến 94%, mang đến không gian riêng tư, hiện đại và đẳng cấp.",
+    price: 1350000,
+    priceDisplay: "Từ 1.350.000đ / m²",
+    thumb: "/assets/curtains/curtain-rainbow-brioni.jpg",
+    defaultColor: "#4b382a",
+    colors: ["#4b382a", "#846e49", "#4c5660", "#8e5330", "#3e454b", "#7d8287", "#362822"],
+    colorCodes: ["B 294", "B 295", "B 297", "B 298", "B 299", "B 290", "B 301"],
+    colorNames: [
+      "Nâu gỗ óc chó đậm",
+      "Vàng nâu cát rêu",
+      "Xám than chì dệt vân",
+      "Nâu caramel dệt xước",
+      "Xám đen khói",
+      "Ghi xám bạc sáng",
+      "Nâu socola đen"
+    ],
+    highlights: [
+      "Cản sáng đến 94%",
+      "Đảm bảo sự riêng tư",
+      "Vải dày, độ bền cao",
+      "Phù hợp nhiều không gian"
+    ],
+    fabricLayers: [
+      {
+        layerNumber: 1,
+        title: "Chất liệu cao cấp",
+        code: "B 294",
+        colorHex: "#4b382a",
+        name: "Vải polyester dệt vân cản sáng",
+        desc: "Vải polyester dệt vân cao cấp, cản sáng hiệu quả đến 94%",
+        weaveDetail: "Vân dệt sợi ngang gân xước tự nhiên (Wood-grain slub)"
+      },
+      {
+        layerNumber: 2,
+        title: "Cấu trúc 2 lớp",
+        code: "B 297",
+        colorHex: "#4c5660",
+        name: "Hai lớp xen kẽ cản sáng & lấy sáng",
+        desc: "Cấu trúc hai lớp nan xen kẽ cản sáng và voan lọc sáng, điều chỉnh ánh sáng linh hoạt",
+        weaveDetail: "Lưới voan dệt thoi trắng tinh tế kết hợp nan cản sáng dày"
+      },
+      {
+        layerNumber: 3,
+        title: "Vận hành êm ái",
+        code: "B 298",
+        colorHex: "#8e5330",
+        name: "Cơ chế cuốn mượt mà",
+        desc: "Hộp máng nhôm và cơ chế cuốn mượt mà, bền bỉ, dễ sử dụng",
+        weaveDetail: "Thanh đáy bo tròn định hình cân đối"
+      }
+    ]
+  },
+  {
+    id: "rainbow-dragon",
+    name: "Mẫu rèm cầu vồng Dragon.E Blackout®",
+    shortName: "Dragon.E Blackout",
+    category: "Rèm cầu vồng",
+    isRainbow: true,
+    slogan: "Cản Sáng Vượt Trội – Sang Trọng, Hiện Đại",
+    desc: "Dòng rèm cầu vồng Dragon.E Blackout với chất liệu polyester cao cấp, khả năng cản sáng đến 95%, mang đến không gian yên tĩnh, riêng tư và tiện nghi.",
+    price: 1450000,
+    priceDisplay: "Từ 1.450.000đ / m²",
+    thumb: "/assets/curtains/curtain-rainbow-dragon.jpg",
+    defaultColor: "#8c9298",
+    colors: ["#8c9298", "#d4c5b3", "#a5abb0", "#2a313a", "#4a3423", "#48453f", "#a0988c", "#6d737a", "#3b4f63", "#22252a"],
+    colorCodes: ["NA 01", "NA 02", "NA 03", "NA 04", "NA 05", "NA 06", "NA 07", "NA 08", "NA 09", "NA 10"],
+    colorNames: [
+      "Xám xi măng nhạt",
+      "Be cát ấm",
+      "Ghi xám sáng",
+      "Xanh than đậm",
+      "Nâu cà phê đậm",
+      "Nâu rêu than",
+      "Be xám trung tính",
+      "Xám tro khói",
+      "Xanh navy denim",
+      "Đen tuyền cản sáng"
+    ],
+    highlights: [
+      "Cản sáng đến 95%",
+      "Đảm bảo sự riêng tư",
+      "Vải dày, bền chắc",
+      "Phù hợp nhiều không gian"
+    ],
+    fabricLayers: [
+      {
+        layerNumber: 1,
+        title: "Chất liệu cao cấp",
+        code: "NA 01",
+        colorHex: "#8c9298",
+        name: "Vải polyester dệt dày",
+        desc: "Chất liệu polyester cao cấp dệt dày dặn, cản sáng vượt trội đến 95%",
+        weaveDetail: "Vân dệt melange đan khít phẳng phiu, chống bám bụi"
+      },
+      {
+        layerNumber: 2,
+        title: "Cấu trúc 2 lớp",
+        code: "NA 04",
+        colorHex: "#2a313a",
+        name: "Xen kẽ cản sáng và lọc sáng",
+        desc: "Hai lớp nan trượt mượt mà, chuyển đổi linh hoạt giữa riêng tư và lấy sáng",
+        weaveDetail: "Nan dệt blackout nguyên bản kết hợp voan lọc sáng"
+      },
+      {
+        layerNumber: 3,
+        title: "Vận hành êm ái",
+        code: "NA 09",
+        colorHex: "#3b4f63",
+        name: "Độ bền bỉ dài lâu",
+        desc: "Cơ chế kéo dây êm ái nhẹ nhàng, giữ form ổn định dài lâu",
+        weaveDetail: "Phụ kiện đồng màu cao cấp"
+      }
+    ]
+  },
+  {
+    id: "rainbow-infiniti",
+    name: "Mẫu rèm cầu vồng Infiniti.E Blackout®",
+    shortName: "Infiniti.E Blackout",
+    category: "Rèm cầu vồng",
+    isRainbow: true,
+    slogan: "Cản Sáng Vượt Trội – Riêng Tư Tuyệt Đối",
+    desc: "Dòng rèm cầu vồng Infiniti.E Blackout kết hợp hai lớp vải cao cấp, khả năng cản sáng lên đến 90%, mang đến không gian yên tĩnh, riêng tư và thoải mái.",
+    price: 1550000,
+    priceDisplay: "Từ 1.550.000đ / m²",
+    thumb: "/assets/curtains/curtain-rainbow-infiniti.jpg",
+    defaultColor: "#4c5660",
+    colors: ["#4c5660", "#ccbba4", "#a6733c", "#593927", "#2f2622", "#241d1d"],
+    colorCodes: ["I 891", "I 892", "I 893", "I 894", "I 896", "I 897"],
+    colorNames: [
+      "Xám than chì viền sáng",
+      "Be cát vân gỗ viền vàng nhạt",
+      "Vàng hổ phách vân gỗ viền sáng",
+      "Nâu óc chó viền kem",
+      "Nâu đen espresso viền sáng",
+      "Đen gỗ mun viền kem"
+    ],
+    highlights: [
+      "Cản sáng đến 90%",
+      "Đảm bảo riêng tư",
+      "Vải dày, bền chắc",
+      "Phù hợp phòng ngủ, phòng làm việc"
+    ],
+    fabricLayers: [
+      {
+        layerNumber: 1,
+        title: "Chất liệu cao cấp",
+        code: "I 891",
+        colorHex: "#4c5660",
+        name: "Vải polyester dày dặn có viền nẹp",
+        desc: "Bề mặt nan có 2 đường viền nẹp sáng màu sang trọng ở hai mép, tạo điểm nhấn kiến trúc",
+        weaveDetail: "Viền kép Dual-Border nổi bật độc quyền của dòng Infiniti.E"
+      },
+      {
+        layerNumber: 2,
+        title: "Cấu trúc 2 lớp",
+        code: "I 893",
+        colorHex: "#a6733c",
+        name: "Linh hoạt cản sáng & đón sáng",
+        desc: "Điều chỉnh ánh sáng đa mức độ, bảo đảm sự riêng tư tuyệt đối",
+        weaveDetail: "Voan lưới cao cấp xuyên sáng tinh khôi"
+      },
+      {
+        layerNumber: 3,
+        title: "Vận hành êm ái",
+        code: "I 894",
+        colorHex: "#593927",
+        name: "Hộp máng và phụ kiện cao cấp",
+        desc: "Cơ chế cuốn êm ái, thích hợp phòng ngủ và phòng làm việc đẳng cấp",
+        weaveDetail: "Thanh cuộn trợ lực chống ồn"
+      }
+    ]
+  },
+  {
+    id: "rainbow-rivere",
+    name: "Mẫu rèm cầu vồng River.E 🇻🇳",
+    shortName: "River.E",
+    category: "Rèm cầu vồng",
+    isRainbow: true,
+    slogan: "Hiện Đại – Bền Bỉ – Đa Dạng Màu Sắc",
+    desc: "Dòng rèm cầu vồng River.E với chất liệu polyester cao cấp, điều chỉnh ánh sáng linh hoạt, phù hợp cho nhiều không gian nhà ở và văn phòng.",
+    price: 1150000,
+    priceDisplay: "Từ 1.150.000đ / m²",
+    thumb: "/assets/curtains/curtain-rainbow-river-e.jpg",
+    defaultColor: "#7cb9e8",
+    colors: ["#7cb9e8", "#dfcaa7", "#c2bcaf", "#7d8387", "#3e586d", "#54463d", "#6d7671", "#6b7a8d", "#9a7457", "#2c3b47"],
+    colorCodes: ["R 101", "R 102", "R 103", "R 104", "R 105", "R 106", "R 107", "R 108", "R 109", "R 110"],
+    colorNames: [
+      "Xanh thiên thanh pastel",
+      "Be kem sáng",
+      "Ghi xám nhạt",
+      "Xám trung tính",
+      "Xanh xám denim",
+      "Nâu đất ấm",
+      "Xám rêu nhẹ",
+      "Xanh khói xám",
+      "Nâu caramel",
+      "Xanh than đậm"
+    ],
+    highlights: [
+      "Điều chỉnh ánh sáng linh hoạt",
+      "Độ bền cao, ít bám bụi",
+      "Chống nắng, chống UV",
+      "Phù hợp nhiều không gian"
+    ],
+    fabricLayers: [
+      {
+        layerNumber: 1,
+        title: "Chất liệu polyester",
+        code: "R 101",
+        colorHex: "#7cb9e8",
+        name: "Bề mặt dệt mịn dệt chắc",
+        desc: "Chất liệu polyester dệt chắc chắn, bề mặt mịn màng, ít bám bụi, độ bền cao",
+        weaveDetail: "Vân dệt sợi polyester chuẩn phong cách Hàn Quốc"
+      },
+      {
+        layerNumber: 2,
+        title: "Cấu trúc 2 lớp",
+        code: "R 105",
+        colorHex: "#3e586d",
+        name: "Lớp voan trắng xuyên sáng",
+        desc: "Nan vải và nan voan đan xen điều chỉnh góc sáng tự nhiên dễ dàng",
+        weaveDetail: "Lưới voan dệt mắt nhỏ thoáng khí lọc sáng"
+      },
+      {
+        layerNumber: 3,
+        title: "Vận hành êm ái",
+        code: "R 110",
+        colorHex: "#2c3b47",
+        name: "Bền bỉ, dễ sử dụng",
+        desc: "Cơ chế cuốn mượt mà, bộ phụ kiện chịu lực bền bỉ theo thời gian",
+        weaveDetail: "Hệ thống dây kéo hạt chuỗi êm nhẹ"
+      }
+    ]
+  }
+];
+
+// =============================================================================
+// 2D. TỔNG HỢP TOÀN BỘ MẪU VẢI & MẪU RÈM (ALL SAMPLES)
 // =============================================================================
 export const fabricSamples = [
   ...fabricCurtainSamples,
-  ...rollerCurtainSamples
+  ...rollerCurtainSamples,
+  ...rainbowCurtainSamples
 ];
 
 export const studioStyleFilters = [
