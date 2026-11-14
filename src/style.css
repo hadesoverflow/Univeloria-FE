@@ -22971,6 +22971,85 @@ button:active:not(:disabled),
   background: rgba(255, 255, 255, 0.85) !important;
 }
 
+/* Dynamic AI Thinking State (5-10s Analysis) */
+.chatbot-thinking-box {
+  background: #ffffff !important;
+  border: 1px solid rgba(23, 51, 82, 0.12) !important;
+  border-radius: 14px 14px 14px 4px !important;
+  padding: 12px 14px !important;
+  box-shadow: 0 4px 14px rgba(23, 51, 82, 0.06) !important;
+  margin-bottom: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  animation: chatbotThinkingFade 0.3s ease !important;
+}
+
+@keyframes chatbotThinkingFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chatbot-thinking-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.chatbot-thinking-spinner {
+  width: 13px !important;
+  height: 13px !important;
+  border: 2px solid rgba(23, 51, 82, 0.2) !important;
+  border-top-color: #173352 !important;
+  border-radius: 50% !important;
+  animation: spin 0.8s linear infinite !important;
+}
+
+.chatbot-thinking-title {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #173352 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.chatbot-thinking-text {
+  font-size: 12.5px !important;
+  color: #334155 !important;
+  line-height: 1.45 !important;
+  animation: chatbotTextPulse 1.2s ease-in-out infinite alternate !important;
+}
+
+.chatbot-thinking-progress {
+  width: 100% !important;
+  height: 3px !important;
+  background: rgba(23, 51, 82, 0.08) !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  margin-top: 2px !important;
+}
+
+.chatbot-thinking-progress-bar {
+  height: 100% !important;
+  background: linear-gradient(90deg, #173352 0%, #3b82f6 50%, #d4af37 100%) !important;
+  border-radius: 999px !important;
+  animation: thinkingProgressAnim 6.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+@keyframes thinkingProgressAnim {
+  0% { width: 5%; }
+  25% { width: 35%; }
+  60% { width: 75%; }
+  90% { width: 92%; }
+  100% { width: 100%; }
+}
+
+@keyframes chatbotTextPulse {
+  0% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
 .chatbot-messages-list {
   display: flex !important;
   flex-direction: column !important;

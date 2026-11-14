@@ -99,6 +99,7 @@ export function ProductDetailPage({
 
   // Always fetch fresh product detail from Backend API whenever productId changes
   useEffect(() => {
+    setLiveProduct(null);
     if (!productId) return;
     let isMounted = true;
     apiClient(`/api/Products/${productId}`)
@@ -148,17 +149,21 @@ export function ProductDetailPage({
           });
         }
       })
-      .catch((err) => console.log('Using cached product detail:', err));
+      .catch((err) => {
+        console.log('Using cached product detail:', err);
+        if (isMounted) setLiveProduct(null);
+      });
     return () => { isMounted = false; };
   }, [productId]);
 
   // Find target product or fallback to id 1
   const baseProduct = productsList.find((p) => String(p.id) === String(productId)) ||
     productsData.find((p) => String(p.id) === String(productId)) ||
+    productsData.find((p) => Number(p.id) === Number(productId)) ||
     productsData.find((p) => p.code === 'UVL-SFOLD01') ||
     productsData[0];
 
-  const product = liveProduct || baseProduct;
+  const product = (liveProduct && String(liveProduct.id) === String(productId)) ? liveProduct : baseProduct;
 
   // Gallery state - Single main image per user requirement
   const primaryImg = product.mainImage || product.image || (product.imageUrls && product.imageUrls[0]) || '/product/Rèm/Rèm Vải/Rèm Hai Lớp S-Fold Định Hình Cao Cấp.png';

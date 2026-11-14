@@ -489,11 +489,15 @@ export default function App() {
       return;
     }
 
-        if (targetPage === 'product-detail') {
-      const prodId = targetSection || selectedProductId || 4;
+    if (targetPage === 'product-detail') {
+      const rawProdId = targetSection || selectedProductId || 1;
+      const prodId = isNaN(Number(rawProdId)) ? rawProdId : Number(rawProdId);
       setSelectedProductId(prodId);
       const targetUrl = `/products/${prodId}`;
-      if (currentPage === 'product-detail' && selectedProductId === prodId) {
+      if (window.location.pathname !== targetUrl) {
+        window.history.pushState({ page: 'product-detail', productId: prodId }, '', targetUrl);
+      }
+      if (currentPage === 'product-detail') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
@@ -507,7 +511,6 @@ export default function App() {
         })
         .call(() => {
           setCurrentPage('product-detail');
-          window.history.pushState({ page: 'product-detail', productId: prodId }, '', targetUrl);
           window.scrollTo(0, 0);
         })
         .to('.page-transition-curtain', {

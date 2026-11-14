@@ -161,10 +161,66 @@ function normalizeText(str) {
     .replace(/[^a-z0-9\s]/g, ' ');
 }
 
-function getAiCurtainRecommendation(userInput, currentCurtainId = null) {
-  const norm = normalizeText(userInput);
+// =============================================================================
+// AI ANALYSIS ENGINE: PHÂN TÍCH NGỮ CẢNH CÂU CHUYỆN & Ý ĐỊNH NGƯỜI DÙNG
+// =============================================================================
+export function analyzeUserMessage(rawInput, currentCurtainId = null) {
+  const trimmed = (rawInput || '').trim();
+  const norm = normalizeText(trimmed);
 
-  // 1. Check if user explicitly asked for random or another model
+  // 1. Phân loại Chào hỏi / Xã giao đơn thuần (Greeting only)
+  const greetingWords = ['chao', 'xin chao', 'hello', 'hi', 'alo', 'ad oi', 'shop oi', 'em oi', 'ban oi', 'cho hoi', 'tu van'];
+  const hasGreeting = greetingWords.some(w => norm.includes(w));
+  const hasRoomDetail = norm.includes('phong') || 
+                        norm.includes('rem') || 
+                        norm.includes('nang') || 
+                        norm.includes('tay') || 
+                        norm.includes('dong') || 
+                        norm.includes('go') || 
+                        norm.includes('can sang') || 
+                        norm.includes('cua') || 
+                        norm.includes('nha') ||
+                        norm.includes('kinh') ||
+                        norm.includes('can ho') ||
+                        norm.includes('chung cu');
+
+  if (hasGreeting && !hasRoomDetail && trimmed.split(/\s+/).length <= 7) {
+    return {
+      delayMs: 3800,
+      curtain: null,
+      text: "Dạ em chào anh/chị ạ! Em là Trợ lý AI tư vấn rèm của UniVeloria ☁️✨\n\nEm rất sẵn lòng đồng hành cùng anh/chị tìm ra mẫu rèm hoàn hảo cho ngôi nhà. Anh/chị hãy kể cho em nghe một chút về căn phòng mình muốn lắp rèm nhé:\n• Đó là phòng ngủ, phòng khách, phòng làm việc hay ban công ạ?\n• Hướng cửa có bị nắng gắt buổi chiều không và phong cách nội thất chủ đạo là gì ạ?\n\nChỉ cần vài chi tiết, em sẽ phân tích và gợi ý ngay mẫu rèm chuẩn chỉ kèm trải nghiệm 3D trực quan ạ!"
+    };
+  }
+
+  // 2. Cảm ơn / Tạm biệt (Thanks / Farewell)
+  const thanksWords = ['cam on', 'thank', 'tuyet voi', 'hay qua', 'ok shop', 'tam biet', 'bye'];
+  if (thanksWords.some(w => norm.includes(w)) && !hasRoomDetail) {
+    return {
+      delayMs: 3200,
+      curtain: null,
+      text: "Dạ không có gì ạ! Rất vui được trò chuyện và tư vấn cùng anh/chị. Bất cứ khi nào anh/chị cần trải nghiệm phối cảnh rèm 3D hoặc tìm kiếm giải pháp che nắng, em luôn sẵn sàng hỗ trợ nhé. Chúc anh/chị một ngày thật an yên và nhiều niềm vui! 🌿✨"
+    };
+  }
+
+  // 3. Hỏi giá / Báo giá / Cách tính giá (Price FAQ)
+  if (norm.includes('gia') && (norm.includes('tinh') || norm.includes('bao nhieu') || norm.includes('bang gia') || norm.includes('met') || norm.includes('dat khong'))) {
+    return {
+      delayMs: 4200,
+      curtain: null,
+      text: "Dạ giá rèm tại UniVeloria được niêm yết rõ ràng và tính theo diện tích thực tế:\n• 🌟 **Rèm Cuốn:** Từ 380.000đ – 490.000đ / m² (Gọn gàng, hiện đại, cản sáng tốt)\n• 🌈 **Rèm Cầu Vòng:** Từ 1.150.000đ – 1.550.000đ / m² (Nan 2 lớp xoay lật điều chỉnh sáng linh hoạt)\n• 💎 **Rèm Vải Cao Cấp:** Từ 580.000đ – 680.000đ / m² (Sóng đổ bồng bềnh chuẩn 5 sao)\n\nAnh/chị hãy kể cho em về căn phòng cụ thể của mình để em gợi ý mẫu phù hợp và dẫn vào trải nghiệm 3D nhé!"
+    };
+  }
+
+  // 4. Hỏi về Dịch vụ / Lắp đặt / Bảo hành / Đo đạc (Service FAQ)
+  if (norm.includes('lap dat') || norm.includes('thi cong') || norm.includes('bao hanh') || norm.includes('do dac') || norm.includes('o dau') || norm.includes('dia chi')) {
+    return {
+      delayMs: 4200,
+      curtain: null,
+      text: "Dạ dịch vụ trọn gói chuẩn 5 sao của UniVeloria bao gồm:\n1. **Đo đạc tận nơi:** Chuyên viên mang mẫu vải thực tế đến tận nhà tư vấn và đo đạc miễn phí.\n2. **Thi công lắp đặt:** Nhanh gọn, chuẩn chỉ trong vòng 24h - 48h.\n3. **Bảo hành vàng:** 3 năm chính hãng cho chất liệu vải & phụ kiện máng rèm, 5 năm cho động cơ rèm tự động.\n\nAnh/chị đang muốn tân trang cho không gian phòng nào trong nhà ạ?"
+    };
+  }
+
+  // 5. Yêu cầu ngẫu nhiên / Chọn đại / Mẫu khác (Explicit Random)
   const isExplicitRandom = norm.includes('random') || 
                            norm.includes('ngau nhien') || 
                            norm.includes('bat ky') || 
@@ -179,63 +235,149 @@ function getAiCurtainRecommendation(userInput, currentCurtainId = null) {
       : CURTAIN_PROFILES;
     const picked = candidates[Math.floor(Math.random() * candidates.length)];
     return {
+      delayMs: 5500,
       curtain: picked,
-      intro: `Một gợi ý ngẫu nhiên đầy thú vị dành cho bạn! Dưới đây là mẫu rèm đặc sắc mà UniVeloria nghĩ bạn sẽ thích:`
+      text: `Một đề xuất ngẫu nhiên đầy bất ngờ dành cho bạn! Dưới đây là tuyệt phẩm rèm được nhiều gia chủ và kiến trúc sư lựa chọn tại UniVeloria:`
     };
   }
 
-  // 2. Score candidates based on matching keywords
+  // 6. PHÂN TÍCH CHUYÊN SÂU CÂU CHUYỆN CĂN PHÒNG & VỊ TRÍ KHÔNG GIAN
+  const isLivingRoom = norm.includes('phong khach') || norm.includes('khach') || norm.includes('biet thu') || norm.includes('gian chinh') || norm.includes('phong sinh hoat');
+  const isBedRoom = norm.includes('phong ngu') || norm.includes('ngu') || norm.includes('em be') || norm.includes('master') || norm.includes('vo chong');
+  const isWorkRoom = norm.includes('lam viec') || norm.includes('van phong') || norm.includes('cong ty') || norm.includes('ban lam viec') || norm.includes('doc sach');
+  const isApartment = norm.includes('chung cu') || norm.includes('can ho') || norm.includes('studio') || norm.includes('phong nho') || norm.includes('dien tich hep');
+
+  const isWestSun = norm.includes('huong tay') || norm.includes('nang gat') || norm.includes('nang chieu') || norm.includes('chong choi') || norm.includes('nong') || norm.includes('ha nhiet') || norm.includes('chong nang');
+  const isMorningSunOrView = norm.includes('huong dong') || norm.includes('ban cong') || norm.includes('ngam canh') || norm.includes('view') || norm.includes('thoang daang') || norm.includes('loc sang') || norm.includes('don nang');
+  const isTotalDark = norm.includes('toi hoan toan') || norm.includes('blackout') || norm.includes('mat ngu') || norm.includes('ngu ngon') || norm.includes('cach am') || norm.includes('yen tinh');
+
+  const isWood = norm.includes('go') || norm.includes('van go') || norm.includes('nau') || norm.includes('am cung') || norm.includes('moc mac');
+  const isScandinavian = norm.includes('bac au') || norm.includes('scandinavian') || norm.includes('hoa ram') || norm.includes('thanh lich');
+  const isLuxury5Star = norm.includes('sang trong') || norm.includes('5 sao') || norm.includes('khach san') || norm.includes('hoang gia') || norm.includes('quy toc') || norm.includes('chau au') || norm.includes('be the');
+  const isJapandi = norm.includes('japandi') || norm.includes('eco') || norm.includes('song xanh') || norm.includes('thien nhien');
+
+  // Tính điểm phù hợp cho 12 mẫu rèm
   const scored = CURTAIN_PROFILES.map(item => {
     let score = 0;
-    // Category hints
+
+    // Loại rèm theo mong muốn
     if (norm.includes('cau vong') || norm.includes('zebra')) {
-      if (item.category === 'Rèm cầu vồng') score += 10;
-      else score -= 10;
+      if (item.category === 'Rèm cầu vồng') score += 12;
+      else score -= 15;
     }
     if (norm.includes('cuon') || norm.includes('roller')) {
-      if (item.category === 'Rèm cuốn') score += 10;
-      else score -= 10;
+      if (item.category === 'Rèm cuốn') score += 12;
+      else score -= 15;
     }
     if (norm.includes('rem vai') || norm.includes('vai')) {
-      if (item.category === 'Rèm vải') score += 10;
-      else score -= 10;
+      if (item.category === 'Rèm vải') score += 12;
+      else score -= 15;
     }
 
-    // Specific keyword matching
+    // Phòng & Công năng
+    if (isLivingRoom) {
+      if (item.studioId === 'elogi-1198-2') score += 16;
+      if (item.studioId === 'rainbow-brioni') score += 14;
+      if (item.studioId === 'roller-silvia') score += 13;
+      if (item.studioId === 'roller-sunny') score += 10;
+    }
+    if (isBedRoom) {
+      if (item.studioId === 'roller-moon') score += 18;
+      if (item.studioId === 'rainbow-dragon') score += 17;
+      if (item.studioId === 'elogi-1206-1') score += 15;
+      if (item.studioId === 'rainbow-brioni') score += 12;
+    }
+    if (isWorkRoom) {
+      if (item.studioId === 'rainbow-infiniti') score += 18;
+      if (item.studioId === 'roller-harmony-2') score += 16;
+      if (item.studioId === 'roller-malange-1') score += 12;
+    }
+    if (isApartment) {
+      if (item.studioId === 'rainbow-rivere') score += 16;
+      if (item.studioId === 'roller-malange-1') score += 15;
+      if (item.studioId === 'roller-harmony-2') score += 13;
+    }
+
+    // Hướng nắng & Ánh sáng
+    if (isWestSun) {
+      if (item.studioId === 'rainbow-dragon') score += 20;
+      if (item.studioId === 'roller-moon') score += 20;
+      if (item.studioId === 'rainbow-brioni') score += 14;
+    }
+    if (isMorningSunOrView) {
+      if (item.studioId === 'roller-sunny') score += 20;
+      if (item.studioId === 'rainbow-rivere') score += 16;
+    }
+    if (isTotalDark) {
+      if (item.studioId === 'roller-moon') score += 22;
+      if (item.studioId === 'rainbow-dragon') score += 18;
+    }
+
+    // Phong cách nội thất
+    if (isWood) {
+      if (item.studioId === 'rainbow-brioni') score += 20;
+      if (item.studioId === 'elogi-1206-1') score += 15;
+    }
+    if (isLuxury5Star) {
+      if (item.studioId === 'elogi-1198-2') score += 20;
+      if (item.studioId === 'roller-silvia') score += 18;
+    }
+    if (isScandinavian) {
+      if (item.studioId === 'roller-malange-1') score += 20;
+      if (item.studioId === 'roller-harmony-2') score += 14;
+    }
+    if (isJapandi) {
+      if (item.studioId === 'elogi-1230-1') score += 22;
+    }
+
+    // Khớp từ khóa cụ thể trong hồ sơ sản phẩm
     item.keywords.forEach(kw => {
       const normKw = normalizeText(kw);
-      if (norm.includes(normKw)) {
-        score += 3;
-      }
+      if (norm.includes(normKw)) score += 3.5;
     });
 
     return { item, score };
   });
 
-  // Sort by score descending
   scored.sort((a, b) => b.score - a.score);
 
   const highestScore = scored[0].score;
   let chosen;
   if (highestScore > 0) {
-    // If multiple items share top score (or within 2 points), randomly pick one among top candidates
     const topCandidates = scored.filter(s => s.score >= highestScore - 2).map(s => s.item);
     chosen = topCandidates[Math.floor(Math.random() * topCandidates.length)];
   } else {
-    // General story / no specific keywords -> Randomly pick one among all 12 curtains
     chosen = CURTAIN_PROFILES[Math.floor(Math.random() * CURTAIN_PROFILES.length)];
   }
 
-  const intros = [
-    `Lắng nghe câu chuyện của bạn, UniVeloria nhận thấy không gian này sẽ tỏa sáng nhất khi kết hợp cùng:`,
-    `Để mang lại sự hài hòa tối ưu cho căn phòng như bạn vừa chia sẻ, mình xin gợi ý mẫu rèm chuẩn chỉ này:`,
-    `Một câu chuyện căn phòng rất ấm áp! Mình tìm thấy mẫu rèm hoàn hảo sinh ra để giải quyết đúng nhu cầu của bạn:`
-  ];
-  const intro = intros[Math.floor(Math.random() * intros.length)];
+  // TỔNG HỢP CÂU TRẢ LỜI THÔNG MINH DÀNH RIÊNG CHO CĂN PHÒNG ĐÓ
+  let narrative = '';
+  if (isBedRoom && isWestSun) {
+    narrative = `Lắng nghe câu chuyện về phòng ngủ hướng tây đón nhiều nắng gắt của bạn: Đây là vị trí rất cần giải pháp cản nhiệt và chắn sáng triệt để để giữ phòng luôn mát dịu, bảo vệ giấc ngủ sâu và yên tĩnh trọn vẹn.`;
+  } else if (isLivingRoom && isWood) {
+    narrative = `Với không gian phòng khách hiện đại kết hợp nhiều nội thất gỗ sang trọng: Sự phối hợp đắt giá nhất là tấm rèm có vân dệt tự nhiên trầm ấm, tôn lên chất mộc quý phái và đồng điệu với thẩm mỹ căn nhà.`;
+  } else if (isWorkRoom) {
+    narrative = `Đối với góc làm việc cần sự chỉn chu và tập trung: Tiêu chuẩn hàng đầu là khả năng cản chói chống lóa màn hình, vận hành êm ái và có đường nét kiến trúc sắc sảo, gọn gàng.`;
+  } else if (isBedRoom) {
+    narrative = `Phòng ngủ là chốn riêng tư để nghỉ ngơi và tái tạo năng lượng: Tấm rèm hoàn hảo cần mang lại độ che chắn riêng tư cao, chất cảm êm dịu và khả năng cách âm, cản nhiệt tốt.`;
+  } else if (isLivingRoom) {
+    narrative = `Phòng khách là trung tâm của ngôi nhà: Việc chọn rèm cần tạo được sự bề thế, linh hoạt lấy sáng tự nhiên đón tài lộc và tạo cảm giác thoáng đãng, ấm cúng.`;
+  } else if (isWestSun) {
+    narrative = `Với khung cửa hướng tây chịu ảnh hưởng của nắng chiều oi ả: Khả năng hạ nhiệt và chặn 95-100% tia UV là yếu tố then chốt giúp bảo vệ sức khỏe gia đình và độ bền của nội thất.`;
+  } else if (isMorningSunOrView) {
+    narrative = `Với khung cửa sổ có ban công hoặc tầm nhìn thoáng đãng: Bạn cần một tấm rèm lọc sáng dịu nhẹ, vừa cản tia cực tím hiệu quả nhưng vẫn giữ trọn không gian mở để ngắm cảnh thư thái.`;
+  } else if (isApartment) {
+    narrative = `Với không gian căn hộ chung cư hiện đại: Giải pháp rèm cần tiết kiệm diện tích tối đa, dễ dàng vệ sinh lau chùi và mang lại cảm giác trẻ trung, thoáng mát.`;
+  } else {
+    narrative = `Lắng nghe câu chuyện và mong muốn về không gian của bạn: UniVeloria đã phân tích các tiêu chí về vị trí, cường độ ánh sáng và phong cách nội thất để tìm ra giải pháp chuẩn xác nhất.`;
+  }
+
+  const responseText = `${narrative}\n\nUniVeloria trân trọng đề xuất **${chosen.name}** (${chosen.badge}) — sự lựa chọn chuẩn mực dành riêng cho căn phòng của bạn:`;
 
   return {
+    delayMs: 6500, // Thời gian phân tích từ 5-10s theo yêu cầu
     curtain: chosen,
-    intro
+    text: responseText
   };
 }
 
@@ -244,23 +386,39 @@ export function FloatingPetdexChat({ navigateTo }) {
   const [chatInput, setChatInput] = useState('');
   const [facingLeft, setFacingLeft] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [thinkingStageIdx, setThinkingStageIdx] = useState(0);
+
+  const thinkingStages = [
+    { icon: '🔍', title: 'Tiếp nhận thông tin', text: 'Đang đọc hiểu câu chuyện không gian & vị trí căn phòng...' },
+    { icon: '☀️', title: 'Phân tích môi trường', text: 'Đang đánh giá hướng nắng, nhu cầu cản sáng & phong cách nội thất...' },
+    { icon: '🧵', title: 'Đối chiếu dữ liệu', text: 'Đang quét kho dữ liệu 12 mẫu rèm chính hãng UniVeloria...' },
+    { icon: '✨', title: 'Thiết lập giải pháp', text: 'Đang hoàn tất đề xuất và chuẩn bị không gian 3D tương ứng...' }
+  ];
 
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: 'Xin chào! Tôi là Trợ lý AI UniVeloria ☁️✨ Hãy kể cho tôi nghe về căn phòng của bạn (phòng ngủ, phòng khách, hướng nắng, phong cách yêu thích...) hoặc bất kỳ câu chuyện nào, tôi sẽ gợi ý ngay mẫu rèm hoàn hảo kèm câu chuyện, mức giá và dẫn bạn vào trải nghiệm 3D ngay lập tức!',
+      text: 'Xin chào! Tôi là Trợ lý AI UniVeloria ☁️✨ Hãy kể cho tôi nghe về căn phòng của bạn (phòng ngủ, phòng khách, hướng nắng, phong cách yêu thích...) hoặc bất kỳ câu chuyện nào, tôi sẽ phân tích chuyên sâu và gợi ý ngay mẫu rèm hoàn hảo kèm câu chuyện, mức giá và dẫn bạn vào trải nghiệm 3D ngay lập tức!',
       curtain: null
     }
   ]);
 
   const messagesEndRef = useRef(null);
+  const timersRef = useRef([]);
+
+  // Clear timers on unmount
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach(t => clearTimeout(t));
+    };
+  }, []);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
     if (chatOpen) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, chatOpen, isTyping]);
+  }, [messages, chatOpen, isTyping, thinkingStageIdx]);
 
   // Translation offset from default bottom-right origin
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -337,44 +495,70 @@ export function FloatingPetdexChat({ navigateTo }) {
 
   const handleSendMessage = (textOverride = null) => {
     const query = (textOverride || chatInput).trim();
-    if (!query) return;
+    if (!query || isTyping) return;
+
+    // Clear previous timers if any
+    timersRef.current.forEach(t => clearTimeout(t));
+    timersRef.current = [];
 
     // Add user message
     setMessages((prev) => [...prev, { sender: 'user', text: query, curtain: null }]);
     if (!textOverride) setChatInput('');
     setIsTyping(true);
+    setThinkingStageIdx(0);
 
-    setTimeout(() => {
-      // Find current active curtain to avoid immediate duplicate on random
-      const lastBotCurtain = [...messages].reverse().find(m => m.curtain)?.curtain?.studioId || null;
-      const { curtain, intro } = getAiCurtainRecommendation(query, lastBotCurtain);
+    // Find current active curtain to avoid immediate duplicate on random
+    const lastBotCurtain = [...messages].reverse().find(m => m.curtain)?.curtain?.studioId || null;
+    const { curtain, text, delayMs } = analyzeUserMessage(query, lastBotCurtain);
 
+    // Cycle thinking stages across the 5-10s analysis duration
+    const stepDuration = Math.floor(delayMs / 4);
+    const t1 = setTimeout(() => setThinkingStageIdx(1), stepDuration);
+    const t2 = setTimeout(() => setThinkingStageIdx(2), stepDuration * 2);
+    const t3 = setTimeout(() => setThinkingStageIdx(3), stepDuration * 3);
+    const tFinal = setTimeout(() => {
       setMessages((prev) => [
         ...prev,
         {
           sender: 'bot',
-          text: intro,
+          text,
           curtain
         }
       ]);
       setIsTyping(false);
-    }, 650);
+    }, delayMs);
+
+    timersRef.current = [t1, t2, t3, tFinal];
   };
 
   const handleRequestAnotherCurtain = (currentStudioId) => {
+    if (isTyping) return;
+
+    timersRef.current.forEach(t => clearTimeout(t));
+    timersRef.current = [];
+
     setIsTyping(true);
-    setTimeout(() => {
-      const { curtain, intro } = getAiCurtainRecommendation('random', currentStudioId);
+    setThinkingStageIdx(0);
+    const delayMs = 5200; // > 5s per user requirement
+    const stepDuration = Math.floor(delayMs / 4);
+
+    const t1 = setTimeout(() => setThinkingStageIdx(1), stepDuration);
+    const t2 = setTimeout(() => setThinkingStageIdx(2), stepDuration * 2);
+    const t3 = setTimeout(() => setThinkingStageIdx(3), stepDuration * 3);
+    const tFinal = setTimeout(() => {
+      const { curtain, text } = analyzeUserMessage('random', currentStudioId);
       setMessages((prev) => [
         ...prev,
         {
           sender: 'bot',
-          text: intro,
+          text,
           curtain
         }
       ]);
       setIsTyping(false);
-    }, 500);
+    }, delayMs);
+
+    timersRef.current = [t1, t2, t3, tFinal];
   };
 
   const quickPrompts = [
@@ -407,7 +591,7 @@ export function FloatingPetdexChat({ navigateTo }) {
               </div>
               <div>
                 <strong className="chatbot-header-title">Trợ lý AI Tư Vấn Rèm</strong>
-                <small className="chatbot-header-sub">UniVeloria AI · Gợi ý theo câu chuyện</small>
+                <small className="chatbot-header-sub">UniVeloria AI · Phân tích sâu 5-10s</small>
               </div>
             </div>
             <button
@@ -424,7 +608,10 @@ export function FloatingPetdexChat({ navigateTo }) {
             <div className="chatbot-messages-list">
               {messages.map((m, idx) => (
                 <div key={idx} className={m.sender === 'bot' ? 'chatbot-bot-wrap' : 'chatbot-user-wrap'}>
-                  <div className={m.sender === 'bot' ? 'chatbot-bot-msg' : 'chatbot-user-msg'}>
+                  <div 
+                    className={m.sender === 'bot' ? 'chatbot-bot-msg' : 'chatbot-user-msg'}
+                    style={{ whiteSpace: 'pre-line' }}
+                  >
                     {m.text}
                   </div>
 
@@ -456,23 +643,25 @@ export function FloatingPetdexChat({ navigateTo }) {
                             <Sparkles size={14} />
                             <span>Xem 3D ngay</span>
                           </button>
-                          <button
-                            type="button"
+                          <a
+                            href={`/products/${m.curtain.id}`}
                             className="chatbot-btn-detail"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.preventDefault();
                               setChatOpen(false);
                               if (navigateTo) navigateTo('product-detail', m.curtain.id);
                             }}
-                            title="Xem chi tiết thông số và đặt mua"
+                            title={`Xem chi tiết ${m.curtain.name}`}
                           >
                             <ExternalLink size={14} />
                             <span>Chi tiết</span>
-                          </button>
+                          </a>
                         </div>
                         <button
                           type="button"
                           className="chatbot-btn-another"
                           onClick={() => handleRequestAnotherCurtain(m.curtain.studioId)}
+                          disabled={isTyping}
                         >
                           <Dices size={13} />
                           <span>Gợi ý mẫu khác cho phòng này</span>
@@ -483,9 +672,21 @@ export function FloatingPetdexChat({ navigateTo }) {
                 </div>
               ))}
 
+              {/* Dynamic AI Thinking State (5-10s Analysis) */}
               {isTyping && (
-                <div className="chatbot-bot-msg chatbot-typing-indicator">
-                  <span>Trợ lý AI đang phân tích câu chuyện căn phòng...</span>
+                <div className="chatbot-thinking-box">
+                  <div className="chatbot-thinking-header">
+                    <div className="chatbot-thinking-spinner" />
+                    <span className="chatbot-thinking-title">
+                      {thinkingStages[thinkingStageIdx]?.icon} {thinkingStages[thinkingStageIdx]?.title}
+                    </span>
+                  </div>
+                  <div className="chatbot-thinking-text">
+                    {thinkingStages[thinkingStageIdx]?.text}
+                  </div>
+                  <div className="chatbot-thinking-progress">
+                    <div className="chatbot-thinking-progress-bar" />
+                  </div>
                 </div>
               )}
 
@@ -502,6 +703,7 @@ export function FloatingPetdexChat({ navigateTo }) {
                   key={i}
                   type="button"
                   onClick={() => handleSendMessage(p.text)}
+                  disabled={isTyping}
                 >
                   {p.label}
                 </button>
@@ -512,9 +714,10 @@ export function FloatingPetdexChat({ navigateTo }) {
           <div className="chatbot-popup-footer">
             <input
               type="text"
-              placeholder="Kể về căn phòng của bạn (ví dụ: phòng ngủ hướng tây...)"
+              placeholder={isTyping ? "AI đang phân tích câu chuyện căn phòng..." : "Kể về căn phòng (phòng ngủ hướng tây, phòng khách đồ gỗ...)"}
               className="chatbot-input"
               value={chatInput}
+              disabled={isTyping}
               onChange={(e) => setChatInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSendMessage();
@@ -525,6 +728,8 @@ export function FloatingPetdexChat({ navigateTo }) {
               className="chatbot-send-btn"
               aria-label="Gửi tin nhắn"
               onClick={() => handleSendMessage()}
+              disabled={isTyping || !chatInput.trim()}
+              style={{ opacity: isTyping || !chatInput.trim() ? 0.6 : 1 }}
             >
               <Send size={15} />
             </button>
