@@ -43,7 +43,8 @@ import {
   Ruler,
   Tag,
   Star,
-  Settings
+  Settings,
+  Search
 } from 'lucide-react';
 
 const CURTAIN_COLOR_NAMES = {
@@ -939,6 +940,55 @@ export function StudioPage({
             </div>
           </div>
 
+          {/* CHI TIẾT TỪNG LỚP VẢI 3D (FABRIC LAYERS & WEAVE INSPECTOR) */}
+          {currentType?.fabricLayers && currentType.fabricLayers.length > 0 && (
+            <div className="fabric-layers-selector-bar">
+              <div className="fl-header">
+                <div className="fl-title">
+                  <Sparkles size={14} color="#8c6036" />
+                  <span>Chất liệu vải 3D: <strong>{currentType.name}</strong></span>
+                </div>
+                <button
+                  type="button"
+                  className="fl-macro-btn"
+                  onClick={() => viewer3dRef.current?.zoomIn(1.2)}
+                  title="Phóng to 3D xem rõ từng đường dệt vải"
+                >
+                  <Search size={12} />
+                  <span>Soi cận cảnh chất vải 3D</span>
+                </button>
+              </div>
+              <div className="fl-cards-grid">
+                {currentType.fabricLayers.map((layer) => {
+                  const isCurrentActive = studioColor?.toLowerCase() === layer.colorHex.toLowerCase();
+                  const isLight = layer.colorHex === '#ebe6db' || layer.colorHex === '#e3d8c8' || layer.colorHex === '#ddd3c3' || layer.colorHex === '#ded8cf' || layer.colorHex === '#e4ded5';
+                  return (
+                    <div
+                      key={layer.code}
+                      className={`fl-card ${isCurrentActive ? 'active' : ''}`}
+                      onClick={() => setStudioColor(layer.colorHex)}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="fl-card-swatch-box" style={{ backgroundColor: layer.colorHex }}>
+                        {isCurrentActive && <Check size={13} color={isLight ? '#173352' : '#ffffff'} strokeWidth={3} />}
+                      </div>
+                      <div className="fl-card-content">
+                        <div className="fl-layer-tag">
+                          <span className="fl-num">Lớp {layer.layerNumber}</span>
+                          <span className="fl-layer-name">{layer.title}</span>
+                          <span className="fl-code">{layer.code}</span>
+                        </div>
+                        <strong className="fl-fabric-tone">{layer.name}</strong>
+                        <small className="fl-desc">{layer.desc}</small>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* KÉO XẾP LỚP DOCK: Curtain Open / Fold Action & Ratio Slider */}
           <div className="external-curtain-dock">
             <button
@@ -948,23 +998,11 @@ export function StudioPage({
               type="button"
             >
               <Eye size={15} />
-              <span>
-                {currentType?.isRoman
-                  ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Kéo xếp lớp Roman')
-                  : currentType?.isHoneycomb
-                  ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Kéo xếp rèm lên')
-                  : currentType?.isPvc
-                  ? (isCurtainOpen ? 'Hạ bạt xuống' : 'Cuộn bạt lên')
-                  : currentType?.isRoller
-                  ? (isCurtainOpen ? 'Hạ rèm xuống' : 'Cuộn rèm lên')
-                  : (isCurtainOpen ? 'Đóng rèm' : 'Mở rèm 3D')}
-              </span>
+              <span>{isCurtainOpen ? 'Đóng rèm 3D' : 'Kéo mở rèm 3D'}</span>
             </button>
 
             <div className="slider-track-wrap">
-              <label>
-                {currentType?.isRoman ? 'Độ xếp lớp:' : currentType?.isHoneycomb ? 'Độ kéo xếp:' : currentType?.isPvc ? 'Độ cuộn bạt:' : currentType?.isRoller ? 'Độ cuộn:' : 'Độ mở:'}
-              </label>
+              <label>Độ mở rèm:</label>
               <input
                 type="range"
                 min="0.0"
@@ -1054,7 +1092,7 @@ export function StudioPage({
             </div>
 
             <div className="panel3-tabs">
-              {['Tất cả', 'Rèm vải', 'Rèm cầu vồng', 'Rèm cuốn'].map((filter) => (
+              {studioStyleFilters.map((filter) => (
                 <button
                   key={filter}
                   type="button"

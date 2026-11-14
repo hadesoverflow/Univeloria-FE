@@ -24276,6 +24276,162 @@ button:active:not(:disabled),
 }
 
 /* ==========================================================================
+   3D FABRIC LAYERS & WEAVE INSPECTOR BAR (CHI TIẾT CHẤT VẢI 3D)
+   ========================================================================== */
+.fabric-layers-selector-bar {
+  background: #ffffff;
+  border: 1px solid rgba(200, 168, 125, 0.35);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-top: 10px;
+  box-shadow: 0 4px 16px rgba(23, 51, 82, 0.05);
+}
+
+.fl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fl-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #173352;
+}
+
+.fl-title strong {
+  color: #8c6036;
+}
+
+.fl-macro-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fbf8f3;
+  border: 1px solid rgba(140, 96, 54, 0.28);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #8c6036;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fl-macro-btn:hover {
+  background: #8c6036;
+  color: #ffffff;
+  border-color: #8c6036;
+}
+
+.fl-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fl-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fdfbf7;
+  border: 1.5px solid rgba(200, 168, 125, 0.3);
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+.fl-card:hover {
+  border-color: #8c6036;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(140, 96, 54, 0.12);
+}
+
+.fl-card.active {
+  background: #fff8f0;
+  border-color: #8c6036;
+  box-shadow: 0 0 0 2px rgba(140, 96, 54, 0.25), 0 6px 16px rgba(140, 96, 54, 0.14);
+}
+
+.fl-card-swatch-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(0, 0, 0, 0.12);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.fl-card-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.fl-layer-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.fl-num {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #8c6036;
+  background: #f6eee3;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.fl-layer-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #173352;
+}
+
+.fl-code {
+  font-size: 10px;
+  color: #8c6036;
+  font-weight: 600;
+}
+
+.fl-fabric-tone {
+  font-size: 12px;
+  font-weight: 700;
+  color: #173352;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fl-desc {
+  font-size: 10.5px;
+  color: #64748b;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .fl-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
    AFFILIATE PARTNERS PAGE (DEDICATED FULL-PAGE SHOPEE SHOWCASE)
    ========================================================================== */
 .partners-page-view {
