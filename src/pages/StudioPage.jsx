@@ -1260,7 +1260,7 @@ export function StudioPage({
                     <div className="panel3-card-info">
                       <strong>{item.name}</strong>
                       <small>{item.desc}</small>
-                      <div className="panel3-card-price">{item.priceDisplay}</div>
+                      {item.priceDisplay ? <div className="panel3-card-price">{item.priceDisplay}</div> : null}
                     </div>
                     <button
                       type="button"

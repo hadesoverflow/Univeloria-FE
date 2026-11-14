@@ -65,38 +65,38 @@ export const CURTAIN_PROFILES = [
   {
     id: 13,
     studioId: 'elogi-1198-2',
-    name: 'UniVeloria Motion A25 Pro',
+    name: 'Smart Automation A25 Pro',
     category: 'Thanh rèm',
-    price: 3450000,
-    priceDisplay: 'Từ 3.450.000đ / bộ',
-    image: '/product/Thanh Rèm/UniVeloria Motion A25 Pro.png',
+    price: 2800000,
+    priceDisplay: 'Từ 2.800.000đ / bộ',
+    image: '/product/Thanh Rèm/Smart Automation A25 Pro.png',
     badge: 'Smart Motor Tự Động',
     story: 'Đỉnh cao công nghệ Smart Home cho rèm cửa: Động cơ siêu tĩnh âm <25dB công nghệ Đức, hỗ trợ kéo tay nhẹ Touch Motion và điều khiển giọng nói qua Apple HomeKit / Google Assistant. Thanh ray nhôm hàng không 6063-T5 chịu tải 60kg, tự động đóng mở theo lịch trình mỗi ngày.',
-    whyChoose: 'Motion A25 Pro giải phóng hoàn toàn sức lao động, nâng cấp căn phòng thành không gian sống thông minh đẳng cấp quốc tế. Động cơ không chổi than Brushless siêu êm không phát ra tiếng ồn (<25dB), tải trọng cực đại 60kg cho mọi bộ rèm vải dày, tính năng kéo tay nhẹ tự chạy (Touch Motion) và bảo hành đổi mới 5 năm chính hãng.',
+    whyChoose: 'Smart Automation A25 Pro giải phóng hoàn toàn sức lao động, nâng cấp căn phòng thành không gian sống thông minh đẳng cấp quốc tế. Động cơ không chổi than Brushless siêu êm không phát ra tiếng ồn (<25dB), tải trọng cực đại 60kg cho mọi bộ rèm vải dày, tính năng kéo tay nhẹ tự chạy (Touch Motion) và bảo hành đổi mới 5 năm chính hãng.',
     pros: [
       'Động cơ Brushless không chổi than siêu tĩnh âm <25dB công nghệ Đức, không phát ra tiếng ồn.',
       'Tích hợp thông minh: Kéo tay nhẹ tự chạy (Touch Motion), điều khiển Apple HomeKit / Google Assistant.',
       'Thanh ray nhôm hàng không 6063-T5 tải trọng 60kg, bảo hành đổi mới 5 năm chính hãng.'
     ],
-    keywords: ['thanh rem', 'thanh ray', 'dong co', 'tu dong', 'smart', 'motor', 'homekit', 'google', 'dieu khien', 'ray rem', 'ray tu dong', 'thanh treo']
+    keywords: ['thanh rem', 'thanh ray', 'dong co', 'tu dong', 'smart', 'motor', 'homekit', 'google', 'dieu khien', 'ray rem', 'ray tu dong', 'thanh treo', 'a25', 'automation']
   },
   {
     id: 14,
     studioId: 'elogi-1198-2',
-    name: 'UniVeloria Motion R25',
+    name: 'Smart Automation R25',
     category: 'Thanh rèm',
-    price: 2850000,
-    priceDisplay: 'Từ 2.850.000đ / bộ',
-    image: '/product/Thanh Rèm/UniVeloria Motion R25.png',
+    price: 2500000,
+    priceDisplay: 'Từ 2.500.000đ / bộ',
+    image: '/product/Thanh Rèm/Smart Automation R25.png',
     badge: 'Ray Bi Teflon Siêu Mượt',
     story: 'Hệ rãnh trượt bi con lăn phủ hạt nhựa Teflon tự bôi trơn siêu êm ái, kéo rèm lướt nhẹ như nhung không phát ra tiếng động. Nhôm đúc nguyên khối chịu lực uốn cong 90 độ hoặc bo tròn theo góc cửa sổ vòng cung, độ bền trên 15 năm.',
-    whyChoose: 'Motion R25 khắc phục triệt để hiện tượng kẹt rít, võng ray của các loại thanh treo thông thường. Hệ bi phủ hạt nhựa Teflon tự bôi trơn giúp rèm vải nặng lướt êm ái như nhung, kết hợp khả năng uốn góc 90 độ theo kiến trúc cửa sổ bo cong với độ bền trên 15 năm mà không cần bảo dưỡng.',
+    whyChoose: 'Smart Automation R25 khắc phục triệt để hiện tượng kẹt rít, võng ray của các loại thanh treo thông thường. Hệ bi phủ hạt nhựa Teflon tự bôi trơn giúp rèm vải nặng lướt êm ái như nhung, kết hợp khả năng uốn góc 90 độ theo kiến trúc cửa sổ bo cong với độ bền trên 15 năm mà không cần bảo dưỡng.',
     pros: [
       'Hệ rãnh trượt con lăn phủ hạt nhựa Teflon tự bôi trơn siêu êm ái, kéo nhẹ như lướt trên nhung.',
       'Uốn cong 90 độ hoặc bo tròn góc cửa sổ vòng cung linh hoạt theo mọi kiến trúc.',
       'Nhôm đúc nguyên khối chịu tải 60kg, độ bền trên 15 năm không lo xệ máng hay kẹt rít.'
     ],
-    keywords: ['thanh rem', 'thanh treo', 'ray rem', 'ray bi', 'teflon', 'sieu muot', 'uon cong', 'keo tay', 'ben bi', 'phu kien', 'thanh ray co']
+    keywords: ['thanh rem', 'thanh treo', 'ray rem', 'ray bi', 'teflon', 'sieu muot', 'uon cong', 'keo tay', 'ben bi', 'phu kien', 'thanh ray co', 'r25']
   }
 ];
 

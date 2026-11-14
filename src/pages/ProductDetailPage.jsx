@@ -484,6 +484,15 @@ export function ProductDetailPage({
                       <span>Quy cách lắp đặt thanh rèm:</span>
                       <small className="label-tip">(Đo theo kích thước thực tế ô cửa tại công trình)</small>
                     </div>
+                    <button
+                      type="button"
+                      className="pdetail-btn-measure-guide"
+                      onClick={() => setShowMeasureGuide(true)}
+                      title="Xem quy chuẩn 5 bước đo cửa chính xác"
+                    >
+                      <Ruler size={13} />
+                      <span>Cách đo cửa để đặt rèm</span>
+                    </button>
                   </div>
                   <div className="pdetail-dimension-grid" style={{ gridTemplateColumns: '1fr auto' }}>
                     <div className="dimension-field">
@@ -569,7 +578,7 @@ export function ProductDetailPage({
                   }}
                 >
                   <Sliders size={16} />
-                  <span>Xem chất vải & phối phòng thực tế dưới dạng 3D</span>
+                  <span>{product?.category === 'Thanh rèm' ? 'Phối thử rèm cùng thanh ray & động cơ thông minh trong 3D Studio' : 'Xem chất vải & phối phòng thực tế dưới dạng 3D'}</span>
                 </button>
               </div>
 
@@ -599,8 +608,8 @@ export function ProductDetailPage({
                 <div className="trust-item">
                   <Sparkles size={20} className="trust-icon" />
                   <div>
-                    <strong>Vải cao cấp OEKO-TEX</strong>
-                    <span>An toàn tuyệt đối cho sức khỏe</span>
+                    <strong>{product.category === 'Thanh rèm' ? 'Động cơ siêu tĩnh âm' : 'Vải cao cấp OEKO-TEX'}</strong>
+                    <span>{product.category === 'Thanh rèm' ? 'Êm ái <25dB công nghệ Đức' : 'An toàn tuyệt đối cho sức khỏe'}</span>
                   </div>
                 </div>
               </div>
@@ -723,7 +732,7 @@ export function ProductDetailPage({
                     </p>
                   )}
 
-                  {/* 3 feature badges */}
+                  {/* Product highlights */}
                   <div style={{
                     display: 'flex',
                     flexWrap: 'wrap',
@@ -732,54 +741,60 @@ export function ProductDetailPage({
                     paddingTop: '18px',
                     borderTop: '1px solid rgba(23, 51, 82, 0.08)'
                   }}>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      backgroundColor: '#FEF3E3',
-                      border: '1px solid rgba(23, 51, 82, 0.12)',
-                      padding: '8px 14px',
-                      borderRadius: '10px',
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      color: '#173352'
-                    }}>
-                      <Sparkles size={16} color="#c8a87d" />
-                      <span>Mềm mịn, thoáng khí</span>
-                    </div>
-
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      backgroundColor: '#FEF3E3',
-                      border: '1px solid rgba(23, 51, 82, 0.12)',
-                      padding: '8px 14px',
-                      borderRadius: '10px',
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      color: '#173352'
-                    }}>
-                      <ShieldCheck size={16} color="#c8a87d" />
-                      <span>Cản sáng tốt</span>
-                    </div>
-
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      backgroundColor: '#FEF3E3',
-                      border: '1px solid rgba(23, 51, 82, 0.12)',
-                      padding: '8px 14px',
-                      borderRadius: '10px',
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      color: '#173352'
-                    }}>
-                      <Check size={16} color="#c8a87d" />
-                      <span>Bền màu theo thời gian</span>
-                    </div>
+                    {product.highlights && product.highlights.length > 0 ? (
+                      product.highlights.map((hl, i) => (
+                        <div key={i} style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          backgroundColor: '#FEF3E3',
+                          border: '1px solid rgba(23, 51, 82, 0.12)',
+                          padding: '8px 14px',
+                          borderRadius: '10px',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                          color: '#173352'
+                        }}>
+                          {i === 0 ? <Sparkles size={16} color="#c8a87d" /> : i === 1 ? <ShieldCheck size={16} color="#c8a87d" /> : <Check size={16} color="#c8a87d" />}
+                          <span>{hl.title}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#FEF3E3', border: '1px solid rgba(23, 51, 82, 0.12)', padding: '8px 14px', borderRadius: '10px', fontSize: '13px', fontWeight: 600, color: '#173352' }}>
+                          <Sparkles size={16} color="#c8a87d" />
+                          <span>Chất liệu cao cấp</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#FEF3E3', border: '1px solid rgba(23, 51, 82, 0.12)', padding: '8px 14px', borderRadius: '10px', fontSize: '13px', fontWeight: 600, color: '#173352' }}>
+                          <ShieldCheck size={16} color="#c8a87d" />
+                          <span>Độ bền vượt trội</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#FEF3E3', border: '1px solid rgba(23, 51, 82, 0.12)', padding: '8px 14px', borderRadius: '10px', fontSize: '13px', fontWeight: 600, color: '#173352' }}>
+                          <Check size={16} color="#c8a87d" />
+                          <span>Bảo hành chính hãng</span>
+                        </div>
+                      </>
+                    )}
                   </div>
+
+                  {product.features && product.features.length > 0 && (
+                    <div style={{
+                      marginTop: '18px',
+                      padding: '14px 18px',
+                      backgroundColor: 'rgba(23, 51, 82, 0.03)',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(23, 51, 82, 0.06)'
+                    }}>
+                      <strong style={{ display: 'block', fontSize: '13.5px', color: '#173352', marginBottom: '8px' }}>
+                        Chi tiết cấu tạo & tính năng:
+                      </strong>
+                      <ul style={{ margin: 0, paddingLeft: '18px', color: '#475569', fontSize: '13.5px', lineHeight: '1.7' }}>
+                        {product.features.map((feat, fIdx) => (
+                          <li key={fIdx}>{feat}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -793,7 +808,7 @@ export function ProductDetailPage({
                       <td>{product.code || (`UVL-${product.id}`)}</td>
                     </tr>
                     <tr>
-                      <th>Loại rèm / Danh mục</th>
+                      <th>Loại sản phẩm / Danh mục</th>
                       <td>{product.category || 'Rèm vải cao cấp'}</td>
                     </tr>
                     <tr>
@@ -805,19 +820,19 @@ export function ProductDetailPage({
                       <td>{product.style || 'Hiện đại'}</td>
                     </tr>
                     <tr>
-                      <th>Chất liệu vải</th>
+                      <th>{product.category === 'Thanh rèm' ? 'Chất liệu thân vỏ & ray' : 'Chất liệu vải'}</th>
                       <td>{product.material || 'Theo tiêu chuẩn nhà sản xuất'}</td>
                     </tr>
                     <tr>
-                      <th>Khổ vải may tiêu chuẩn</th>
+                      <th>{product.category === 'Thanh rèm' ? 'Quy cách & chiều dài' : 'Khổ vải may tiêu chuẩn'}</th>
                       <td>{product.fabricWidth || 'Theo kích thước đo đạc thực tế'}</td>
                     </tr>
                     <tr>
-                      <th>Khả năng cản sáng</th>
+                      <th>{product.category === 'Thanh rèm' ? 'Tải trọng chịu lực' : 'Khả năng cản sáng'}</th>
                       <td>{product.lightBlocking || 'Tùy chỉnh theo yêu cầu'}</td>
                     </tr>
                     <tr>
-                      <th>Xuất xứ vải & phụ kiện</th>
+                      <th>Xuất xứ</th>
                       <td>{product.origin || 'Nhập khẩu chính hãng'}</td>
                     </tr>
                     <tr>

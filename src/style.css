@@ -2,15 +2,20 @@
 
 :root {
   font-family: 'Manrope', 'DM Sans', sans-serif;
-  color: #061116;
+  color: #173352;
   background: #f8f7f3;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --ink: #061116;
+  --ink: #173352;
   --cream: #f7f4ed;
   --blue: #9dbbd6;
-  --line: rgba(6, 17, 22, .18)
+  --line: rgba(23, 51, 82, .18);
+  --brand-navy: #173352;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #173352;
 }
 
 * {
@@ -156,7 +161,7 @@ a:focus-visible {
   line-height: .8;
   letter-spacing: -.095em;
   white-space: nowrap;
-  color: #020d12
+  color: #173352
 }
 
 .brand-word span {
@@ -16938,7 +16943,10 @@ a:focus-visible {
   align-items: center !important;
   gap: 6px !important;
   margin-bottom: 6px !important;
-  flex-wrap: wrap !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 .card-category-tag {
@@ -16952,18 +16960,22 @@ a:focus-visible {
   border-radius: 4px !important;
   line-height: 1.2 !important;
   display: inline-block !important;
+  flex-shrink: 0 !important;
 }
 
 .card-room-tag {
   font-size: 10.5px !important;
   color: #64748b !important;
   font-weight: 500 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 .product-info h3 {
   font-size: 13.5px !important;
   font-weight: 700 !important;
-  color: #101e28 !important;
+  color: #173352 !important;
   margin: 0 0 4px 0 !important;
   line-height: 1.35 !important;
   height: 37px !important;
@@ -17039,7 +17051,7 @@ a:focus-visible {
 .price-wrap .price {
   font-size: 15px !important;
   font-weight: 700 !important;
-  color: #101e28 !important;
+  color: #173352 !important;
 }
 
 .price-wrap .old-price {
@@ -17053,7 +17065,7 @@ a:focus-visible {
   width: 36px !important;
   height: 36px !important;
   border-radius: 50% !important;
-  background: #101e28 !important;
+  background: #173352 !important;
   color: #ffffff !important;
   border: none !important;
   display: flex !important;
