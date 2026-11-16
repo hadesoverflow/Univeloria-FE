@@ -19958,7 +19958,7 @@ button:active:not(:disabled),
   font-size: clamp(30px, 3.8vw, 44px);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #0c1518;
+  color: #173352 !important;
   margin: 0 0 12px;
 }
 
@@ -20047,7 +20047,7 @@ button:active:not(:disabled),
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 23px;
   font-weight: 700;
-  color: #0c1518;
+  color: #173352 !important;
   margin: 0 0 14px;
   line-height: 1.25;
 }
@@ -20101,7 +20101,7 @@ button:active:not(:disabled),
   font-size: clamp(30px, 3.8vw, 44px);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #0c1518;
+  color: #173352 !important;
   margin: 0 0 12px;
 }
 
@@ -20174,7 +20174,7 @@ button:active:not(:disabled),
 .about-page-view .cv-title {
   font-size: 16px;
   font-weight: 700;
-  color: #0c1518;
+  color: #173352 !important;
   margin: 0 0 5px;
   line-height: 1.35;
 }
