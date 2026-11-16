@@ -454,6 +454,28 @@ export function analyzeUserMessage(rawInput, context = {}, currentCurtainId = nu
   const recommendedIds = new Set(context.recommendedCurtainIds || []);
   const curtainPool = CURTAIN_PROFILES.filter(c => c.category !== 'Thanh rèm');
 
+  // Helper to pick candidate not in dislikedIds
+  const pickCandidate = (preferredIds = []) => {
+    let candidates = curtainPool.filter(c => !dislikedIds.has(c.id));
+    if (candidates.length === 0) {
+      dislikedIds.clear();
+      candidates = curtainPool;
+    }
+    // Prefer non-recommended first from preferredIds
+    for (const pId of preferredIds) {
+      const found = candidates.find(c => c.id === pId && !recommendedIds.has(c.id));
+      if (found) return found;
+    }
+    // Otherwise any from preferredIds
+    for (const pId of preferredIds) {
+      const found = candidates.find(c => c.id === pId);
+      if (found) return found;
+    }
+    // Otherwise any non-recommended
+    const fresh = candidates.filter(c => !recommendedIds.has(c.id));
+    return fresh.length > 0 ? fresh[0] : candidates[0];
+  };
+
   // 1. Phân tích nhu cầu về THANH RÈM / ĐỘNG CƠ TỰ ĐỘNG (Chỉ hiện khi khách hỏi)
   const isThanhRemQuery = norm.includes('thanh rem') || 
                           norm.includes('thanh treo') || 
@@ -467,10 +489,12 @@ export function analyzeUserMessage(rawInput, context = {}, currentCurtainId = nu
                           norm.includes('phu kien rem') ||
                           norm.includes('ray treo') ||
                           norm.includes('thanh keo') ||
-                          norm.includes('treo rem');
+                          norm.includes('treo rem') ||
+                          norm.includes('a25') ||
+                          norm.includes('r25');
 
   if (isThanhRemQuery) {
-    const isAuto = norm.includes('tu dong') || norm.includes('smart') || norm.includes('dien thoai') || norm.includes('giong noi') || norm.includes('motor') || norm.includes('dong co') || norm.includes('app');
+    const isAuto = norm.includes('tu dong') || norm.includes('smart') || norm.includes('dien thoai') || norm.includes('giong noi') || norm.includes('motor') || norm.includes('dong co') || norm.includes('app') || norm.includes('a25');
     const chosenRod = isAuto 
       ? CURTAIN_PROFILES.find(c => c.id === 13) 
       : (CURTAIN_PROFILES.find(c => c.id === 14) || CURTAIN_PROFILES.find(c => c.id === 13));
@@ -490,7 +514,7 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenRod.name} (${chosenRod
 
     return {
       type: 'rod_consultation',
-      delayMs: 3500,
+      delayMs: 3200,
       curtain: chosenRod,
       text: rodText,
       updatedContext: { ...context, lastCurtainId: chosenRod.id }
@@ -503,11 +527,11 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenRod.name} (${chosenRod
     return norm.includes(cNorm);
   });
 
-  if (requestedSpecific && (norm.includes('xem') || norm.includes('cho toi') || norm.includes('quay lai') || norm.includes('chon mau') || norm.includes('mau nay') || norm.includes('tu van'))) {
+  if (requestedSpecific && (norm.includes('xem') || norm.includes('cho toi') || norm.includes('quay lai') || norm.includes('chon mau') || norm.includes('mau nay') || norm.includes('tu van') || norm.includes('chi tiet'))) {
     dislikedIds.delete(requestedSpecific.id);
     return {
       type: 'final_consultation',
-      delayMs: 3500,
+      delayMs: 3200,
       confirmText: `Dạ vâng! Tôi đã mở lại mẫu ${requestedSpecific.name} (${requestedSpecific.badge}) theo đúng yêu cầu của bạn. Bạn đợi tôi trong giây phút nhé!`,
       finalText: `TƯ VẤN CHUYÊN GIA: THÔNG TIN CHI TIẾT VỀ ${requestedSpecific.name.toUpperCase()}
 
@@ -556,22 +580,17 @@ Chuyên gia tư vấn UniVeloria gửi bạn chi tiết mẫu ${requestedSpecifi
 
     // Lọc pool: TUYỆT ĐỐI LOẠI BỎ các sản phẩm người dùng không thích
     let candidatePool = curtainPool.filter(c => !dislikedIds.has(c.id) && !recommendedIds.has(c.id));
-    
-    // Nếu đã gợi ý hết các sản phẩm chưa xem, chọn trong số các sản phẩm KHÔNG BỊ DISLIKE
     if (candidatePool.length === 0) {
       candidatePool = curtainPool.filter(c => !dislikedIds.has(c.id) && c.id !== curId);
     }
-
-    // Nếu người dùng dislike hầu như tất cả (chỉ còn rỗng), fallback giữ lại sản phẩm khác curId
     if (candidatePool.length === 0) {
       candidatePool = curtainPool.filter(c => c.id !== curId);
     }
 
-    // Ưu tiên chọn mẫu khác biệt về category so với mẫu cũ
     const prevCategory = curtainPool.find(c => c.id === curId)?.category;
     const diffCategoryCandidates = candidatePool.filter(c => c.category !== prevCategory);
     const chosenPool = diffCategoryCandidates.length > 0 ? diffCategoryCandidates : candidatePool;
-    const chosenAlt = chosenPool[Math.floor(Math.random() * chosenPool.length)];
+    const chosenAlt = chosenPool[Math.floor(Math.random() * chosenPool.length)] || curtainPool[0];
 
     const roomLabel = context.room?.label || 'căn phòng';
 
@@ -594,7 +613,7 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
 
     return {
       type: 'alternative_curtain',
-      delayMs: 3800,
+      delayMs: 3400,
       curtain: chosenAlt,
       text: altText,
       updatedContext: {
@@ -613,7 +632,7 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
       type: 'faq',
       delayMs: 600,
       curtain: null,
-      text: "Dạ không có gì ạ! Rất vui được đồng hành tư vấn không gian cùng bạn. Bất cứ khi nào bạn cần phân tích hướng nắng, chất liệu vải hay trải nghiệm phối cảnh rèm 3D thực tế, tôi luôn sẵn sàng hỗ trợ nhé. Chúc bạn một ngày thật an yên và nhiều năng lượng tích cực! 🌿✨"
+      text: "Dạ không có gì ạ! Rất vui được đồng hành tư vấn không gian cùng bạn. Bất cứ khi nào bạn cần phân tích hướng nắng, chất liệu vải hay trải nghiệm phối cảnh rèm 3D thực tế, tôi luôn sẵn sàng hỗ trợ nhé. Chúc bạn một ngày thật an yên và nhiều niềm vui! 🌿✨"
     };
   }
 
@@ -624,7 +643,7 @@ Chuyên gia tư vấn UniVeloria khẳng định: ${chosenAlt.name} (${chosenAlt
   if (isPriceQuery) {
     return {
       type: 'faq',
-      delayMs: 800,
+      delayMs: 700,
       curtain: null,
       text: `Dạ bảng giá rèm tại UniVeloria được niêm yết công khai, minh bạch và tính theo diện tích m² thực tế (đã gồm đầy đủ phụ kiện chuẩn & công lắp đặt hoàn thiện):
 
@@ -637,23 +656,69 @@ Bạn đang dự tính làm rèm cho không gian nào (như phòng khách, phòn
     };
   }
 
-  // 6. CÂU HỎI VỀ KHẢ NĂNG CẢN NHIỆT / CHỐNG NẮNG
-  if ((norm.includes('can nhiet') || norm.includes('chong nong') || norm.includes('can sang') || norm.includes('cach nhiet') || norm.includes('100')) && (norm.includes('tot nhat') || norm.includes('loai nao') || norm.includes('the nao') || norm.includes('co tot khong'))) {
+  // 6. CÂU HỎI VỀ CÁC LOẠI RÈM / SO SÁNH CÁC DÒNG RÈM
+  const isTypesQuery = norm.includes('co nhung loai') || 
+                       norm.includes('cac loai rem') || 
+                       norm.includes('cac dong rem') || 
+                       norm.includes('nhung loai nao') || 
+                       norm.includes('co loai nao') || 
+                       norm.includes('co may loai') || 
+                       norm.includes('phan biet') || 
+                       norm.includes('loai rem gi');
+
+  if (isTypesQuery) {
     return {
       type: 'faq',
-      delayMs: 800,
+      delayMs: 750,
       curtain: null,
-      text: `Dạ để chống nóng và cản nắng tối ưu, UniVeloria phân loại theo từng cấp độ giải pháp chuyên môn:
+      text: `Dạ hiện tại UniVeloria sản xuất và may đo 3 dòng rèm chính hãng cùng hệ thống điều khiển tự động:
 
-1. 🥇 Cản nhiệt & Cản sáng 100% Tuyệt đối: Mẫu Shade Luna (Rèm Cuốn) phủ 3 lớp bọt Foam cách nhiệt, giảm tới 5 độ C cho phòng đón nắng hướng Tây gay gắt.
-2. 🥈 Cản sáng 95% Sang trọng & Lì phẳng: Mẫu Duo Orion Blackout (Rèm Cầu Vồng sợi melange mật độ cao) hoặc Drape Elysia (Rèm Vải gấm Nhật Bản may sóng S dày dặn).
-3. 🥉 Cản sáng 94% Ấm cúng vân gỗ: Mẫu Duo Onyx Blackout (Rèm Cầu Vồng vân gỗ tự nhiên), bảo vệ đồ nội thất gỗ khỏi bạc màu.
+1. 🌈 **Rèm Cầu Vồng (Dòng Duo)**: Cấu tạo 2 lớp nan so le xoay lật 180 độ, bề mặt vân gỗ Wood-grain hoặc dệt melange cản sáng 90-95%. Rất hiện đại, gọn gàng và điều tiết ánh sáng linh hoạt.
+2. 🌟 **Rèm Cuốn (Dòng Shade)**: Cuộn phẳng đứng phom trong hộp máng nhôm. Nổi bật với khả năng cản sáng 100% Blackout (Shade Luna) hoặc mắt lưới vi mảnh ngắm view (Shade Solis).
+3. 💎 **Rèm Vải Cao Cấp (Dòng Drape)**: Kỹ thuật may sóng chữ S bồng bềnh từ trần xuống sàn chuẩn khách sạn 5 sao, chất vải gấm Nhật Bản cách âm 35% và cách nhiệt bề thế.
+4. ⚡ **Hệ Thanh Rèm & Động Cơ Tự Động (Smart Automation A25 Pro & R25)**: Động cơ siêu êm <25dB, tích hợp điều khiển giọng nói qua Apple HomeKit / Google Assistant.
 
-Cửa sổ căn phòng của bạn hiện đang ở hướng nào (hướng Tây nắng chiều gay gắt hay hướng Đông nắng sớm)? Tôi sẽ chọn đúng mẫu cản nhiệt chuẩn nhất cho bạn!`
+Bạn quan tâm hoặc thích phong cách của dòng rèm nào trong các loại trên? Hãy chia sẻ để tôi tư vấn chi tiết hơn nhé!`
     };
   }
 
-  // 7. TRÍCH XUẤT THÔNG TIN NGỮ NGHĨA TỰ NHIÊN
+  // 7. CÂU HỎI VỀ KHẢ NĂNG CẢN NHIỆT / CHỐNG NẮNG GẮT
+  const isHeatQuery = (norm.includes('can nhiet') || norm.includes('chong nong') || norm.includes('can sang') || norm.includes('cach nhiet') || norm.includes('100')) && (norm.includes('tot nhat') || norm.includes('loai nao') || norm.includes('the nao') || norm.includes('co tot khong') || norm.includes('giam nong'));
+
+  if (isHeatQuery) {
+    return {
+      type: 'faq',
+      delayMs: 750,
+      curtain: null,
+      text: `Dạ để chống nóng và cản nắng tối ưu cho nhà hướng Tây hoặc phòng nắng gắt, UniVeloria phân loại theo từng cấp độ giải pháp chuyên môn:
+
+1. 🥇 **Cản nhiệt & Cản sáng 100% Tuyệt đối**: Mẫu Shade Luna (Rèm Cuốn) phủ 3 lớp bọt Foam cách nhiệt, giảm tới 5 độ C cho phòng đón nắng gay gắt.
+2. 🥈 **Cản sáng 95% Sang trọng & Lì phẳng**: Mẫu Duo Orion Blackout (Rèm Cầu Vồng sợi melange mật độ cao) hoặc Drape Elysia (Rèm Vải gấm Nhật Bản may sóng S dày dặn).
+3. 🥉 **Cản sáng 94% Ấm cúng vân gỗ**: Mẫu Duo Onyx Blackout (Rèm Cầu Vồng vân gỗ tự nhiên), bảo vệ đồ nội thất gỗ khỏi bạc màu.
+
+Cửa sổ căn phòng của bạn hiện đang ở hướng nào (hướng Tây nắng chiều hay hướng Đông nắng sớm)? Tôi sẽ chọn đúng mẫu cản nhiệt chuẩn nhất cho bạn!`
+    };
+  }
+
+  // 8. CÂU HỎI VỀ ĐO ĐẠC & LẮP ĐẶT
+  const isInstallQuery = norm.includes('lap dat') || norm.includes('do dac') || norm.includes('thi cong') || norm.includes('khao sat') || norm.includes('bao lau') || norm.includes('co tinh phi khong');
+  if (isInstallQuery) {
+    return {
+      type: 'faq',
+      delayMs: 750,
+      curtain: null,
+      text: `Dạ quy trình may đo & lắp đặt tại UniVeloria rất nhanh chóng và hoàn toàn tiện lợi:
+
+• 📏 **Khảo sát & Mang mẫu tận nhà**: Hoàn toàn MIỄN PHÍ. Kỹ thuật viên sẽ đem bảng mẫu vải thực tế đến tận nhà để bạn sờ chất liệu và phối thử với màu sơn tường.
+• ⏱️ **Thời gian hoàn thiện**: Chỉ từ 24h – 48h từ khi chốt mẫu may đo.
+• 🔧 **Thi công & Lắp đặt**: Kỹ thuật viên chuyên nghiệp lắp đặt chuẩn chỉ, sạch sẽ, hướng dẫn sử dụng và bàn giao trọn gói.
+• 🛡️ **Bảo hành**: 5 năm đổi mới cho động cơ thông minh và bảo dưỡng trọn đời.
+
+Bạn muốn kỹ thuật viên UniVeloria hỗ trợ đo đạc tận nhà hay cần tư vấn mẫu rèm trước qua chat ạ?`
+    };
+  }
+
+  // 9. NHẬN DIỆN CĂN PHÒNG ĐƯỢC HỎI HOẶC ĐỀ CẬP (Bao gồm "Phòng thờ thì sao", "Còn phòng khách", "Thế phòng ngủ", v.v.)
   let extractedRoom = null;
   if (norm.includes('phong tho') || norm.includes('gian tho') || norm.includes('ban tho') || norm.includes('tho gia tien') || norm.includes('tam linh') || norm.includes('ton nghiem') || norm.includes('thanh tinh') || norm.includes('noi tho') || norm.includes('khong gian tho') || norm.includes('tho')) {
     extractedRoom = { key: 'worship', label: 'Phòng thờ' };
@@ -669,75 +734,18 @@ Cửa sổ căn phòng của bạn hiện đang ở hướng nào (hướng Tây
     extractedRoom = { key: 'balcony', label: 'Ban công' };
   } else if (norm.includes('phong an') || norm.includes('bep') || norm.includes('nha bep')) {
     extractedRoom = { key: 'dining', label: 'Phòng ăn' };
-  } else if (norm.includes('cua so chinh') || norm.includes('cua chinh') || norm.includes('vach kinh')) {
-    extractedRoom = { key: 'main_window', label: 'Cửa kính chính' };
-  } else if (norm.includes('cua so') || norm.includes('khung cua') || norm.includes('o cua')) {
-    extractedRoom = { key: 'window', label: 'Cửa sổ căn phòng' };
   }
 
-  let extractedStyle = null;
-  if (norm.includes('ton nghiem') || norm.includes('trang nghiem') || norm.includes('thanh tinh') || norm.includes('phong thuy') || norm.includes('tram am') || norm.includes('van go') || norm.includes('go') || norm.includes('nau')) {
-    extractedStyle = { key: 'worship_wood', label: 'Tôn nghiêm vân gỗ' };
-  } else if (norm.includes('sang trong') || norm.includes('dang cap') || norm.includes('5 sao') || norm.includes('quy toc') || norm.includes('chau au') || norm.includes('be the') || norm.includes('cao cap')) {
-    extractedStyle = { key: 'luxury', label: 'Sang trọng 5 sao' };
-  } else if (norm.includes('don gian') || norm.includes('gon gang') || norm.includes('hien dai') || norm.includes('toi gian') || norm.includes('minimal')) {
-    extractedStyle = { key: 'simple', label: 'Đơn giản gọn gàng' };
-  } else if (norm.includes('toi uu') || norm.includes('can sang') || norm.includes('blackout') || norm.includes('chong nong') || norm.includes('cach nhiet') || norm.includes('toi hoan toan') || norm.includes('100')) {
-    extractedStyle = { key: 'blackout', label: 'Cản sáng tối ưu' };
-  } else if (norm.includes('loc sang') || norm.includes('ngam canh') || norm.includes('view') || norm.includes('thoang')) {
-    extractedStyle = { key: 'view', label: 'Lọc sáng ngắm cảnh' };
-  } else if (norm.includes('gia re') || norm.includes('tiet kiem') || norm.includes('re nhat') || norm.includes('vua tien')) {
-    extractedStyle = { key: 'budget', label: 'Tiết kiệm ngân sách' };
-  }
-
-  let extractedOrientation = null;
-  if (norm.includes('tay') || norm.includes('phia tay') || norm.includes('huong tay') || norm.includes('nang chieu') || norm.includes('nang gat') || norm.includes('om nhiet') || norm.includes('tay bac') || norm.includes('tay nam')) {
-    extractedOrientation = { key: 'west', label: 'Hướng Tây (Nắng gắt)' };
-  } else if (norm.includes('dong') || norm.includes('phia dong') || norm.includes('huong dong') || norm.includes('nang som') || norm.includes('binh minh') || norm.includes('dong bac') || norm.includes('dong nam')) {
-    extractedOrientation = { key: 'east', label: 'Hướng Đông (Nắng sớm)' };
-  } else if (norm.includes('nam') || norm.includes('phia nam') || norm.includes('huong nam') || norm.includes('gio mat') || norm.includes('gio nom')) {
-    extractedOrientation = { key: 'south', label: 'Hướng Nam (Đón gió mát)' };
-  } else if (norm.includes('bac') || norm.includes('phia bac') || norm.includes('huong bac') || norm.includes('gio lanh') || norm.includes('mua dong') || norm.includes('thieu sang')) {
-    extractedOrientation = { key: 'north', label: 'Hướng Bắc (Dịu mát)' };
-  }
-
-  const activeRoom = extractedRoom || context.room;
-  const activeStyle = extractedStyle || context.style;
-  const activeOrientation = extractedOrientation || context.orientation;
-
-  // 8. XỬ LÝ LỜI CHÀO HỎI ĐẦU TIÊN
-  const greetingWords = ['alo', 'chao', 'xin chao', 'hello', 'hi', 'ad oi', 'shop oi', 'em oi', 'ban oi'];
-  const isGreetingOnly = greetingWords.includes(norm);
-  if (isGreetingOnly && !activeRoom && !activeStyle && !activeOrientation) {
-    return {
-      type: 'question',
-      delayMs: 600,
-      curtain: null,
-      text: "Dạ UniVeloria xin chào bạn! Tôi là Chuyên gia Tư vấn Không gian Rèm AI ☁️✨\n\nBạn đang muốn chọn rèm cho không gian nào (như phòng khách, phòng ngủ, phòng thờ, phòng làm việc hay ban công...)? Căn phòng của bạn có đón nắng nhiều không? Hãy chia sẻ cho tôi biết nhé!",
-      updatedContext: { ...context, hasGreeted: true }
-    };
-  }
-
-  // 9. TRƯỜNG HỢP ĐẶC BIỆT: PHÒNG THỜ (Worship Room)
-  if (activeRoom && activeRoom.key === 'worship') {
-    const hasEnoughContext = activeOrientation || activeStyle || norm.includes('tu van') || norm.includes('mau') || norm.includes('loai nao') || norm.includes('cho toi') || norm.includes('chon');
-    
-    if (hasEnoughContext) {
-      const candidates = curtainPool.filter(c => !dislikedIds.has(c.id));
-      const worshipRank = [1, 11, 12, 2, 7, 8, 4, 3, 5, 10, 6, 9];
-      let chosen = candidates.find(c => worshipRank.includes(c.id)) || candidates[0];
-      for (const wId of worshipRank) {
-        const found = candidates.find(c => c.id === wId && !recommendedIds.has(c.id));
-        if (found) { chosen = found; break; }
-      }
-
-      const orientLabel = activeOrientation ? ` ${activeOrientation.label}` : '';
-      const confirmText = `Tôi hiểu rồi! Đối với không gian Phòng thờ gia tiên, sự tôn nghiêm, thanh tịnh và phong thủy ấm cúng là tiêu chuẩn khắt khe nhất. Bạn đợi tôi trong giây phút để tôi chọn cho bạn mẫu rèm chuẩn phong thủy nhất nhé!`;
-
-      const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM TÔN NGHIÊM CHO PHÒNG THỜ GIA TIÊN${orientLabel.toUpperCase()}
+  // 10. NẾU NGƯỜI DÙNG NHẮC ĐẾN HOẶC HỎI VỀ 1 CĂN PHÒNG CỤ THỂ -> TRỰC TIẾP TƯ VẤN NGAY CHO PHÒNG ĐÓ KÈM THẺ SẢN PHẨM!
+  // Tuyệt đối không lặp lại câu hỏi "Bạn muốn lắp cho phòng nào?"
+  if (extractedRoom) {
+    if (extractedRoom.key === 'worship') {
+      const chosen = pickCandidate([1, 11, 12, 2, 7, 8]);
+      const confirmText = `Dạ với không gian **Phòng thờ gia tiên**, sự tôn nghiêm, thanh tịnh và phong thủy tụ khí sinh tài là tiêu chuẩn khắt khe nhất! Bạn đợi tôi trong giây phút để tôi thẩm định và đưa ra giải pháp rèm chuẩn phong thủy nhất nhé!`;
+      const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM TÔN NGHIÊM CHO PHÒNG THỜ GIA TIÊN
 
 1. Mức độ phù hợp với không gian:
-10/10 - Rất hoàn hảo cho không gian phòng thờ. ${chosen.name} sở hữu gam màu trầm ấm đồng điệu tuyệt đối với bàn thờ gỗ tự nhiên. Cơ chế che chắn kín đáo ngăn chặn triệt để luồng nắng chói gắt chiếu trực diện vào bát hương và bài vị (điều tối kỵ gây tán khí trong phong thủy), giữ cho gian thờ luôn tĩnh mịch, tụ khí sinh tài.
+10/10 - Rất hoàn hảo cho không gian phòng thờ gia tiên. Mẫu ${chosen.name} sở hữu gam màu trầm ấm đồng điệu tuyệt đối với bàn thờ gỗ tự nhiên và hoành phi câu đối. Cơ chế che chắn kín đáo ngăn chặn triệt để luồng nắng chói gắt và bức xạ nhiệt chiếu trực diện vào bát hương, bài vị (điều tối kỵ gây tán khí trong phong thủy), giữ cho gian thờ luôn tĩnh mịch, tụ khí sinh tài.
 
 2. Tại sao bạn bắt buộc phải chọn nó:
 ${chosen.whyChoose}
@@ -745,193 +753,325 @@ ${chosen.whyChoose}
 3. Mặt tốt & Ưu điểm vượt trội của sản phẩm:
 ${chosen.pros.map(p => `• ${p}`).join('\n')}
 
-Chuyên gia tư vấn UniVeloria khẳng định: ${chosen.name} (${chosen.badge}) là giải pháp chuẩn phong thủy và tôn nghiêm nhất cho phòng thờ của bạn:`;
+Chuyên gia tư vấn UniVeloria khẳng định: ${chosen.name} (${chosen.badge}) là giải pháp chuẩn phong thủy và tôn nghiêm nhất cho gian thờ của bạn:`;
 
       return {
         type: 'final_consultation',
-        delayMs: 4200,
+        delayMs: 3800,
         confirmText,
         finalText,
         curtain: chosen,
         updatedContext: {
           ...context,
-          room: activeRoom,
-          style: activeStyle || { key: 'worship_wood', label: 'Tôn nghiêm vân gỗ' },
-          orientation: activeOrientation,
+          room: extractedRoom,
           lastCurtainId: chosen.id,
+          lastQuestionType: 'consulted_worship',
           recommendedCurtainIds: [...recommendedIds, chosen.id],
           dislikedProductIds: Array.from(dislikedIds)
         }
       };
-    } else {
-      return {
-        type: 'question',
-        delayMs: 700,
-        curtain: null,
-        text: `Dạ với không gian phòng thờ gia tiên, sự thanh tịnh, tôn nghiêm và cân bằng phong thủy là ưu tiên hàng đầu. Rèm cửa phòng thờ cần cản bớt ánh nắng chói gắt chiếu trực diện vào bàn thờ, đồng thời giữ được tone màu ấm cúng (vân gỗ hoặc vàng be mộc mạc) để giữ trọn vượng khí.
+    }
 
-Cửa sổ phòng thờ của bạn có nằm ở hướng đón nắng nhiều không, và bạn ưu tiên loại rèm cuốn/cầu vồng vân gỗ gọn gàng hay rèm vải buông trang nghiêm ạ?`,
+    if (extractedRoom.key === 'living') {
+      const chosen = pickCandidate([10, 3, 1, 9, 12]);
+      const confirmText = `Dạ với **Phòng khách**, yếu tố bề thế, sang trọng và khả năng lấy sáng hài hòa là ưu tiên số một. Bạn đợi tôi trong giây phút nhé!`;
+      const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM SANG TRỌNG BỀ THẾ CHO PHÒNG KHÁCH
+
+1. Mức độ phù hợp với không gian:
+10/10 - Cực kỳ hoàn mỹ cho phòng khách. Mẫu ${chosen.name} định hình chuẩn mực kiến trúc sang trọng, tôn lên vẻ đẹp của sofa và nội thất. Vừa giúp đón ánh sáng tự nhiên khoáng đạt khi sinh hoạt chung, vừa đảm bảo sự riêng tư trang trọng.
+
+2. Tại sao bạn bắt buộc phải chọn nó:
+${chosen.whyChoose}
+
+3. Mặt tốt & Ưu điểm vượt trội:
+${chosen.pros.map(p => `• ${p}`).join('\n')}
+
+Chuyên gia tư vấn UniVeloria gửi bạn phương án tối ưu nhất cho phòng khách:`;
+
+      return {
+        type: 'final_consultation',
+        delayMs: 3800,
+        confirmText,
+        finalText,
+        curtain: chosen,
         updatedContext: {
           ...context,
-          room: activeRoom
+          room: extractedRoom,
+          lastCurtainId: chosen.id,
+          lastQuestionType: 'consulted_living',
+          recommendedCurtainIds: [...recommendedIds, chosen.id],
+          dislikedProductIds: Array.from(dislikedIds)
         }
       };
     }
-  }
 
-  // 10. NẾU ĐÃ CÓ ĐỦ DỮ LIỆU ĐỂ TƯ VẤN NGAY
-  const isReadyToConsult = (activeRoom && (activeOrientation || activeStyle)) || 
-                          (activeOrientation && activeStyle) ||
-                          (activeRoom && (norm.includes('tu van') || norm.includes('cho toi') || norm.includes('can mua') || norm.includes('chon')));
+    if (extractedRoom.key === 'bedroom') {
+      const chosen = pickCandidate([7, 4, 1, 11, 2]);
+      const confirmText = `Dạ với **Phòng ngủ**, ưu tiên hàng đầu là cản sáng tuyệt đối, cách âm và tạo bóng tối êm dịu để có giấc ngủ sâu thư thái nhất! Bạn đợi tôi trong giây phút nhé!`;
+      const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM CẢN SÁNG CHỐNG ỒN CHO PHÒNG NGỦ
 
-  if (isReadyToConsult) {
-    const candidates = curtainPool.filter(c => !dislikedIds.has(c.id));
-    if (candidates.length === 0) {
-      dislikedIds.clear();
-    }
+1. Mức độ phù hợp với không gian:
+10/10 - Lựa chọn hoàn hảo cho phòng ngủ. Mẫu ${chosen.name} triệt tiêu toàn bộ tia nắng chói và giảm nhiệt độ phòng, mang lại không gian tĩnh lặng, mát mẻ để bạn và gia đình phục hồi năng lượng trọn vẹn sau ngày dài.
 
-    const scored = candidates.map(item => {
-      let score = 0;
-
-      if (item.keywords && item.keywords.some(k => norm.includes(k))) score += 40;
-
-      if (activeRoom) {
-        if (activeRoom.key === 'bedroom') {
-          if (item.id === 7) score += 45;
-          if (item.id === 1 || item.id === 4) score += 40;
-          if (item.category === 'Rèm vải') score += 35;
-        } else if (activeRoom.key === 'living' || activeRoom.key === 'main_window') {
-          if (item.id === 10) score += 50;
-          if (item.category === 'Rèm vải') score += 40;
-          if (item.category === 'Rèm cầu vồng') score += 35;
-        } else if (activeRoom.key === 'study' || activeRoom.key === 'apartment') {
-          if (item.category === 'Rèm cuốn') score += 45;
-          if (item.category === 'Rèm cầu vồng') score += 38;
-        } else if (activeRoom.key === 'balcony') {
-          if (item.id === 9) score += 55;
-          if (item.category === 'Rèm cuốn') score += 40;
-        }
-      }
-
-      if (activeOrientation) {
-        if (activeOrientation.key === 'west') {
-          if (item.id === 7) score += 50;
-          if (item.id === 4 || item.id === 1) score += 45;
-          if (item.id === 10) score += 40;
-        } else if (activeOrientation.key === 'east') {
-          if (item.category === 'Rèm cuốn' || item.category === 'Rèm cầu vồng') score += 35;
-        } else if (activeOrientation.key === 'south' || activeOrientation.key === 'north') {
-          if (item.category === 'Rèm vải') score += 40;
-        }
-      }
-
-      if (activeStyle) {
-        if (activeStyle.key === 'luxury') {
-          if (item.id === 10 || item.id === 1) score += 45;
-        } else if (activeStyle.key === 'simple') {
-          if (item.category === 'Rèm cuốn') score += 45;
-        } else if (activeStyle.key === 'blackout') {
-          if (item.id === 7 || item.id === 4 || item.id === 1) score += 50;
-        } else if (activeStyle.key === 'view') {
-          if (item.id === 9) score += 55;
-        } else if (activeStyle.key === 'budget') {
-          if (item.id === 6 || item.id === 5) score += 50;
-        }
-      }
-
-      if (recommendedIds.has(item.id)) {
-        score -= 25;
-      }
-
-      return { item, score };
-    });
-
-    scored.sort((a, b) => b.score - a.score);
-    const chosen = scored[0]?.item || candidates[0];
-
-    const roomName = activeRoom?.label || 'căn phòng';
-    const orientName = activeOrientation ? ` ${activeOrientation.label}` : '';
-    const styleName = activeStyle ? ` phong cách ${activeStyle.label.toLowerCase()}` : '';
-
-    const confirmText = `Tôi hiểu rồi! Căn phòng ${roomName.toLowerCase()}${orientName.toLowerCase()}${styleName} có những đặc thù vi khí hậu và thẩm mỹ riêng. Bạn đợi tôi trong giây phút để tôi chọn cho bạn mẫu rèm hoàn hảo nhất nhé!`;
-
-    const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP ${chosen.name.toUpperCase()} TỐI ƯU CHO ${roomName.toUpperCase()}${orientName.toUpperCase()}
-
-1. Mức độ phù hợp:
-10/10 - Rất hoàn hảo cho ${roomName.toLowerCase()}${orientName.toLowerCase()}. Sản phẩm đáp ứng trọn vẹn cả công năng điều hòa ánh sáng lẫn tính thẩm mỹ sang trọng, hài hòa với kiến trúc không gian sống.
-
-2. Tại sao chọn nó:
+2. Tại sao bạn bắt buộc phải chọn nó:
 ${chosen.whyChoose}
 
-3. Mặt tốt của nó:
+3. Mặt tốt & Ưu điểm vượt trội:
 ${chosen.pros.map(p => `• ${p}`).join('\n')}
 
-Chuyên gia tư vấn UniVeloria khẳng định: ${chosen.name} (${chosen.badge}) là giải pháp chuẩn xác và tối ưu nhất cho căn phòng của bạn:`;
+Chuyên gia tư vấn UniVeloria gửi bạn mẫu rèm phòng ngủ tối ưu nhất:`;
+
+      return {
+        type: 'final_consultation',
+        delayMs: 3800,
+        confirmText,
+        finalText,
+        curtain: chosen,
+        updatedContext: {
+          ...context,
+          room: extractedRoom,
+          lastCurtainId: chosen.id,
+          lastQuestionType: 'consulted_bedroom',
+          recommendedCurtainIds: [...recommendedIds, chosen.id],
+          dislikedProductIds: Array.from(dislikedIds)
+        }
+      };
+    }
+
+    if (extractedRoom.key === 'study') {
+      const chosen = pickCandidate([5, 2, 9, 3]);
+      const confirmText = `Dạ với **Phòng làm việc**, rèm cần thiết kế gọn gàng, cách nhiệt tốt và chống chói màn hình máy tính để bạn tập trung tối đa. Bạn đợi tôi trong giây phút nhé!`;
+      const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM GỌN GÀNG CHỐNG CHÓI CHO PHÒNG LÀM VIỆC
+
+1. Mức độ phù hợp với không gian:
+10/10 - Mẫu ${chosen.name} cuộn phẳng đứng phom, tiết kiệm diện tích tối đa cho bàn làm việc, lọc ánh sáng dịu mắt để bảo vệ thị lực khi làm việc với máy tính liên tục.
+
+2. Tại sao bạn bắt buộc phải chọn nó:
+${chosen.whyChoose}
+
+3. Mặt tốt & Ưu điểm vượt trội:
+${chosen.pros.map(p => `• ${p}`).join('\n')}
+
+Chuyên gia tư vấn UniVeloria gửi bạn phương án phòng làm việc lý tưởng:`;
+
+      return {
+        type: 'final_consultation',
+        delayMs: 3800,
+        confirmText,
+        finalText,
+        curtain: chosen,
+        updatedContext: {
+          ...context,
+          room: extractedRoom,
+          lastCurtainId: chosen.id,
+          lastQuestionType: 'consulted_study',
+          recommendedCurtainIds: [...recommendedIds, chosen.id],
+          dislikedProductIds: Array.from(dislikedIds)
+        }
+      };
+    }
+
+    if (extractedRoom.key === 'balcony') {
+      const chosen = pickCandidate([9, 5, 6]);
+      const confirmText = `Dạ với **Ban công & Logia**, tiêu chí quan trọng nhất là cản tia UV, chịu nắng mưa tốt nhưng vẫn giữ tầm nhìn view khoáng đạt. Bạn đợi tôi trong giây phút nhé!`;
+      const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM LỌC SÁNG NGẮM CẢNH CHO BAN CÔNG
+
+1. Mức độ phù hợp với không gian:
+10/10 - Mẫu ${chosen.name} sở hữu sợi dệt Micro Sunscreen cản 95% tia bức xạ nhưng vẫn giữ trọn 100% view nhìn ra ngoài sân vườn và bầu trời, không lo ẩm mốc hay bay màu dưới nắng.
+
+2. Tại sao bạn bắt buộc phải chọn nó:
+${chosen.whyChoose}
+
+3. Mặt tốt & Ưu điểm vượt trội:
+${chosen.pros.map(p => `• ${p}`).join('\n')}
+
+Chuyên gia tư vấn UniVeloria gửi bạn giải pháp hoàn hảo cho ban công:`;
+
+      return {
+        type: 'final_consultation',
+        delayMs: 3800,
+        confirmText,
+        finalText,
+        curtain: chosen,
+        updatedContext: {
+          ...context,
+          room: extractedRoom,
+          lastCurtainId: chosen.id,
+          lastQuestionType: 'consulted_balcony',
+          recommendedCurtainIds: [...recommendedIds, chosen.id],
+          dislikedProductIds: Array.from(dislikedIds)
+        }
+      };
+    }
+
+    // Default room fallback (apartment, dining, etc.)
+    const chosen = pickCandidate([6, 12, 3, 10]);
+    const confirmText = `Dạ tôi đã hiểu nhu cầu cho không gian ${extractedRoom.label} của bạn. Bạn đợi tôi trong giây phút nhé!`;
+    const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP RÈM TỐI ƯU CHO ${extractedRoom.label.toUpperCase()}
+
+1. Mức độ phù hợp với không gian:
+10/10 - Mẫu ${chosen.name} đáp ứng xuất sắc cả về công năng lẫn tính thẩm mỹ, gọn gàng và dễ dàng vệ sinh.
+
+2. Tại sao bạn bắt buộc phải chọn nó:
+${chosen.whyChoose}
+
+3. Mặt tốt & Ưu điểm vượt trội:
+${chosen.pros.map(p => `• ${p}`).join('\n')}
+
+Chuyên gia tư vấn UniVeloria gửi bạn phương án tối ưu:`;
 
     return {
       type: 'final_consultation',
-      delayMs: 4200,
+      delayMs: 3800,
       confirmText,
       finalText,
       curtain: chosen,
       updatedContext: {
         ...context,
-        room: activeRoom || { key: 'general', label: 'Căn phòng' },
-        style: activeStyle,
-        orientation: activeOrientation,
+        room: extractedRoom,
         lastCurtainId: chosen.id,
+        lastQuestionType: `consulted_${extractedRoom.key}`,
         recommendedCurtainIds: [...recommendedIds, chosen.id],
         dislikedProductIds: Array.from(dislikedIds)
       }
     };
   }
 
-  // 11. HỎI ĐỐI THOẠI THÔNG MINH (THEO NGỮ CẢNH CỦA NGƯỜI DÙNG)
-  if (activeRoom) {
-    if (activeRoom.key === 'bedroom') {
-      return {
-        type: 'question',
-        delayMs: 650,
-        curtain: null,
-        text: `Phòng ngủ là không gian nghỉ ngơi cần sự yên tĩnh và cản sáng để giấc ngủ sâu. Cửa sổ phòng ngủ của bạn đón nắng buổi sáng hay nắng gắt buổi chiều, và bạn thích phong cách rèm vải bồng bềnh êm ái hay rèm cầu vồng hiện đại gọn gàng?`,
-        updatedContext: { ...context, room: activeRoom }
-      };
-    } else if (activeRoom.key === 'living') {
-      return {
-        type: 'question',
-        delayMs: 650,
-        curtain: null,
-        text: `Phòng khách là không gian chính đón tiếp bạn bè và sinh hoạt chung. Cửa sổ phòng khách của bạn là vách kính lớn sát sàn cần rèm vải sóng chữ S sang trọng bề thế, hay cửa sổ vừa cần rèm cầu vồng/rèm cuốn lấy sáng linh hoạt?`,
-        updatedContext: { ...context, room: activeRoom }
-      };
-    } else if (activeRoom.key === 'study') {
-      return {
-        type: 'question',
-        delayMs: 650,
-        curtain: null,
-        text: `Với phòng làm việc, yếu tố chống chói màn hình máy tính và thiết kế gọn gàng giúp tăng tập trung là quan trọng nhất. Cửa sổ phòng làm việc của bạn có view ngắm cảnh thoáng mát hay cần cản sáng chống chói gắt?`,
-        updatedContext: { ...context, room: activeRoom }
-      };
-    }
-  }
+  // 11. HƯỚNG NẮNG GẮT / HƯỚNG TÂY
+  const isWestSun = norm.includes('huong tay') || norm.includes('nang gat') || norm.includes('nang chieu') || norm.includes('chong nong');
+  if (isWestSun) {
+    const chosen = pickCandidate([7, 4, 1]);
+    const confirmText = `Dạ với cửa sổ hướng Tây đón nắng gắt, bài toán cấp bách nhất là cản bức xạ nhiệt và tia cực tím để hạ nhiệt cho phòng! Bạn đợi tôi trong giây phút nhé!`;
+    const finalText = `TƯ VẤN CHUYÊN GIA: GIẢI PHÁP CẢN NHIỆT CHỐNG NẮNG GẮT HƯỚNG TÂY
 
-  if (activeOrientation || activeStyle) {
-    const hint = activeOrientation ? `hướng cửa ${activeOrientation.label.toLowerCase()}` : `phong cách ${activeStyle.label.toLowerCase()}`;
+1. Mức độ phù hợp với vị trí nắng gắt:
+10/10 - Mẫu ${chosen.name} giải quyết triệt để vấn đề chói chang và hầm nóng của hướng Tây, giảm nhiệt độ phòng rõ rệt và ngăn tia UV làm hư hại đồ gỗ.
+
+2. Tại sao bạn bắt buộc phải chọn nó:
+${chosen.whyChoose}
+
+3. Mặt tốt & Ưu điểm vượt trội:
+${chosen.pros.map(p => `• ${p}`).join('\n')}
+
+Chuyên gia tư vấn UniVeloria gửi bạn phương án cản nhiệt hướng Tây tối ưu:`;
+
     return {
-      type: 'question',
-      delayMs: 650,
-      curtain: null,
-      text: `Tôi đã ghi nhận nhu cầu về ${hint} của bạn! Bạn đang muốn lắp rèm cho căn phòng nào (như phòng ngủ, phòng khách, phòng thờ hay phòng làm việc...)? Hãy chia sẻ để tôi tư vấn chuẩn xác nhất nhé!`,
-      updatedContext: { ...context, orientation: activeOrientation, style: activeStyle }
+      type: 'final_consultation',
+      delayMs: 3800,
+      confirmText,
+      finalText,
+      curtain: chosen,
+      updatedContext: {
+        ...context,
+        lastCurtainId: chosen.id,
+        lastQuestionType: 'consulted_west',
+        recommendedCurtainIds: [...recommendedIds, chosen.id],
+        dislikedProductIds: Array.from(dislikedIds)
+      }
     };
   }
 
+  // 12. NGƯỜI DÙNG MUỐN TÌM RÈM / MUA RÈM / TƯ VẤN NHƯNG CHƯA NÓI RÕ PHÒNG
+  // (Ví dụ: "Tôi muốn tìm 1 cái rèm", "Tôi muốn mua rèm", "Tư vấn cho tôi", "Có mẫu nào đẹp")
+  // -> CHỦ ĐỘNG GỢI Ý MẪU BESTSELLER SỐ 1 KÈM THẺ SẢN PHẨM TRỰC QUAN, TUYỆT ĐỐI KHÔNG HỎI DỒN DẬP
+  const isGeneralSearchQuery = norm.includes('tim 1 cai rem') || 
+                               norm.includes('tim rem') || 
+                               norm.includes('mua rem') || 
+                               norm.includes('can lam rem') || 
+                               norm.includes('tu van giup toi') || 
+                               norm.includes('tu van cho toi') || 
+                               norm.includes('tu van rem') || 
+                               norm.includes('co mau nao dep') || 
+                               norm.includes('goi y cho toi') || 
+                               norm.includes('chua biet chon') || 
+                               norm.includes('gioi thieu mau');
+
+  if (isGeneralSearchQuery) {
+    const chosen = pickCandidate([1, 10, 7, 3]);
+    const confirmText = `Dạ chào bạn! UniVeloria rất hân hạnh được đồng hành tư vấn không gian cùng bạn 🌿✨ Để bạn dễ dàng trải nghiệm ngay, tôi xin giới thiệu mẫu rèm được đánh giá 5 sao bán chạy hàng đầu tại UniVeloria:`;
+    const finalText = `TƯ VẤN CHUYÊN GIA: ${chosen.name.toUpperCase()} – LỰA CHỌN ĐƯỢC ƯA CHUỘNG HÀNG ĐẦU TẠI UNIVELORIA
+
+1. Mức độ đa năng & Phù hợp không gian:
+Mẫu ${chosen.name} (${chosen.category}) là dòng sản phẩm linh hoạt nhất, phù hợp cho cả phòng khách, phòng ngủ lẫn phòng thờ. Thiết kế tinh tế nâng tầm thẩm mỹ nội thất ngay từ ánh nhìn đầu tiên.
+
+2. Tại sao bạn nên trải nghiệm sản phẩm này:
+${chosen.whyChoose}
+
+3. Ưu điểm nổi bật:
+${chosen.pros.map(p => `• ${p}`).join('\n')}
+
+Bạn có thể xem chi tiết mẫu ${chosen.name} bên dưới. Nếu bạn đang muốn may rèm cho một căn phòng cụ thể (như phòng khách, phòng ngủ hay phòng thờ...), hãy kể thêm cho tôi nhé!`;
+
+    return {
+      type: 'final_consultation',
+      delayMs: 3800,
+      confirmText,
+      finalText,
+      curtain: chosen,
+      updatedContext: {
+        ...context,
+        lastCurtainId: chosen.id,
+        lastQuestionType: 'bestseller_suggested',
+        recommendedCurtainIds: [...recommendedIds, chosen.id],
+        dislikedProductIds: Array.from(dislikedIds)
+      }
+    };
+  }
+
+  // 13. LỜI CHÀO HỎI ĐẦU TIÊN (Alo, Hello, Chào shop...)
+  const greetingWords = ['alo', 'chao', 'xin chao', 'hello', 'hi', 'ad oi', 'shop oi', 'em oi', 'ban oi'];
+  const isGreetingOnly = greetingWords.includes(norm);
+  if (isGreetingOnly) {
+    return {
+      type: 'question',
+      delayMs: 600,
+      curtain: null,
+      text: "Dạ UniVeloria xin chào bạn! Tôi là Chuyên gia Tư vấn Không gian Rèm AI ☁️✨\n\nBạn đang quan tâm đến rèm cho không gian nào (như phòng khách, phòng ngủ, phòng thờ hay căn hộ...)? Hoặc bạn có thể cho tôi biết về hướng cửa đón nắng để tôi tư vấn giải pháp phù hợp nhất nhé!",
+      updatedContext: { ...context, hasGreeted: true, lastQuestionType: 'ask_room_first' }
+    };
+  }
+
+  // 14. NẾU ĐÃ TỪNG HỎI PHÒNG MÀ NGƯỜI DÙNG TRẢ LỜI NGẮN HOẶC LẠ:
+  // KHÔNG BAO GIỜ HỎI LẠI CÂU "BẠN MUỐN LẮP CHO CĂN PHÒNG NÀO"
+  if (context.lastQuestionType === 'ask_room_first' || context.lastQuestionType === 'ask_room') {
+    const chosen = pickCandidate([1, 10, 7]);
+    const confirmText = `Dạ tôi hiểu rồi! Để bạn có hình dung trực quan nhất, tôi xin gửi bạn mẫu rèm cao cấp đang được ưa chuộng nhất tại UniVeloria:`;
+    const finalText = `TƯ VẤN CHUYÊN GIA: ${chosen.name.toUpperCase()} (${chosen.badge})
+
+1. Mức độ phù hợp với không gian sống:
+Mẫu ${chosen.name} đáp ứng trọn vẹn cả công năng điều hòa ánh sáng lẫn tính thẩm mỹ sang trọng, hài hòa với mọi phong cách nội thất.
+
+2. Lý do chọn:
+${chosen.whyChoose}
+
+3. Mặt tốt của sản phẩm:
+${chosen.pros.map(p => `• ${p}`).join('\n')}
+
+Chuyên gia tư vấn UniVeloria gửi bạn chi tiết mẫu ${chosen.name}:`;
+
+    return {
+      type: 'final_consultation',
+      delayMs: 3600,
+      confirmText,
+      finalText,
+      curtain: chosen,
+      updatedContext: {
+        ...context,
+        lastCurtainId: chosen.id,
+        lastQuestionType: 'bestseller_fallback',
+        recommendedCurtainIds: [...recommendedIds, chosen.id],
+        dislikedProductIds: Array.from(dislikedIds)
+      }
+    };
+  }
+
+  // 15. FALLBACK LINH HOẠT VỚI GỢI MỞ ĐA CHIỀU (KHÔNG LẶP CÂU HỎI CŨ)
   return {
     type: 'question',
     delayMs: 650,
     curtain: null,
-    text: "Dạ vâng! Để tôi có thể tư vấn giải pháp rèm chuẩn xác và phù hợp nhất, bạn hãy chia sẻ thêm về căn phòng của mình nhé (ví dụ: phòng thờ tôn nghiêm, phòng ngủ hướng Tây nắng gắt, hay phòng khách biệt thự sang trọng...)!",
-    updatedContext: { ...context, hasGreeted: true }
+    text: "Dạ vâng! Để tôi hỗ trợ bạn chuẩn xác nhất, bạn có thể cho tôi biết vị trí phòng cần lắp rèm (như phòng khách, phòng ngủ hay phòng thờ), hoặc bạn đang thích kiểu rèm cản sáng tuyệt đối hay rèm cuốn gọn gàng ngắm view?",
+    updatedContext: { ...context, hasGreeted: true, lastQuestionType: 'ask_room' }
   };
 }
 

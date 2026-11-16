@@ -226,8 +226,8 @@ export default function App() {
                       (p.name?.includes('A25') && lp.code === 'UVL-TR-A25') ||
                       (p.name?.includes('R25') && lp.code === 'UVL-TR-R25')
             );
-            const isA25 = String(p.id) === '13' || p.code === 'UVL-TR-A25' || p.name?.includes('A25');
-            const isR25 = String(p.id) === '14' || p.code === 'UVL-TR-R25' || p.name?.includes('R25');
+            const isA25 = String(p.id) === '13' || p.code === 'UVL-TR-A25' || p.name?.toLowerCase().includes('a25') || p.name?.toLowerCase().includes('motion');
+            const isR25 = String(p.id) === '14' || p.code === 'UVL-TR-R25' || p.name?.toLowerCase().includes('r25');
 
             const name = isA25 ? 'Smart Automation A25 Pro' : isR25 ? 'Smart Automation R25' : (local?.name || p.name);
             const price = isA25 ? 2800000 : isR25 ? 2500000 : (local?.price || Number(p.basePrice) || 2450000);
