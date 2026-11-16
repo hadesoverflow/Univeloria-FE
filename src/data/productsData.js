@@ -2,6 +2,7 @@ export const curtainRooms = [
   "Tất cả",
   "Phòng khách",
   "Phòng ngủ",
+  "Phòng thờ",
   "Phòng ăn",
   "Văn phòng",
   "Ngoài trời"
